@@ -38,7 +38,7 @@ export default function Home() {
                         error sapiente odit aliquid distinctio doloremque repudiandae praesentium, earum minus omnis esse
                         quo cum iusto. Repudiandae!</p>
                         <div class="button">
-                        <RedirectButton destination="/pages/Login" text="Login" />
+                        <RedirectButton destination="/Login" text="Login" />
                         </div>
                 </div>
             </div>
