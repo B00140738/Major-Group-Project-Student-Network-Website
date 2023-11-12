@@ -100,7 +100,7 @@ body::after {
     font-weight: 300;
 }
 
-/*CSS for Card content and buttons (links) */
+/*CSS for buttons (links) */
 .container .card .card-content .button {
     display: inline-block;
     margin-top: 25px;
