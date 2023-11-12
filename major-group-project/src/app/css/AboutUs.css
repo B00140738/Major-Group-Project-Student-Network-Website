@@ -100,7 +100,7 @@ body::after {
     font-weight: 300;
 }
 
-.container .card .card-content a {
+.container .card .card-content .button {
     display: inline-block;
     margin-top: 25px;
     background-color: white;
