@@ -5,7 +5,6 @@ import Helmet from 'react-helmet';
 import VanillaTilt from 'vanilla-tilt';
 import "./css/AboutUs.css";
 import RedirectButton from './Components/RedirectButton';
-import { useRouter } from 'next/navigation';
 
 export default function Home() {
 
@@ -16,7 +15,7 @@ export default function Home() {
         max: 25,
         speed: 400,
     });
-}, []); // Empty dependency array ensures the effect runs only once
+}, []); // Empty dependency array to ensure the effect runs only once
 
   return (
     <><div class="container">
@@ -39,7 +38,7 @@ export default function Home() {
                         error sapiente odit aliquid distinctio doloremque repudiandae praesentium, earum minus omnis esse
                         quo cum iusto. Repudiandae!</p>
                         <div class="button">
-                        <RedirectButton destination="/Login" text="Login" />
+                        <RedirectButton destination="/pages/Login" text="Login" />
                         </div>
                 </div>
             </div>

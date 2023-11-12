@@ -2,7 +2,6 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import RedirectButton from '../Components/RedirectButton';
-import '../styles/globals.css'; // Import your global styles here
 
 function MyApp({ Component, pageProps }) {
     const routes = module.exports = require('next-routes')()

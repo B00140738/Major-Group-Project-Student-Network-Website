@@ -8,16 +8,18 @@ const RedirectButton = ({ destination, text }) => {
   const router = useRouter();
 
   //Send user to destination page when clicked
-  const handleClick = () => {
+  const handleClick = (e) => {
+    e.preventDefault();
     router.push(destination);
   };
 
   //Component Content
   return (
-    <button onClick={handleClick}>
-      {text}
-    </button>
+    <a href={destination} onClick={handleClick}>
+    {text}
+    </a>
   );
 };
 
+//Export component so it can be used later
 export default RedirectButton;
