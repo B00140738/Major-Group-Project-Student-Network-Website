@@ -1,6 +1,6 @@
 // RedirectButton.js
 import React from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 const RedirectButton = ({ destination, text }) => {
   const router = useRouter();

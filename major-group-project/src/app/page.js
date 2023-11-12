@@ -4,6 +4,8 @@ import React, { useEffect } from "react";
 import Helmet from 'react-helmet';
 import VanillaTilt from 'vanilla-tilt';
 import "./css/AboutUs.css";
+import RedirectButton from './Components/RedirectButton';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
 
@@ -24,7 +26,7 @@ export default function Home() {
                     <h3>Sign Up</h3>
                     <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rem quas sapiente architecto, atque
                         accusamus itaque minus neque accusantium veritatis cupiditate.</p>
-                    <a href="#">Sign Up</a>
+                        <RedirectButton destination="/SignUp" text="Sign Up" />
                 </div>
             </div>
             <div class="card">
@@ -34,7 +36,7 @@ export default function Home() {
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tempora officia debitis quis velit sunt
                         error sapiente odit aliquid distinctio doloremque repudiandae praesentium, earum minus omnis esse
                         quo cum iusto. Repudiandae!</p>
-                    <a href="#">Login</a>
+                        <RedirectButton destination="/Login" text="Login" />
                 </div>
             </div>
         </div>
