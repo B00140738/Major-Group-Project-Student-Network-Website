@@ -1,0 +1,103 @@
+/*!***********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[12].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[12].oneOf[12].use[3]!./src/app/css/loginform.css ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************/
+.loginContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+
+  }
+  
+  .loginBox {
+    background: #333;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px; /* Adjust the width as necessary */
+  }
+  
+  .loginBox h1 {
+    color: #fff;
+    text-align: center;
+  }
+  
+  .appleLogin,
+  .googleLogin {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .appleLogin {
+    background: #000;
+    color: #fff;
+  }
+  
+  .googleLogin {
+    background: #fff;
+    color: #000;
+  }
+  
+  .divider {
+    text-align: center;
+    margin: 20px 0;
+    color: #fff;
+  }
+  
+  .inputField {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #555;
+    background: #222;
+    color: #fff;
+  }
+  
+  .nextButton {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    background: #0A84FF; /* Adjust the color to match your branding */
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .forgotPassword {
+    color: #0A84FF;
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  .signUp {
+    text-align: center;
+    margin-top: 20px;
+    color: #fff;
+  }
+  
+  .signUpLink {
+    color: #0A84FF;
+  }
+
+  .hide {
+    display: none;
+  }
+  
+  .login-popup-show {
+    display: block; /* Or use 'flex' or other display values as needed */
+    position: fixed; /* Or 'absolute' */
+    top: 7%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white; /* Choose a background color that stands out */
+    color: black; /* Choose a text color that is readable */
+    padding: 20px;
+    border-radius: 4px;
+    z-index: 10; /* Make sure this is above other content */
+    /* Add other styling as necessary */
+  }
