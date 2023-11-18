@@ -1,12 +1,12 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../css/loginform.css'; // Make sure this path is correct
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [popupStyle, setPopupStyle] = useState("hide");
-
+  const [isClient, setIsClient] = useState(false)
   const showPopup = () => {
     // Check if either the username or password is empty
     if (!username || !password) {
@@ -22,11 +22,15 @@ const Login = () => {
       console.log('Attempt login with:', username, password);
     }
   };
-
-  return (
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+ 
+  return ( 
+    
     <div className="loginContainer">
       <div className="loginBox">
-        <h1>Sign in</h1>
+        <h1> Sign in</h1>
         <button className="appleLogin">Sign in with Apple</button>
         <button className="googleLogin">Sign in with Google</button>
         <div className="divider">or</div>
@@ -57,6 +61,7 @@ const Login = () => {
       </div>
     </div>
   );
+
 };
 
 export default Login;
