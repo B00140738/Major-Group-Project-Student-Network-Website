@@ -2,43 +2,26 @@
 
 //Login form for draft/project website
 import React, { useState } from "react";
+import React from 'react';
+import styles from '../styles/Login.module.css'; // Adjust the path as necessary
 
-//Better to store form as arrow function/as const to cut down on unnecessary jargon/confusion later on.
-const LoginForm = () => {
-
-    //configure Popup
-    const [popupStyle, showPopup] = useState("hide");
-
-    const popup = () => {
-        showPopup("login-popup");
-        setTimeout(() => showPopup("hide"), 3000);
-    }
-
-    return (
-        <center>
-        <div className="cover">
-            <h1>Login</h1>
-            <input type="text" placeholder="Username"/>
-            <input type="password" placeholder="Password"/>
-
-            <div className="login-btn" onClick={popup}>Login</div>
-
-            <p className="text">Or Login Using</p>
-
-            <div className="alt-login">
-                <div className="facebook"></div>
-                <div className="google"></div>
-            </div>
-
-            <div className={popupStyle}>
-                <h3>Login Failed!</h3>
-                <p>Username or Password incorrect</p>
-            </div>
+const Login = () => {
+  return (
+    <div className={styles.loginContainer}>
+      <div className={styles.loginBox}>
+        <h1>Sign in to X</h1>
+        <button className={styles.appleLogin}>Sign in with Apple</button>
+        <button className={styles.googleLogin}>Sign in with Google</button>
+        <div className={styles.divider}>or</div>
+        <input type="text" placeholder="Phone, email, or username" className={styles.inputField}/>
+        <button className={styles.nextButton}>Next</button>
+        <a href="#" className={styles.forgotPassword}>Forgot password?</a>
+        <div className={styles.signUp}>
+          Don't have an account? <a href="#" className={styles.signUpLink}>Sign up</a>
         </div>
-        </center>
+      </div>
+    </div>
+  );
+};
 
-    );
-}
-
-//Export form
-export default LoginForm;
+export default Login;

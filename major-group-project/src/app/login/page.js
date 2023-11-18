@@ -1,44 +1,62 @@
-"use client";
-import React, { useState } from "react";
+"use client"
+import React, { useState } from 'react';
+import '../css/loginform.css'; // Make sure this path is correct
 
-//Login form component
 const Login = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [popupStyle, setPopupStyle] = useState("hide");
 
-    //configure Popup
-    const [popupStyle, showPopup] = useState("hide");
+  const showPopup = () => {
+    // Check if either the username or password is empty
+    if (!username || !password) {
+      // Specify what popup to show
+      setPopupStyle("login-popup-show");
 
-    const popup = () => {
-        //Specify what popup to show
-        showPopup("login-popup");
-        //Popup duration
-        setTimeout(() => showPopup("hide"), 3000);
+      // Popup duration
+      setTimeout(() => {
+        setPopupStyle("hide");
+      }, 3000);
+    } else {
+      // Here you would put your login logic
+      console.log('Attempt login with:', username, password);
     }
+  };
 
-    return (
-        <center>
-        <div className="cover">
-            <h1>Login</h1>
-            <input type="text" placeholder="Username"/>
-            <input type="password" placeholder="Password"/>
+  return (
+    <div className="loginContainer">
+      <div className="loginBox">
+        <h1>Sign in</h1>
+        <button className="appleLogin">Sign in with Apple</button>
+        <button className="googleLogin">Sign in with Google</button>
+        <div className="divider">or</div>
+        <input
+          type="text"
+          placeholder="Phone, email, or username"
+          className="inputField"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          className="inputField"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button type="button" className="nextButton" onClick={showPopup}>Next</button>
 
-            <div className="login-btn" onClick={popup}>Login</div>
-
-            <p className="text">Or Login Using</p>
-
-            <div className="alt-login">
-                <div className="facebook"></div>
-                <div className="google"></div>
-            </div>
-            {/* HTML for form Popup */}
-            <div className={popupStyle}>
-                <h3>Login Failed!</h3>
-                <p>Username or Password incorrect</p>
-            </div>
+        <a href="#" className="forgotPassword">Forgot password?</a>
+        <div className="signUp">
+          Don't have an account? <a href="#" className="signUpLink">Sign up</a>
         </div>
-        </center>
+        <div className={popupStyle}>
+          <h3>Login Failed!</h3>
+          <p>Username or Password incorrect</p>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-    );
-}
-
-//Export form
 export default Login;

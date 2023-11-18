@@ -1,137 +1,100 @@
-/* CSS file for Login Form */
-
-* {
-    margin: 0;
-    box-sizing: border-box;
-    font-family: "CustomFont";
-}
-
-body {
-    background: url("../Images/img.jpg"), no-repeat;
-    background-size: cover;
-    background-position: center;
-    height: 70vh;
-}
-
-@font-face {
-    font-family: "CustomFont";
-    src: url("../fonts/RolexLight.woff2");
-}
-
-.page {
+.loginContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 100vh;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 
-.cover {
-    background-color: white;
-    width: 30em;
-    height: 35em;
-    background: transparent;
-    margin-top: 9%;
-    position: relative;
-    border-radius: 1em;
-    box-shadow: 0 0.188em 1.550em rgb(100, 156, 156);
-    backdrop-filter: blur(10px);
+  }
+  
+  .loginBox {
+    background: #333;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px; /* Adjust the width as necessary */
+  }
+  
+  .loginBox h1 {
     color: #fff;
-    border: 2px solid rgba(255, 255, 255, 255, .2);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-}
-
-.alt-login {
-    width: 80%;
-    height: 3em;
-    display: flex;
-    justify-content: space-around;
-}
-
-.alt-login div {
-    width: 45%;
-    height: 90%;
-    border-radius: 0.25em;
-    background-color: black;
-    background-position: center;
-    background-size: contain;
-    background-repeat: no-repeat;
-    cursor: pointer;
-}
-
-.google {
-    background-image: url("../icons/google.png");
-}
-
-.facebook {
-    background-image: url("../icons/facebook.png");
-}
-
-input {
-    border: none;
-    background-color: rgb(229, 226, 226);
-    height: 4em;
-    width: 80%;
-    border-radius: 0.25em;
     text-align: center;
-    padding: 2em;
-}
-
-input:focus {
-    outline-color: rgb(32, 177, 255);
-}
-
-/* CSS for login button */
-
-.login-btn {
-    width: 40%;
-    height: 3em;
-    background-color: rgb(32, 177, 255);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: 0.5s;
-    border-radius: 0.25em;
+  }
+  
+  .appleLogin,
+  .googleLogin {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: none;
     cursor: pointer;
-}
+  }
+  
+  .appleLogin {
+    background: #000;
+    color: #fff;
+  }
+  
+  .googleLogin {
+    background: #fff;
+    color: #000;
+  }
+  
+  .divider {
+    text-align: center;
+    margin: 20px 0;
+    color: #fff;
+  }
+  
+  .inputField {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #555;
+    background: #222;
+    color: #fff;
+  }
+  
+  .nextButton {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    background: #0A84FF; /* Adjust the color to match your branding */
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .forgotPassword {
+    color: #0A84FF;
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  .signUp {
+    text-align: center;
+    margin-top: 20px;
+    color: #fff;
+  }
+  
+  .signUpLink {
+    color: #0A84FF;
+  }
 
-/* Enlarge login button when user hovers over it */
-
-.login-btn:hover {
-    transform: scale(1.25);
-}
-
-.text {
-    position: relative;
-    bottom: 2em;
-}
-
-.hide {
+  .hide {
     display: none;
-
-}
-
-.login-popup {
-    position: absolute;
-    height: 30em;
-    width: 30em;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.25em;
-    background-color: black;
-    color: white;
-    bottom: 0;
-    transform: scale(1);
-    transform: 1.5s;
-}
-
-h3 {
-    color: red;
-}
-
-/* End of CSS for login button */
+  }
+  
+  .login-popup-show {
+    display: block; /* Or use 'flex' or other display values as needed */
+    position: fixed; /* Or 'absolute' */
+    top: 7%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white; /* Choose a background color that stands out */
+    color: black; /* Choose a text color that is readable */
+    padding: 20px;
+    border-radius: 4px;
+    z-index: 10; /* Make sure this is above other content */
+    /* Add other styling as necessary */
+  }
