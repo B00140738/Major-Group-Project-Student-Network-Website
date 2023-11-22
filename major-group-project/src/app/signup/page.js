@@ -45,7 +45,7 @@ export default function Page() {
     let address = data.get('address');
     let dob = data.get('dob');
 
-    runDBCallAsync(`http://localhost:3000/api/register?email=${email}&pass=${pass}&repeatPass=${repeatPass}&username=${username}&address=${address}&dob=${dob}`);
+    runDBCallAsync(`http://localhost:3000/api/register?&username=${username}&email=${email}&pass=${pass}&repeatPass=${repeatPass}&address=${address}&dob=${dob}`);
   };
 
   return (
