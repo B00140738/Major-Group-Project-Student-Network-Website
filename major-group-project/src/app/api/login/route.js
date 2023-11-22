@@ -1,41 +1,38 @@
-export async function POST(req, res) {
+export async function GET(req, res) {
+ 
   try {
-    // Parse the JSON data from the request body
-    const { searchParams } = new URL(req.url);
-    const username = searchParams.get('email');
-    const email = searchParams.get('email');
-    const pass = searchParams.get('pass');
+  const { searchParams } = new URL(req.url)
+  const email = searchParams.get('email')
+  const pass = searchParams.get('pass')
 
-
-    // Perform MongoDB operations
-    const { MongoClient } = require('mongodb');
+       const { MongoClient } = require('mongodb');
     const url = 'mongodb://root:example@localhost:27017/';
     const client = new MongoClient(url);
-    const dbName = 'forums'; // database name
-
+   
+    const dbName = 'forums';
+    
     await client.connect();
+    
     console.log('Connected successfully to the server');
-
     const db = client.db(dbName);
-    const collection = db.collection('register'); // collection name
+    const collection = db.collection('register');
 
-    const findResult = await collection.find({
-      username: username,
-      email: email,
-      pass: pass, 
-    });
+    
+    const findResult = await collection.find({"username": email, "pass":pass}).toArray();
 
     let valid = false;
     if (findResult) {
       valid = true;
       console.log('Logged in successfully');
     } else {
-      console.log('Login failed: wrong email or password');
+      valid = false;
+      console.log('Login failed: wrong username or password');
+      
     }
-
-    res.json({ data: valid ? "valid" : "invalid" });
+    return Response.json({ "data":"" + valid + ""})
+   
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
-  }
+  } 
 }
