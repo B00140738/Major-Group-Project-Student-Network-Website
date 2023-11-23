@@ -2,7 +2,7 @@ export async function GET(req, res) {
  
   try {
   const { searchParams } = new URL(req.url)
-  const email = searchParams.get('email')
+  const username = searchParams.get('username')
   const pass = searchParams.get('pass')
 
        const { MongoClient } = require('mongodb');
@@ -18,10 +18,10 @@ export async function GET(req, res) {
     const collection = db.collection('register');
 
     
-    const findResult = await collection.find({"username": email, "pass":pass}).toArray();
+    const findResult = await collection.find({"username": username, "pass":pass}).toArray();
 
     let valid = false;
-    if (findResult) {
+    if (findResult.length > 0) {
       valid = true;
       console.log('Logged in successfully');
     } else {
