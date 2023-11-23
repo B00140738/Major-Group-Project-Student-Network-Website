@@ -37,10 +37,10 @@ export default function Login() {
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
-    let email = data.get('email');
+    let username = data.get('username');
     let pass = data.get('pass');
 
-      runDBCallAsync(`http://localhost:3000/api/login?&email=${email}&pass=${pass}`);
+      runDBCallAsync(`http://localhost:3000/api/login?&username=${username}&pass=${pass}`);
     
   };
   
@@ -61,7 +61,7 @@ export default function Login() {
             aria-label="Username"
           />
           <input
-            type="password"
+            type="pass"
             placeholder="Password"
             className="inputField"
             name="pass"
