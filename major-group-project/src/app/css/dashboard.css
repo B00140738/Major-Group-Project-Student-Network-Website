@@ -1,0 +1,98 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: url('your-background-image.jpg') center/cover fixed;
+    overflow: hidden;
+}
+
+.main-container {
+    margin: 50px;
+    margin-bottom: 50px;
+    border-radius: 15px;
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+}
+
+.dashboard-container {
+    background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+}
+
+.search-bar input {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.search-button {
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.profile-button {
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+}
+
+.top-boxes {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.forum-box {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.view-posts-button {
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.side-bar {
+    width: 250px;
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 25px;
+    text-align: center;
+}
+
+.side-bar h2 {
+    margin-bottom: 10px;
+}
