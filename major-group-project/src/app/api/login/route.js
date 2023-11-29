@@ -1,13 +1,11 @@
-import { Response } from '@sveltejs/kit';
-// ... (other imports)
-
 export async function GET(req, res) {
+ 
   try {
-    const { searchParams } = new URL(req.url);
-    const username = searchParams.get('username');
-    const pass = searchParams.get('pass');
+  const { searchParams } = new URL(req.url)
+  const email = searchParams.get('email')
+  const pass = searchParams.get('pass')
 
-    const { MongoClient } = require('mongodb');
+       const { MongoClient } = require('mongodb');
     const url = 'mongodb://root:example@localhost:27017/';
     const client = new MongoClient(url);
 
@@ -19,26 +17,22 @@ export async function GET(req, res) {
     const db = client.db(dbName);
     const collection = db.collection('register');
 
-    const findResult = await collection.find({ "username": username, "pass": pass }).toArray();
+
+    const findResult = await collection.find({"username": email, "pass":pass}).toArray();
 
     let valid = false;
-    let redirectURL = ''; // Initialize redirectURL
-
-    if (findResult.length > 0) {
+    if (findResult) {
       valid = true;
       console.log('Logged in successfully');
-      // Set the redirect URL to your dashboard page
-      redirectURL = '/dashboard';
     } else {
       valid = false;
       console.log('Login failed: wrong username or password');
-    }
 
-    // Return a response with the validation status and redirect URL
-    return Response.json({ "data": "" + valid + "", "redirectURL": redirectURL });
+    }
+    return Response.json({ "data":"" + valid + ""})
 
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
-  }
+  } 
 }

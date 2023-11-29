@@ -15,6 +15,7 @@
     "react-dom": "18.2.0",
     "react-helmet": "^6.1.0",
     "react-router-dom": "^6.18.0",
+    "svelte": "^4.2.7",
     "vanilla-tilt": "^1.8.1"
   }
 }
