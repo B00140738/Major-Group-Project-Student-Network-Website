@@ -1,20 +1,11 @@
 {
-  "name": "major-group-project",
-  "version": "0.1.0",
-  "private": true,
+  "dependencies": {
+    "next": "^14.0.3",
+    "vanilla-tilt": "^1.8.1"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "helmet": "^7.1.0",
-    "next": "14.0.1",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "react-helmet": "^6.1.0",
-    "react-router-dom": "^6.18.0",
-    "vanilla-tilt": "^1.8.1"
+    "start": "next start"
   }
 }
