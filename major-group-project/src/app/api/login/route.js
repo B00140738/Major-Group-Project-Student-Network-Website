@@ -1,3 +1,5 @@
+import { cookies } from 'next/headers'
+
 export async function GET(req, res) {
  
   try {
@@ -23,11 +25,16 @@ export async function GET(req, res) {
     let valid = false;
     if (findResult.length > 0) {
       valid = true;
-      console.log('Logged in successfully');
+      console.log('Logged in successfully')
+
+        // save a little cookie to say we are authenticated
+    console.log("Saving username and auth status")
+    cookies().set('auth', true);
+    cookies().set('username', username)
+     
     } else {
       valid = false;
       console.log('Login failed: wrong username or password');
-      
     }
     return Response.json({ "data":"" + valid + ""})
    
