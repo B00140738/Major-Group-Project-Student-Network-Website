@@ -1,6 +1,11 @@
 "use client"
+<<<<<<< Updated upstream
 import React, { useState } from 'react';
 import '../css/loginform.css';
+=======
+import React, { useState} from 'react';
+import '../css/loginform.css'; // Make sure this path is correct
+>>>>>>> Stashed changes
 
 
 export default function Login() {
@@ -31,6 +36,7 @@ export default function Login() {
       setPopupStyle('login-popup-show');
       setTimeout(() => setPopupStyle('hide'), 3000);
     }
+<<<<<<< Updated upstream
   }
 
   const handleSubmit = (event) => {
@@ -41,6 +47,11 @@ export default function Login() {
     let pass = data.get('pass');
 
       runDBCallAsync(`http://localhost:3000/api/login?&username=${username}&pass=${pass}`);
+  };
+
+ 
+  return ( 
+>>>>>>> Stashed changes
     
   };
   
