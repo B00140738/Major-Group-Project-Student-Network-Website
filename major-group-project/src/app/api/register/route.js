@@ -2,7 +2,7 @@ export async function POST(req, res) {
   try {
     // Parse the JSON data from the request body
     const { searchParams } = new URL(req.url);
-    const username = searchParams.get('email');
+    const username = searchParams.get('username');
     const email = searchParams.get('email');
     const pass = searchParams.get('pass');
     const repeatPass = searchParams.get('repeatPass');
