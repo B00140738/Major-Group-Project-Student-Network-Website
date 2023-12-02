@@ -2,32 +2,26 @@
 import React, { useState } from 'react';
 import '../css/loginform.css';
 
-
 export default function Login() {
   const [popupStyle, setPopupStyle] = useState('hide');
   const [popupMessage, setPopupMessage] = useState('');
 
-  async function runDBCallAsync(url) {
+  async function runDBCallAsync(url, username) {
     try {
       const res = await fetch(url);
       const data = await res.json();
       if (!res.ok) {
-        throw new error(`HTTP error! status: ${res.status}`);E
+        throw new Error(`HTTP error! status: ${res.status}`);
       }
 
-     
-
-      if (data.data == "true") {
+      if (data.data === "true") {
         console.log("Login Successful!");
-       
-        // Redirect or perform further actions upon successful login
+        window.location.href = '/dashboard'; // Redirect to dashboard
       } else {
         throw new Error('Invalid username or password');
-        
       }
     } catch (error) {
       setPopupMessage(error.message);
-     
       setPopupStyle('login-popup-show');
       setTimeout(() => setPopupStyle('hide'), 3000);
     }
@@ -35,15 +29,13 @@ export default function Login() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     const data = new FormData(event.currentTarget);
     let username = data.get('username');
     let pass = data.get('pass');
-
-      runDBCallAsync(`http://localhost:3000/api/login?&username=${username}&pass=${pass}`);
-    
+    runDBCallAsync(`http://localhost:3000/api/login?&username=${username}&pass=${pass}`, username);
   };
-  
+
+
   return (
     <div className="loginContainer">
       <div className="loginBox">
@@ -56,12 +48,11 @@ export default function Login() {
             type="text"
             placeholder="Phone, email, or username"
             className="inputField"
-          
             name="username"
             aria-label="Username"
           />
           <input
-            type="pass"
+            type="password"
             placeholder="Password"
             className="inputField"
             name="pass"
@@ -82,4 +73,3 @@ export default function Login() {
     </div>
   );
 };
-
