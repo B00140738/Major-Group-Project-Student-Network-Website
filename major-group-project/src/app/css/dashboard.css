@@ -1,7 +1,6 @@
 body {
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: url('your-background-image.jpg') center/cover fixed;
     overflow: hidden;
 }
 
