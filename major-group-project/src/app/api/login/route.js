@@ -15,26 +15,21 @@ export async function GET(req, res) {
     
     await client.connect();
     
-    console.log('Connected successfully to the server');
     const db = client.db(dbName);
     const collection = db.collection('register');
 
-    
     const findResult = await collection.find({"username": username, "pass":pass}).toArray();
 
     let valid = false;
     if (findResult.length > 0) {
       valid = true;
-      console.log('Logged in successfully')
 
-        // save a little cookie to say we are authenticated
-    console.log("Saving username and auth status")
+    // save a little cookie to say we are authenticated
     cookies().set('auth', true);
     cookies().set('username', username)
      
     } else {
       valid = false;
-      console.log('Login failed: wrong username or password');
     }
     return Response.json({ "data":"" + valid + ""})
    
