@@ -1,100 +1,123 @@
-.loginContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+/* Overlay background that covers the entire screen */
+.modal-background {
+  position: fixed; /* Stay in place */
+  z-index: 1000; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  background-color: rgba(0,0,0,0.4); /* Black background with opacity */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  }
-  
-  .loginBox {
-    background: #333;
-    padding: 20px;
-    border-radius: 10px;
-    width: 300px; /* Adjust the width as necessary */
-  }
-  
-  .loginBox h1 {
-    color: #fff;
-    text-align: center;
-  }
-  
-  .appleLogin,
-  .googleLogin {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .appleLogin {
-    background: #000;
-    color: #fff;
-  }
-  
-  .googleLogin {
-    background: #fff;
-    color: #000;
-  }
-  
-  .divider {
-    text-align: center;
-    margin: 20px 0;
-    color: #fff;
-  }
-  
-  .inputField {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    border: 1px solid #555;
-    background: #222;
-    color: #fff;
-  }
-  
-  .nextButton {
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    border: none;
-    background: #0A84FF; /* Adjust the color to match your branding */
-    color: #fff;
-    cursor: pointer;
-  }
-  
-  .forgotPassword {
-    color: #0A84FF;
-    display: block;
-    text-align: center;
-    margin-top: 10px;
-  }
-  
-  .signUp {
-    text-align: center;
-    margin-top: 20px;
-    color: #fff;
-  }
-  
-  .signUpLink {
-    color: #0A84FF;
-  }
+/* Modal container with the content */
+.modal-container {
+  background: #333;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+  width: auto;
+  min-width: 320px; /* Minimum width to ensure content fits well */
+  max-width: 400px; /* Maximum width of the modal */
+  margin: 0 20px; 
+}
 
-  .hide {
-    display: none;
+/* The Close Button */
+.close-modal {
+  color: #aaa;
+  position: absolute; /* Absolute relative to the loginContainer */
+  top: 5px; 
+  right: 5px; 
+  font-size: 24px;
+  cursor: pointer;
+  margin-bottom: 50px;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+  color: white;
+  text-decoration: none;
+}
+
+/* Style for the sign-in button */
+.appleLogin,
+.googleLogin {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px; /* Space between icon and text */
+  z-index: 0; /* Ensure they are behind the close button */
+}
+
+.appleLogin {
+  background: #000;
+  color: #fff;
+}
+
+.googleLogin {
+  background: #fff;
+  color: #000;
+}
+
+/* Divider style */
+.divider {
+  color: #fff;
+  text-align: center;
+  margin: 20px 0;
+}
+
+/* Input field style */
+.inputField {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #555;
+  background: #222;
+  color: #fff;
+  font-size: 16px; /* Increase font size for better readability */
+}
+
+/* The 'Next' button style */
+.nextButton {
+  width: 100%;
+  padding: 15px;
+  margin-top: 20px;
+  background: #0A84FF; /* Adjust the color to match your branding */
+  color: #fff;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Styles for forgot password and sign-up links */
+.forgotPassword,
+.signUpLink {
+  color: #0A84FF;
+  text-align: center;
+  display: block;
+  margin-top: 15px;
+  cursor: pointer;
+}
+
+.forgotPassword:hover,
+.signUpLink:hover {
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .loginContainer {
+    max-width: 90%;
+    padding: 20px; /* Less padding on smaller screens */
   }
-  
-  .login-popup-show {
-    display: block; /* Or use 'flex' or other display values as needed */
-    position: fixed; /* Or 'absolute' */
-    top: 7%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white; /* Choose a background color that stands out */
-    color: black; /* Choose a text color that is readable */
-    padding: 20px;
-    border-radius: 4px;
-    z-index: 10; /* Make sure this is above other content */
-    /* Add other styling as necessary */
-  }
+}

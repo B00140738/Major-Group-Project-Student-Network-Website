@@ -5,10 +5,10 @@ export async function POST(req, res) {
     const username = searchParams.get('username');
     const email = searchParams.get('email');
     const pass = searchParams.get('pass');
-    const repeatPass = searchParams.get('repeatPass');
     const dob = searchParams.get('dob');
     const address = searchParams.get('address');
 
+  
     // Perform MongoDB operations
     const { MongoClient } = require('mongodb');
     const url = 'mongodb://root:example@localhost:27017/';
@@ -25,7 +25,6 @@ export async function POST(req, res) {
       username: username,
       email: email,
       pass: pass,
-      repeatPass: repeatPass,
       dob: dob,
       address: address,
     });
