@@ -47,8 +47,8 @@ export default function LoginModal({ toggleModal }) {
         <div className="divider">or</div>
         <h1>Sign in</h1>
         <form onSubmit={handleSubmit}>
-          <input type="text" placeholder="Phone, email, or username" className="inputField" name="username" />
-          <input type="password" placeholder="Password" className="inputField" name="pass" />
+          <input type="text" placeholder="Phone, email, or username" className="inputField" name="username" required/>
+          <input type="password" placeholder="Password" className="inputField" name="pass" required/>
           <button type="submit" className="nextButton">Next</button>
         </form>
         <a href="#" className="forgotPassword">Forgot password?</a>
