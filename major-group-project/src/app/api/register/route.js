@@ -1,3 +1,5 @@
+import { hash } from 'bcrypt';
+
 export async function POST(req, res) {
   try {
     // Parse the JSON data from the request body
@@ -8,7 +10,9 @@ export async function POST(req, res) {
     const dob = searchParams.get('dob');
     const address = searchParams.get('address');
 
-  
+   // Hash the password before storing it
+   const saltRounds = 10; // You can change the number of salt rounds as needed
+   const hashedPassword = await hash(pass, saltRounds);
     // Perform MongoDB operations
     const { MongoClient } = require('mongodb');
     const url = 'mongodb://root:example@localhost:27017/';
@@ -21,16 +25,22 @@ export async function POST(req, res) {
     const db = client.db(dbName);
     const collection = db.collection('register'); // collection name
 
+
+    
     const findResult = await collection.insertOne({
-      username: username,
-      email: email,
-      pass: pass,
-      dob: dob,
-      address: address,
+      "username":username,
+      "email":email,
+      "pass": hashedPassword,
+      "dob":dob,
+      "address":address,
     });
 
     let valid = false;
     if (findResult.insertedCount > 0) {
+          // save a little cookie to say we are authenticated
+    cookies().set('auth', true);
+    cookies().set('username', username)
+     
       valid = true;
       console.log('Registered valid');
     } else {
