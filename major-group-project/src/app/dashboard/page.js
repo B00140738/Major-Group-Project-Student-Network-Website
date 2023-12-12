@@ -7,6 +7,7 @@ export default function Dashboard() {
     const [username, setUsername] = useState('');
     const [showDropdown, setShowDropdown] = useState(false);
     const router = useRouter(); // Get the Next.js router
+
     useEffect(() => {
         
         // Retrieve username from the cookie
@@ -24,7 +25,6 @@ export default function Dashboard() {
     }, [router]);
 
 
-
        // Toggle dropdown
        const toggleDropdown = () => setShowDropdown(!showDropdown);
 
@@ -38,6 +38,21 @@ export default function Dashboard() {
         router.push('/');
     }
       };
+          // Navigate to edit profile page
+    const handleEditProfile = () => {
+        // Close the dropdown
+        setShowDropdown(false);
+        // Push to the edit profile route
+        router.push('../settings'); // replace '/edit-profile' with your actual edit profile route
+    };
+
+              // Navigate to edit profile page
+              const handleforum = () => {
+                // Close the dropdown
+                setShowDropdown(false);
+                // Push to the edit profile route
+                router.push('../forums'); // replace '/edit-profile' with your actual edit profile route
+            };
 
     return (
         <div className="main-container">
@@ -53,7 +68,7 @@ export default function Dashboard() {
                         </button>
                         {showDropdown && (
                             <div className="profile-dropdown">
-                            <div className="dropdown-item">Settings</div>
+                            <div className="dropdown-item" onClick={handleEditProfile}>Settings</div>
                             <div onClick={handleLogout} className="dropdown-item">Log out @{username}</div>
                             </div>
                         )}
@@ -61,16 +76,24 @@ export default function Dashboard() {
 
                 </header>
                 <section className="main-content">
-                    <div className="top-boxes">
+                    <div className="side-bar left">
+                        <h2>Forum Threads</h2>
+                        {/* Left sidebar content here */}
+                        <button className="Make-Thread">Make a Thread</button>
+                    </div>
+                    <div className="central-content">
                         <div className="forum-box">
                             <h2>Forums</h2>
-                            <button className="view-posts-button">View Posts</button>
+                            <button className="view-posts-button" onClick={handleforum}>View Posts</button>
                         </div>
                     </div>
-                    <div className="side-bar">
+                    <div className="side-bar right">
                         <h2>General Forums</h2>
+                        {/* Right sidebar content here */}
                     </div>
                 </section>
+
+
             </div>
         </div>
     );
