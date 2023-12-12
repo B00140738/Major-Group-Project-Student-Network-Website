@@ -19,16 +19,18 @@ body, html {
 }
 
 header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-between; /* This will space the child elements */
+  align-items: center; /* This will center the child elements vertically */
+  padding: 20px;
+  backdrop-filter: blur(10px);
 }
 
 .search-bar {
-    display: flex;
-    align-items: center;
+  flex-grow: 1; /* This will allow the search bar to grow and take available space */
+  display: flex;
+  justify-content: center; /* This will center the search bar horizontally */
+  align-items: center;
 }
 
 .search-bar input {
@@ -133,4 +135,19 @@ header {
     background-color: #444; /* Slight background color change on hover */
   }
 
- 
+  .central-content {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* Make sure .left and .right classes are added to the corresponding side-bar divs */
+.side-bar.left {
+  /* Additional styles for left sidebar if needed */
+}
+
+.side-bar.right {
+  /* Additional styles for right sidebar if needed */
+}
