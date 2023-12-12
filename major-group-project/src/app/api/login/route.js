@@ -18,10 +18,12 @@ export async function GET(req, res) {
     const db = client.db(dbName);
     const collection = db.collection('register');
 
-    const findResult = await collection.find({"username": username, "pass":pass}).toArray();
+    const findResult = await collection.find({"username": username}).toArray();
 
     let valid = false;
-    if (findResult.length > 0) {
+    const bcrypt = require('bcrypt');
+    let hashResult = bcrypt.compareSync(pass, findResult[0].pass); // true
+    if (findResult.length > 0 && hashResult == true) {
       valid = true;
 
     // save a little cookie to say we are authenticated
