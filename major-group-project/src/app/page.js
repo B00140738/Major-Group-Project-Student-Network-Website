@@ -37,7 +37,10 @@ export default function Home() {
           <div className="card-content">
             <h2>01</h2>
             <h3>Sign Up</h3>
-            <p>Your sign-up card description here.</p>
+            <p>Join our community and unlock the full potential of [Student hub] today! 
+              Get access to exclusive features, personalized insights, and our 
+              supportive user network. Signing up is quick, easy, and completely free. 
+              Start your journey towards a better future now!</p>
             <div className="button">
               {/* Change button click event to toggle modal */}
               <button onClick={toggleSignUpModal}>Sign Up</button>
@@ -49,7 +52,11 @@ export default function Home() {
           <div className="card-content">
             <h2>02</h2>
             <h3>Login</h3>
-            <p>Your login card description here.</p>
+            <p>Welcome back to Student hub! Enter your credentials to 
+              reconnect with your personalized space. We've missed you! 
+              Securely log in to continue your experience where you left off. 
+              Not a member yet? Join us today and 
+              discover the benefits of being part of our growing community.</p>
             <div className="button">
               {/* Change button click event to toggle modal */}
               <button onClick={toggleLoginModal}>Login</button>
