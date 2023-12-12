@@ -1,0 +1,49 @@
+.forum-container {
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #681616;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .forum-post {
+    font-family: Arial, sans-serif;
+    color: #000000c2;
+  }
+
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.85); /* Darken the background */
+    z-index: 1000; /* Ensure it's above other content */
+  }
+  
+  .modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%; /* Adjust width here */
+    max-width: 900px; /* Maximum width */
+    height: auto; /* Adjust height to content */
+    background-color: #fff; /* Background color for the modal */
+    padding: 20px;
+    overflow-y: auto; /* Scroll if content is taller than the modal */
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Optional: add a shadow for better visual hierarchy */
+  }
+  
+  .modal-close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: none;
+    background: none;
+    font-size: 1.5rem;
+    color: #333; /* Button color */
+    cursor: pointer;
+  }
