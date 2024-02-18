@@ -3,6 +3,7 @@ export async function POST(req, res) {
   console.log("in the api page");
 
   // Get the values that were sent across to us.
+
   const { searchParams } = new URL(req.url);
   const poster = searchParams.get('poster');
   const title = searchParams.get('title');
@@ -15,16 +16,24 @@ export async function POST(req, res) {
   console.log(timestamp);
 
   // =================================================
+  // Connect to MongoDB and insert a document
   const { MongoClient } = require('mongodb');
+  // Connection URL
   const url = 'mongodb://root:example@localhost:27017/';
+  // Create a new MongoClient
   const client = new MongoClient(url);
-  const dbName = 'forums'; // database name
+  // database name
+  const dbName = 'forums'; 
 
   try {
+    // Use connect method to connect to the server
     await client.connect();
     console.log('Connected successfully to server');
+    // mongodb connection to the database
     const db = client.db(dbName);
+    // Get the collection
     const collection = db.collection('forumpost'); // collection name
+    // Insert a document
     const findResult = await collection.insertOne({
       "poster": poster,
       "title": title,
