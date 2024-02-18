@@ -26,8 +26,8 @@ export async function POST(req, res) {
     const collection = db.collection('register'); // collection name
 
 
-    
-    const findResult = await collection.insertOne({
+    // Insert the user into the database 
+    const findResult = await collection.insertOne({ 
       "username":username,
       "email":email,
       "pass": hashedPassword,
@@ -35,16 +35,17 @@ export async function POST(req, res) {
       "address":address,
     });
 
-    let valid = false;
-    if (findResult.insertedCount > 0) {
-          // save a little cookie to say we are authenticated
-    cookies().set('auth', true);
-    cookies().set('username', username)
+    let valid = false; // Default value for valid
+    if (findResult.insertedCount > 0) { // If the user was inserted successfully
+        // save a little cookie to say we are authenticated
+        cookies().set('auth', true); 
+        // Set the username cookie
+        cookies().set('username', username)
      
-      valid = true;
-      console.log('Registered valid');
-    } else {
-      valid = false;
+      valid = true; // Set valid to true
+      console.log('Registered valid'); // Log that the user was registered
+    } else {// If the user was not inserted successfully
+      valid = false; // Set valid to false
       console.log('Not Registered');
     }
 
