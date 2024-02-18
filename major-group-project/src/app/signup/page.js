@@ -3,7 +3,9 @@
 import React, { useState } from 'react';
 import '../css/signupform.css'; // Adjust the path to your CSS file
 import LoginModal from '../login/page';
+
 export default function SignUpModal({ toggleModal }) {
+  // Function to generate an array of numbers in a range
 const range = (start, end) => Array.from({ length: end - start + 1 }, (_, i) => start + i);
 const [errorMessage, setErrorMessage] = useState('');
 const [passwordError, setPasswordError] = useState(''); // Separate state for password error
@@ -55,20 +57,20 @@ const [passwordError, setPasswordError] = useState(''); // Separate state for pa
         const month = data.get('dobMonth');
         const day = data.get('dobDay');
         const year = data.get('dobYear');
-        
+        // Format the date of birth  data  before sending it to the server as a string as YYYY-MM-DD
         const dob = `${year.padStart(2, '0')}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-
-         // Pseudo-code for checking if the user already exists
  
-        
+        // Check if the passwords match
         if (pass !== repeatPass) {
           setPasswordError("Passwords do not match."); // Set the error message
           return;
+          // Check if the password is at least 8 characters long
         } else if(!username || !email || !pass || !address || !dob){
           setErrorMessage("Please fill in the form"); // Set the error message
         }
    
           else{
+            // Run the DB call asynchronously
           runDBCallAsync(`http://localhost:3000/api/register?&username=${username}&email=${email}&pass=${pass}&address=${address}&dob=${dob}`);
             window.location.href = '/'; // Redirect to dashboard
         };
