@@ -3,38 +3,31 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import '../css/dashboard.css';
 import Layout from '../Components/Layout';
+import Header from '../Components/Header'; // Import the Header component
 
 export default function Dashboard() {
-    const router = useRouter(); // Get the Next.js router
+    const router = useRouter();
     const [username, setUsername] = useState('');
-    const [showDropdown, setShowDropdown] = useState(false);
     const [searchResults, setSearchResults] = useState([]);
     const [searchParam, setSearchParam] = useState('');
 
     useEffect(() => {
-        const fetchSearchResults = async () => {
-            try {
-                const searchTerm = router.query?.search; // Use optional chaining here
-                console.log('Search Term:', searchTerm);
-                if (searchTerm) {
-                    const response = await fetch(`/api/getSearch?searchParam=${encodeURIComponent(searchTerm)}`);
-                    if (response.ok) {
-                        const data = await response.json();
-                        setSearchResults(data);
-                    } else {
-                        console.error('Failed to fetch search results');
-                    }
-                }
-            } catch (error) {
-                console.error('Error fetching search results:', error);
-            }
+        const getUsernameFromCookies = () => {
+            const allCookies = document.cookie.split('; ');
+            const usernameCookie = allCookies.find(cookie => cookie.startsWith('username='));
+            return usernameCookie ? decodeURIComponent(usernameCookie.split('=')[1]) : '';
         };
-
-        fetchSearchResults();
-    }, [router.query?.search]); // Use optional chaining here
+        const username = getUsernameFromCookies();
+        setUsername(username);
+        if (!username) {
+            router.replace('/login');
+        }
+    }, [router]);
 
     return (
         <Layout>
+            {/* Pass setSearchResults function as a prop */}
+            <Header setSearchResults={setSearchResults} />
             <div className="main-container">
                 <div className="dashboard-container">
                     <section className="main-content">
@@ -45,14 +38,14 @@ export default function Dashboard() {
                         <div className="central-content">
                             <h2>Search Results</h2>
                             <ul>
-                            {searchResults.map((result) => (
-                                <li key={result._id}>
-                                    <h3>{result.title}</h3>
-                                    <p>{result.content}</p>
-                                    <small>Posted by: {result.poster} on {result.timestamp}</small>
-                                </li>
-                            ))}
-                        </ul>
+                                {searchResults && searchResults.map((result, i) => (
+                                    <li key={result._id}>
+                                        <h3>{result.title}</h3>
+                                        <p>{result.content}</p>
+                                        <small>Posted by: {result.poster} on {result.timestamp}</small>
+                                    </li>
+                                ))}
+                            </ul>
                             <div className="forum-box">
                                 <h2>Forums</h2>
                                 <button className="view-posts-button">View Posts</button>
