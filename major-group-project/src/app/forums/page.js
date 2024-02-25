@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Button, Box, TextField } from "@mui/material";
 import Layout from '../Components/Layout';
 import Link from 'next/link'; 
+import Header from '../Components/Header';
 
 const Home = () => {
   const router = useRouter(); // Initialize the router object
@@ -130,7 +131,8 @@ const Home = () => {
 
   return (
     <Layout>
-      <div>
+      <Header />
+      <div className='container'>
         <center><h1>Forum Posts</h1></center>
         <button onClick={() => window.location.href = '/createPost'}>Create Post</button>
         <Link href="/createPost">Create Post</Link>
