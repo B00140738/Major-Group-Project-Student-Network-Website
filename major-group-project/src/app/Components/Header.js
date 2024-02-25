@@ -6,13 +6,25 @@ import Link from 'next/link'; // Import Link from next/link
 import '../css/header.css';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SvgIcon from '@mui/material/SvgIcon';
+import SearchIcon from '@mui/icons-material/Search';
+import HomeIcon from '@mui/icons-material/Home';
+import SettingsIcon from '@mui/icons-material/Settings';
 
-export default function Header({ setSearchResults }) {
+const Header = ({ setSearchResults }) => {
   const [username, setUsername] = useState('');
   const [showSettingsDropdown, setShowSettingsDropdown] = useState(false);
   const [notificationCount, setNotificationCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
+  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
+  const [profileImageData, setProfileImageData] = useState('../public/images/homepage.png');
+
+  const handleSearchChange = (e) => {
+      setSearchQuery(e.target.value);
+      if (e.target.value === '') {
+          setIsSearchExpanded(false);
+      }
+  };
 
   useEffect(() => {
       const getUsernameFromCookies = () => {
@@ -26,13 +38,31 @@ export default function Header({ setSearchResults }) {
           router.replace('/login');
       }
   }, [router]);
-
+/*
+  useEffect(() => {
+      const fetchNotificationCount = async () => {
+          try {
+              const response = await fetch('/api/notification');
+              if (!response.ok) {
+                  throw new Error('Failed to fetch notifications');
+              }
+              const { count } = await response.json();
+              setNotificationCount(count);
+          } catch (error) {
+              console.error('Error fetching notification count:', error);
+          }
+      };
+      fetchNotificationCount();
+  }, []);
+*/
+  // Function to toggle the dropdown menu
   const toggleSettingsDropdown = () => {
-      setShowSettingsDropdown(!showSettingsDropdown);
-  };
+    setShowSettingsDropdown(prevState => !prevState);
+};
+
 
   const handleLogout = () => {
-      document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie = 'username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
       if (router) {
           router.push('/');
       }
@@ -43,11 +73,11 @@ export default function Header({ setSearchResults }) {
       try {
           const response = await fetch(`/api/getSearch?search=${encodeURIComponent(searchQuery)}`);
           if (!response.ok) {
-              console.error("Failed to fetch search results");
+              console.error('Failed to fetch search results');
               return;
           }
           const data = await response.json();
-          setSearchResults(data); // Update the search results in the parent component
+          setSearchResults(data);
       } catch (error) {
           console.error('Error searching:', error);
       }
@@ -56,35 +86,59 @@ export default function Header({ setSearchResults }) {
   return (
       <div className="side-bar-header">
           <div className="profile-section">
-              <div className="profile-image"></div>
+              <div className="profile-image"
+                  style={{ backgroundImage: `url(${profileImageData})` }}
+              >
+                  {!profileImageData && <div>Your placeholder or icon here</div>}
+              </div>
+       
+              <input
+                  id="profile-image-upload"
+                  type="file"
+                  accept="image/*"
+                  style={{ display: 'none' }}
+              />
               <div className="username-display">{username}</div>
-              <div className="notification-icon">
-                  {notificationCount > 0 && (
-                      <div className="notification-count">{notificationCount}</div>
-                  )}
-                  <span className="material-icons">notifications</span>
+              <div className="notification-icon" onClick={() => router.push('/notification')}>
+              {notificationCount > 0 && (
+    <div className="notification-count">{notificationCount}</div>
+)}
                   <SvgIcon component={NotificationsIcon} />
               </div>
-              <div className="search-bar">
+              <div className={`search-bar ${isSearchExpanded ? 'expanded' : ''}`}>
                   <input
                       type="text"
                       placeholder="Search"
                       value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onChange={handleSearchChange}
+                      onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                      onFocus={() => setIsSearchExpanded(true)}
+                      onBlur={() => !searchQuery && setIsSearchExpanded(false)}
+                      className="search-input"
                   />
-                  <button className="search-button" onClick={handleSearch}>Search</button>
+                  <SvgIcon component={SearchIcon} className="search-icon" onClick={handleSearch}/>
               </div>
-              <Link href="/dashboard" className="menu-item">Dashboard</Link>
-              <div className="menu-item" onClick={toggleSettingsDropdown}>
-                  Settings {showSettingsDropdown ? '▲' : '▼'}
-              </div>
-              {showSettingsDropdown && (
-                  <div className="dropdown-menu">
-                      <Link href="/settings" className="dropdown-item">Edit Profile</Link>
-                  </div>
-              )}
+              <Link href="/dashboard" className="menu-item">
+                  <SvgIcon component={HomeIcon} />
+                  Dashboard
+              </Link>
+              
+                <div className="menu-item" onClick={toggleSettingsDropdown}>
+                    <SvgIcon component={SettingsIcon} />
+                    Settings {showSettingsDropdown ? '▲' : '▼'}
+                </div>
+                {showSettingsDropdown && (
+        <div className="dropdown-menu">
+          <Link href="/edit-settings" legacyBehavior>
+            <a className="dropdown-item">Edit Settings</a>
+          </Link>
+          {/* You can add more dropdown items here */}
+        </div>
+      )}
               <div className="menu-item" onClick={handleLogout}>Log out @{username}</div>
           </div>
       </div>
   );
 };
+
+export default Header;

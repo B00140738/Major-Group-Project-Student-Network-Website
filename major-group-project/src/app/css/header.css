@@ -1,96 +1,184 @@
-/* header.css */
 .side-bar-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 200px;
-    background-color: #34495E;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    box-sizing: border-box;
-    z-index: 1000;
-    padding: 20px;
-  }
-  
-  .profile-section {
-    width: 100%;
-    margin-bottom: 20px;
-    
-  }
-  
-  .profile-image {
-    background-color: #2C3E50; /* Placeholder for the profile image */
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    margin-bottom: 20px;
-  }
-  
-  .search-bar {
-    width: 100%;
-    margin-bottom: 20px;
-  }
-  
-  .search-bar input {
-    width: calc(100% - 40px);
-    padding: 10px;
-    border-radius: 5px;
-  }
-  
-  .search-button {
-    padding: 10px;
-    background-color: #2ECC71; /* Green button */
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .menu-item {
-    width: 100%;
-    padding: 10px 0;
-    text-align: center;
-    cursor: pointer;
-    position: relative;
-  }
-  
-  .menu-item:not(:last-child) {
-    margin-bottom: 10px;
-  }
-  
-  .menu-item:hover {
-    background-color: #2C3E50;
-  }
-  
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 250px; /* Wider sidebar */
+  background-color: #111827; /* Dark background color */
+  color: #9CA3AF; /* Gray text color for items */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align items to the left */
+  padding: 20px;
+  box-sizing: border-box;
+  z-index: 1000;
+}
 
+
+.search-bar.expanded .search-input {
+  padding: 8px 10px 8px 35px; /* Left padding for icon when expanded */
+  width: 170px; /* Width when expanded */
+}
+
+.search-input:focus {
+  width: 100%; /* Full width on focus */
+  padding-left: 35px; /* Increase padding to make space for the icon */
+}
+
+
+.search-bar {
+  position: relative;
+  width: 50px; /* Set the initial width of the search bar */
+  transition: width 0.3s ease-out; /* Transition for expanding and contracting */
+}
+
+
+.search-input {
+  width: 100%;
+  padding: 8px 10px 8px 30px;
+  border: none;
+  background-color: #1F2937;
+  color: #D1D5DB;
+  border-radius: 20px;
+  transition: all 0.3s ease-out;
+}
+
+.search-input:focus {
+  width: 100%; /* Full width on focus */
+  padding-left: 35px; /* Increase padding to make space for the icon */
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  color: #9CA3AF;
+}
+
+/* Adjust the profile image to align left */
+.profile-image {
+  width: 50px; /* Smaller profile image */
+  height: 50px;
+  border-radius: 50%;
+  margin-bottom: 20px;
+  margin-left: 10px; /* Align to the left */
+  background-color: #1F2937; /* Slightly lighter than sidebar background for contrast */
+}
+
+/* Adjust the menu item to include both icon and text */
+.menu-item {
+  width: 100%;
+  padding: 10px 10px 10px 20px; /* Add left padding for icon and text alignment */
+  display: flex; /* Use flexbox to layout icon and text */
+  align-items: center; /* Align icon and text vertically */
+  text-align: left; /* Align text to the left */
+  font-size: 16px;
+  color: #D1D5DB; /* Text color */
+  cursor: pointer;
+}
+
+/* Add styles for the icons */
+.menu-item svg {
+  width: 20px; /* Smaller icon size */
+  height: 20px;
+  margin-right: 10px; /* Space between icon and text */
+  fill: currentColor; /* Icon color */
+}
+
+.menu-item:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.menu-item:hover {
+  background-color: #374151; /* Slightly lighter background on hover */
+  color: #FFFFFF; /* White text color on hover */
+}
+
+/* Active menu item styles */
+.menu-item.active {
+  background-color: #2563EB; /* Blue background for active item */
+  color: #FFFFFF; /* White text color for active item */
+}
+
+.logo-title {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 20px;
+  margin-bottom: 20px; 
+  border-bottom: 1px solid #374151; 
+  }
+  
+  .logo-title svg {
+  width: 30px; 
+  height: 30px;
+  fill: #10B981;
+
+  }
+  
+  .logo-title span {
+  color: #D1D5DB; 
+  font-size: 20px; 
+  font-weight: bold;
+  margin-left: 10px; 
+  }
+  
+  
+  .bottom-section {
+  margin-top: auto; 
+  width: 100%;
+  padding: 10px 0;
+  }
+  
+  .bottom-section a {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  color: #D1D5DB;
+  text-decoration: none; /* Remove underline from links */
+  }
+  
+  .bottom-section a:hover {
+  background-color: #374151;
+  color: #FFFFFF;
+  }
+  
+  
   .dropdown-menu {
     position: absolute;
-    background-color: #333;
-    border-radius: 4px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-    width: 100%; /* Match the width of the sidebar header */
-    z-index: 1001; /* Ensure the dropdown appears above other content */
-  
     left: 0;
-}
+    top: 100%; /* Position the dropdown right below the settings icon */
+    min-width: 150px;
+    background-color: #1F2937;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    z-index: 1001;
+    margin-top: 5px; /* Add a little space between the icon and the dropdown */
+    padding: 5px 0; /* Add padding inside the dropdown for spacing */
+  }
+  
+  
+  .dropdown-menu.active {
+  display: block; /* Show when active */
+  }
   
   .dropdown-item {
     padding: 12px 20px;
-    color: white;
-    font-size: 16px;
-    border-bottom: 1px solid #923838cb;
-    cursor: pointer;
-    
+    color: #9CA3AF;
+    text-align: left;
+    display: block; /* Ensure dropdown items are block level for full width */
+    cursor: pointer; /* Change cursor to pointer to indicate clickable items */
   }
   
-
   
-  .dropdown-item:last-child {
-    border-bottom: none;
+  .dropdown-item svg {
+  width: 16px;
+  height: 16px;
+  margin-right: 10px;
   }
   
   .dropdown-item:hover {
-    background-color: #444;
+    background-color: #374151;
+    color: #FFFFFF;
   }
