@@ -18,11 +18,15 @@ const getPostById = async (_id) => {
 };
 
 const getCommentsByPostId = async (_id) => {
+ 
   try {
+     // Fetch comments from the API
     const response = await fetch(`http://localhost:3000/api/getCommentsByPostId?_id=${_id}`);
+    // If the response is not OK, throw an error
     if (!response.ok) {
       throw new Error('Failed to fetch comments');
     }
+    // Otherwise, extract the comments from the response
     const comments = await response.json();
     return comments;
   } catch (error) {
@@ -30,8 +34,9 @@ const getCommentsByPostId = async (_id) => {
     return [];
   }
 };
-
+// Compare this snippet from major-group-project/src/app/posts/%5B_id%5D.js:
 const Post = ({ post, comments }) => {
+  // If there is no post, return a loading indicator
   if (!post) return <div>Post not found</div>;
 
   return (
@@ -52,7 +57,6 @@ const Post = ({ post, comments }) => {
     </div>
   );
 };
-
 const PostPage = () => {
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);

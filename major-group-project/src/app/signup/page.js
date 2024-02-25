@@ -54,6 +54,7 @@ const [passwordError, setPasswordError] = useState(''); // Separate state for pa
         let pass = data.get('pass');
         let address = data.get('address');
         let repeatPass = data.get('repeatPass');
+        let studentyear = data.get('year');
         const month = data.get('dobMonth');
         const day = data.get('dobDay');
         const year = data.get('dobYear');
@@ -65,13 +66,13 @@ const [passwordError, setPasswordError] = useState(''); // Separate state for pa
           setPasswordError("Passwords do not match."); // Set the error message
           return;
           // Check if the password is at least 8 characters long
-        } else if(!username || !email || !pass || !address || !dob){
+        } else if(!username || !email || !pass || !address || !dob || !studentyear){
           setErrorMessage("Please fill in the form"); // Set the error message
         }
    
           else{
             // Run the DB call asynchronously
-          runDBCallAsync(`http://localhost:3000/api/register?&username=${username}&email=${email}&pass=${pass}&address=${address}&dob=${dob}`);
+          runDBCallAsync(`http://localhost:3000/api/register?&username=${username}&email=${email}&pass=${pass}&address=${address}&dob=${dob}&year=${studentyear}`);
             window.location.href = '/'; // Redirect to dashboard
         };
       
@@ -134,10 +135,13 @@ const [passwordError, setPasswordError] = useState(''); // Separate state for pa
             <input type="text" name="address" id="address" className="inputField" required/>
           </label>
           <br />
+          <label>
+            Year:
+            <input type="text" name="year" id="year" className="inputField" required/>
+          </label>
           <button type="submit">Register</button>
         </form>
       </div>
     </div>
   );
 };
-

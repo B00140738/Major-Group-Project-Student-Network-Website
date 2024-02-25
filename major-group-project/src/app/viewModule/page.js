@@ -7,7 +7,7 @@ import { Button, Box, TextField } from "@mui/material";
 import Layout from '../Components/Layout';
 import Link from 'next/link'; 
 
-const Home = () => {
+const viewModule = () => {
   const router = useRouter(); // Initialize the router object
   const [data, setData] = useState([]);
   const [comments, setComments] = useState([]);
@@ -131,7 +131,7 @@ const Home = () => {
   return (
     <Layout>
       <div>
-        <center><h1>Forum Posts</h1></center>
+        <center><h1>Module Posts</h1></center>
         <button onClick={() => window.location.href = '/createPost'}>Create Post</button>
         <Link href="/createPost">Create Post</Link>
         
@@ -140,9 +140,12 @@ const Home = () => {
             <p>No posts available.</p>
           </div>
         ) : (
-          data.map((item, i) => (
+          data
+          .filter((item) => moduleId === item.module_id)
+          .map((item, i) => (
             <div className='forum-container' key={i}>
               <p>Posted By: {item.poster}</p>
+              
               <h2>{item.title}</h2>
               <p>{item.content}</p>
               <button onClick={() => handleViewPost(item)}>
@@ -192,4 +195,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default viewModule;
