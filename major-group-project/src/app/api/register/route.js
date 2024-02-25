@@ -9,6 +9,7 @@ export async function POST(req, res) {
     const pass = searchParams.get('pass');
     const dob = searchParams.get('dob');
     const address = searchParams.get('address');
+    const studentyear = searchParams.get('year');
 
    // Hash the password before storing it
    const saltRounds = 10; // You can change the number of salt rounds as needed
@@ -26,26 +27,26 @@ export async function POST(req, res) {
     const collection = db.collection('register'); // collection name
 
 
-    // Insert the user into the database 
-    const findResult = await collection.insertOne({ 
+
+    const findResult = await collection.insertOne({
       "username":username,
       "email":email,
       "pass": hashedPassword,
       "dob":dob,
       "address":address,
+      "year":studentyear,
     });
 
-    let valid = false; // Default value for valid
-    if (findResult.insertedCount > 0) { // If the user was inserted successfully
-        // save a little cookie to say we are authenticated
-        cookies().set('auth', true); 
-        // Set the username cookie
-        cookies().set('username', username)
-     
-      valid = true; // Set valid to true
-      console.log('Registered valid'); // Log that the user was registered
-    } else {// If the user was not inserted successfully
-      valid = false; // Set valid to false
+    let valid = false;
+    if (findResult.insertedCount > 0) {
+          // save a little cookie to say we are authenticated
+    cookies().set('auth', true);
+    cookies().set('username', username)
+
+      valid = true;
+      console.log('Registered valid');
+    } else {
+      valid = false;
       console.log('Not Registered');
     }
 
