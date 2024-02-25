@@ -40,6 +40,18 @@ export async function POST(req, res) {
       "content": content,
       "timestamp": timestamp
     });
+
+// Update notification status for users
+const users = await db.collection('register').find({}).toArray();
+users.forEach(async user => {
+  await db.collection('notifications').updateOne(
+    { username: user.username },
+    { $inc: { count: 1 } }, // Increment notification count
+    { upsert: true }
+  );
+});
+
+
     let valid = true;
     
     // at the end of the process we need to send something back.
