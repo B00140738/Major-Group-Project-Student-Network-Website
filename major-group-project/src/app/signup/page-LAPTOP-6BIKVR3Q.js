@@ -74,10 +74,10 @@ const [passwordError, setPasswordError] = useState(''); // Separate state for pa
             // Run the DB call asynchronously
           runDBCallAsync(`http://localhost:3000/api/register?&username=${username}&email=${email}&pass=${pass}&address=${address}&dob=${dob}&year=${studentyear}`);
             window.location.href = '/'; // Redirect to dashboard
-              
-          };
-      };
+        };
       
+       
+      };
   return (
     <div className="modal-background">
       <div className="modal-container">

@@ -1,4 +1,4 @@
-// pages/settings.js
+
 "use client"
 import React, { useState, useEffect } from 'react';
 import Layout from '../Components/Layout';
@@ -11,83 +11,270 @@ export default function SettingsPage() {
   const [newUsername, setNewUsername] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [isEditing, setIsEditing] = useState(false);
-  const [currentUser, setCurrentUser] = useState({});
+  const [userId, setUserId] = useState(null);
+  const [email, setEmail] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [address, setAddress] = useState('');
+  const [year, setYear] = useState('');
 
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+  
+  const handleCurrentPasswordChange = (e) => {
+    setCurrentPassword(e.target.value);
+  };
+  
+  const handleNewPasswordChange = (e) => {
+    setNewPassword(e.target.value);
+  };
+  
+  const handleConfirmPasswordChange = (e) => {
+    setConfirmPassword(e.target.value);
+  };
+  
+  const handleDeleteAccount = () => {
+    // Add logic to handle account deletion
+    console.log('Account deletion requested');
+  };
+  
   useEffect(() => {
+    // Fetch the current username and userId from cookies
     const username = getUsernameFromCookies();
+    const userId = getUserIdFromCookies();
     setCurrentUsername(username);
-    if (!username) {
+    setUserId(userId);
+    if (!username || !userId) {
       router.replace('/login');
     }
-  }, []);
+  }, [router]);
 
   const getUsernameFromCookies = () => {
-    if (typeof document !== 'undefined') {
-      const allCookies = document.cookie.split('; ');
-      const usernameCookie = allCookies.find(cookie => cookie.startsWith('username='));
-      return usernameCookie ? decodeURIComponent(usernameCookie.split('=')[1]) : '';
-    }
-    return ''; // Return empty string if document is not defined (e.g., during server-side rendering)
+    const allCookies = document.cookie.split('; ');
+    const usernameCookie = allCookies.find(cookie => cookie.startsWith('username='));
+    return usernameCookie ? decodeURIComponent(usernameCookie.split('=')[1]) : '';
   };
 
+  const getUserIdFromCookies = () => {
+    const allCookies = document.cookie.split('; ');
+    const userIdCookie = allCookies.find(cookie => cookie.startsWith('userId='));
+    return userIdCookie ? decodeURIComponent(userIdCookie.split('=')[1]) : null;
+  };
+
+  
   const handleEditClick = () => {
     setIsEditing(true);
     setNewUsername(currentUsername);
   };
 
-  const handleSaveClick = async () => {
-    console.log('Sending request with newUsername:', newUsername);
+  const handleSaveClick = async (event) => {
+    event.preventDefault();
+    if (!userId) {
+      setErrorMessage('User ID not found. Please log in again.');
+      return;
+    }
+  
     try {
-      const response = await fetch('/api/updateUser', {
-        method: 'PUT',
+      const updateResponse = await fetch(`/api/updateUser`, {
+        method: 'PATCH',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json', // Specify content type as JSON
         },
-        body: JSON.stringify({ newUsername: newUsername }), // Pass newUsername in the request body
+        body: JSON.stringify({ // Stringify the request body to JSON format
+          userId: userId,
+          newUsername: newUsername !== '' ? newUsername : currentUsername, // Use newUsername if it's not empty, otherwise use currentUsername
+          email: email,
+          address: address,
+          year: year,
+        }),
       });
-      if (!response.ok) {
-        throw new Error('Failed to update username');
+  
+      if (!updateResponse.ok) {
+        throw new Error('Failed to update user information');
       }
+  
+      const responseData = await updateResponse.json();
+      console.log('User information updated successfully', responseData);
+  
+      document.cookie = `username=${newUsername}; path=/`;
+      
+      // Update the currentUsername state with the new value
       setCurrentUsername(newUsername);
-      setNewUsername(newUsername);
-      setIsEditing(false);
+      setIsEditing(false)
+      // Optionally, you can display a success message or perform other actions here
     } catch (error) {
-      console.error('Error updating username:', error);
-      setErrorMessage('Failed to update username');
+      console.error('Error updating user information:', error);
+      setErrorMessage('Error updating user information');
     }
   };
 
-  const handleCancelEdit = () => {
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const userId = getUserIdFromCookies();
+      if (!userId) {
+        console.log("User ID not found.");
+        return;
+      }
+    
+      try {
+        const res = await fetch(`/api/getUserInfo?userId=${userId}`);
+    
+        if (!res.ok) {
+          throw new Error("Failed to fetch user information");
+        }
+    
+        const { user } = await res.json();
+        if (user && user.length > 0) {
+          const userInfo = user[0]; // Assuming the result is an array with a single user object
+        
+  
+          // Update state with fetched data, excluding dob and password
+
+          setCurrentUsername(userInfo.username);
+          setEmail(userInfo.email);
+          setAddress(userInfo.address); // Example additional fields
+          setYear(userInfo.year); // Adjust according to your data structure
+        
+        }
+      } catch (error) {
+        console.error("Error fetching user information:", error);
+      }
+    };
+  
+    fetchUserInfo();
+  }, []);
+
+  const handlePasswordChange = async () => {
+    // Validate password inputs
+    if (newPassword !== confirmPassword) {
+      setErrorMessage("Passwords do not match");
+      return;
+    }
+  
+    // Implement the API request to change the password
+    try {
+      // Add your API request logic here
+      console.log("Password change request sent");
+    } catch (error) {
+      console.error("Error changing password:", error);
+      setErrorMessage("Failed to change password");
+    }
+  };
+
+  const handleCancelClick = () => {
     setIsEditing(false);
-    setNewUsername('');
+    // Reset the edited fields to their original values
+    setNewUsername(currentUsername);
+    setEmail(email); // Use the state variable instead of userInfo.email
+    setAddress(address); // Use the state variable instead of userInfo.address
+    setYear(year); // Use the state variable instead of userInfo.year
+    // If you have error messages, you might want to clear them too
     setErrorMessage('');
   };
 
-  return (
-    <Layout>
-      <div className="settings-container">
-        <h1>Account Settings</h1>
+
+    return (
+
+ <Layout>
+    <div className="settings-container">
+      <h1>Account Settings</h1>
+      <div>
+        <strong>Profile Information</strong>
         <div>
-          <p>
-            <strong>Current Username:</strong> {currentUsername}
-          </p>
-          {isEditing ? (
-            <div>
-              <input
-                type="text"
-                value={newUsername}
-                onChange={(e) => setNewUsername(e.target.value)}
-                required
-              />
-              <button onClick={handleSaveClick}>Save</button>
-              <button onClick={handleCancelEdit}>Cancel</button>
-            </div>
-          ) : (
-            <button onClick={handleEditClick}>Edit Username</button>
-          )}
+          <input
+          className={isEditing ? 'input-enabled' : 'input-disabled'}
+            id="username"
+            type="text"
+            value={isEditing ? newUsername : currentUsername}
+            onChange={(e) => setNewUsername(e.target.value)}
+            disabled={!isEditing}
+            style={{ backgroundColor: isEditing ? 'white' : 'lightgray' }}
+            required
+        />
+
+          <label>Email:</label>
+          <input
+              className={isEditing ? 'input-enabled' : 'input-disabled'}
+              id='email'
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              disabled={!isEditing}
+              style={{ backgroundColor: isEditing ? 'white' : 'lightgray' }}
+              required
+            />
+          <label>Address:</label>
+            <input
+              className={isEditing ? 'input-enabled' : 'input-disabled'}
+              id='address'
+              type="text"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              disabled={!isEditing}
+              style={{ backgroundColor: isEditing ? 'white' : 'lightgray' }}
+              required
+            />
+          <label>Year:</label>
+            <input
+              className={isEditing ? 'input-enabled' : 'input-disabled'}
+              id='year'
+              type="text"
+              value={year}
+              onChange={(e) => setYear(e.target.value)}
+              disabled={!isEditing}
+              style={{ backgroundColor: isEditing ? 'white' : 'lightgray' }}
+              required
+            />
+              <div>
+                <button onClick={handleSaveClick}>Save Profile Information</button>
+                <button
+                  onClick={isEditing ? handleCancelClick : handleEditClick}
+                  className={isEditing ? 'cancel-button' : 'edit-button'}
+                >
+                  {isEditing ? 'Cancel' : 'Edit Profile Information'}
+                </button>
+              </div>
+          </div>
+
+        <strong>Update Password</strong>
+        
+        <div>
+          <label>Current Password:</label>
+          <input
+          id='currentPassword'
+            type="password"
+            placeholder="Current Password"
+            onChange={handleCurrentPasswordChange}
+            required
+          />
+          <label>New Password:</label>
+          <input
+          id='newPassword'
+            type="password"
+            placeholder="New Password"
+            onChange={handleNewPasswordChange}
+            required
+          />
+          <label>Confirm New Password:</label>
+          <input
+          id='confirmPassword'
+            type="password"
+            placeholder="Confirm Password"
+            onChange={handleConfirmPasswordChange}
+            required
+          />
+          <button onClick={handlePasswordChange}>Save New Password</button>
         </div>
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
+
+        <strong>Delete Account</strong>
+        <div>
+          <button className="delete-button" onClick={handleDeleteAccount}>Delete Account</button>
+        </div>
       </div>
-    </Layout>
-  );
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
+    </div>
+  </Layout>
+);
 }

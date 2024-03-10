@@ -1,42 +1,43 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
+import { NextResponse } from "next/server";
 
-export async function PUT(req, res) {
-  const { searchParams } = new URL(req.url);
-  const newUsername = searchParams.get('newUsername');
-  const currentUsername = req.cookies.username;
+    const url = 'mongodb://root:example@localhost:27017/';
+    const client = new MongoClient(url);
 
-  console.log('Updating username:', currentUsername, 'to', newUsername);
+    const dbName = 'forums';
 
-  const url = 'mongodb://root:example@localhost:27017/';
-  const dbName = 'register';
-
-  const client = new MongoClient(url);
+// To handle a PATCH request to /api
+export async function PATCH(request) {
   try {
+    const requestBody = await request.json(); // Parse the request body as JSON
+    const { userId, newUsername, email, address, year } = requestBody; // Access parsed JSON data
+    
+    console.log('Received request body:', requestBody); // Add this line to check the parsed body
+
     await client.connect();
-    const db = client.db(dbName);
-    const collection = db.collection('register');
+    const database = client.db(dbName);
+    const usersCollection = database.collection('register');
 
-    const user = await collection.findOne({ username: currentUsername });
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    const result = await collection.updateOne(
-      { _id: user._id },
-      { $set: { username: newUsername } }
+    const updateResult = await usersCollection.updateOne(
+      { _id: new ObjectId(userId) }, // Filter by user ID
+      { $set: { username: newUsername, email: email, address: address, year: year } } // Update fields
     );
 
-    if (!result.modifiedCount) {
-      return res.status(404).json({ message: 'Username not updated' });
+    // Check if the update was successful
+    let valid = false;
+    if (updateResult.modifiedCount > 0) {
+      valid = true;
+      console.log('User information updated successfully', updateResult);
+      return NextResponse.json('User information updated successfully'); // Sending response back
+    } else {
+      console.log('Failed to update user information');
     }
 
-    res.status(200).json({ message: 'Username updated successfully' });
+    return NextResponse.json({ valid:  'User information updated successfully'}); // Sending response back
   } catch (error) {
-    console.error('Error updating username:', error);
-    res.status(500).json({ message: 'Failed to update username' });
+    console.error('Error updating user information:', error);
+    return NextResponse.error({ status: 500, body: 'Internal Server Error' });
   } finally {
     await client.close();
   }
 }
-
-

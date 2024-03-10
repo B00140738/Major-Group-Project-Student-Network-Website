@@ -1,29 +1,24 @@
-export async function GET(req, res) {
-    const { MongoClient } = require('mongodb');
+// Assuming this is in a file located at app/api/notifications/route.js (Next.js 13.x new folder structure)
+import { MongoClient, ObjectId } from 'mongodb';
+import { NextResponse } from "next/server";
+
+export async function GET(req) {
     const url = 'mongodb://root:example@localhost:27017/';
-    const dbName = 'forums'; 
-  
+    const client = new MongoClient(url);
+    const dbName = 'forums';
+    const searchParams = new URL(req.url).searchParams;
+    const username = searchParams.get('username'); // Assuming username is unique
+
     try {
-        const client = new MongoClient(url);
         await client.connect();
-        console.log('Connected successfully to server');
-  
         const db = client.db(dbName);
-        const users = await db.collection('register').find({}).toArray();
-  
-        users.forEach(async user => {
-            await db.collection('notifications').updateOne(
-                { username: user.username },
-                { $inc: { count: 1 } },
-                { upsert: true }
-            );
-        });
-  
-        console.log('Notification status updated for all users.');
-  
-        res.json({ success: true });
+        const notification = await db.collection('notifications').findOne({ username });
+
+        return NextResponse.json({ count: notification ? notification.count : 0 });
     } catch (error) {
-        console.error('Error updating notification status:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    } 
+        console.error('Error fetching notification count:', error);
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    } finally {
+        await client.close();
+    }
 }

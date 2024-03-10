@@ -38,24 +38,61 @@ const Header = ({ setSearchResults }) => {
           router.replace('/login');
       }
   }, [router]);
-/*
+
+  const checkForUsernameUpdate = () => {
+    const usernameUpdatedTime = getCookie('usernameUpdated');
+    if (usernameUpdatedTime && Number(usernameUpdatedTime) > (window.lastUsernameCheck || 0)) {
+      setUsername(getCookie('username'));
+    }
+    window.lastUsernameCheck = Number(usernameUpdatedTime);
+  };
+  
   useEffect(() => {
-      const fetchNotificationCount = async () => {
-          try {
-              const response = await fetch('/api/notification');
-              if (!response.ok) {
-                  throw new Error('Failed to fetch notifications');
-              }
-              const { count } = await response.json();
-              setNotificationCount(count);
-          } catch (error) {
-              console.error('Error fetching notification count:', error);
-          }
-      };
-      fetchNotificationCount();
+    const intervalId = setInterval(checkForUsernameUpdate, 1000); // Check every second
+  
+    return () => {
+      clearInterval(intervalId);
+    };
   }, []);
-*/
-  // Function to toggle the dropdown menu
+  
+  const getCookie = (name) => {
+    const cookieArr = document.cookie.split(';');
+    for (let i = 0; i < cookieArr.length; i++) {
+      const cookiePair = cookieArr[i].split('=');
+      if (name === cookiePair[0].trim()) {
+        return decodeURIComponent(cookiePair[1]);
+      }
+    }
+    return null;
+  };
+
+
+
+  const getUsernameFromCookies = () => {
+    const allCookies = document.cookie.split('; ');
+    const usernameCookie = allCookies.find(cookie => cookie.startsWith('username='));
+    return usernameCookie ? decodeURIComponent(usernameCookie.split('=')[1]) : '';
+  };
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+        const username = getUsernameFromCookies(); // Use the function you already have
+        try {
+            const response = await fetch(`/api/notifyUser?username=${username}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch notifications');
+            }
+            const data = await response.json();
+            setNotificationCount(data.count); // Update your state with the fetched count
+        } catch (error) {
+            console.error('Error fetching notifications:', error);
+        }
+    };
+    
+    fetchNotifications();
+}, []);
+
+
   const toggleSettingsDropdown = () => {
     setShowSettingsDropdown(prevState => !prevState);
 };
@@ -99,12 +136,11 @@ const Header = ({ setSearchResults }) => {
                   style={{ display: 'none' }}
               />
               <div className="username-display">{username}</div>
-              <div className="notification-icon" onClick={() => router.push('/notification')}>
-              {notificationCount > 0 && (
-    <div className="notification-count">{notificationCount}</div>
-)}
-                  <SvgIcon component={NotificationsIcon} />
-              </div>
+              <div className="notification-container">
+                <span className={`notification-count ${notificationCount > 0 ? 'has-notifications' : ''}`}>
+                    {notificationCount}
+                </span>
+            </div>
               <div className={`search-bar ${isSearchExpanded ? 'expanded' : ''}`}>
                   <input
                       type="text"
@@ -142,3 +178,4 @@ const Header = ({ setSearchResults }) => {
 };
 
 export default Header;
+

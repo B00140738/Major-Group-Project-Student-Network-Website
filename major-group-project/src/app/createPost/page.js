@@ -63,6 +63,7 @@ const createPost = () => {
   
       try {
         const response = await runDBCallAsync(`http://localhost:3000/api/createPost?poster=${poster}&title=${title}&content=${content}&timestamp=${timestamp}`);
+       console.log('response:', response);
         if (response.data === "true") {
           console.log("Post created successfully");
           window.location.href = '/forums'; // Redirect to dashboard

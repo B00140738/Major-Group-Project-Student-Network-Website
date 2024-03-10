@@ -182,3 +182,15 @@
     background-color: #374151;
     color: #FFFFFF;
   }
+
+  .notification-count {
+    padding: 5px;
+    border-radius: 50%;
+    background-color: #ddd; /* Default background */
+    color: black; /* Default text color */
+}
+
+.notification-count.has-notifications {
+    background-color: red; /* Red background for notifications */
+    color: white; /* White text color for visibility */
+}

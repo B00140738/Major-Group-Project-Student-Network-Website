@@ -41,6 +41,8 @@ export async function POST(req, res) {
       "timestamp": timestamp
     });
 
+    
+
 // Update notification status for users
 const users = await db.collection('register').find({}).toArray();
 users.forEach(async user => {

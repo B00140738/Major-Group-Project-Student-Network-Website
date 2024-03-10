@@ -18,6 +18,8 @@ const Home = () => {
   const [moduleId, setModuleId] = useState('');
 
   useEffect(() => {
+
+
     if (router.query && router.query.moduleId) {
       const { moduleId } = router.query;
       setModuleId(moduleId);
@@ -127,8 +129,6 @@ const Home = () => {
       console.error('Error creating post:', error);
     }
   };
-
-  
 
 
   return (

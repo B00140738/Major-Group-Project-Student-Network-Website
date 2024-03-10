@@ -1,5 +1,5 @@
 import { MongoClient, ObjectId } from 'mongodb';
-
+import { NextResponse } from "next/server";
 export async function POST(req, res) {
   // Make a note we are on the api. This goes to the console.
   console.log("in the api page");
@@ -34,13 +34,13 @@ export async function POST(req, res) {
       "postId": new ObjectId(postId)
     });
     if (!findResult) {
-      return res.status(400).json({ message: "Missing required fields" });
+      return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
     }
     
-    res.status(200).json({ message: "Comment added successfully", commentId: result.insertedId.toSt });
+    NextResponse.json({message: "Comment added successfully"}, { status: 500 });
   } catch (error) {
     console.error('Error:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    return NextResponse.json({ error: error.message }, { status: 500 });
   } finally {
     await client.close();
   }
