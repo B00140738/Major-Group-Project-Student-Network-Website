@@ -1,58 +1,47 @@
-"use client"; // Add this line to mark as a Client Component
+"use client";
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation'; // Changed from next/navigation to next/router
 import '../css/dashboard.css';
 import Layout from '../Components/Layout';
 import Header from '../Components/Header'; // Import the Header component
 
 export default function Notification() {
-    const [notifications, setNotifications] = useState([]);
+    const [notifications, setNotifications] = useState([]); // Changed from notification to notifications
     const router = useRouter();
-  
+    const [notificationCount, setNotificationCount] = useState(0);
     useEffect(() => {
-        const username = 'matt'; // Replace 'example' with the actual username
-        fetch(`/api/notifications?username=${username}`)
-            .then(res => {
-                if (!res.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return res.json();
-            })
-            .then(data => {
-                setNotifications(data);
-                console.log('Found documents =>', data);
-            })
-            .catch(error => {
-                console.error('Error fetching notifications:', error);
-            });
+        // Fetch notifications when the component mounts
+        fetchNotifications();
     }, []);
-    
-    const handleNotificationClick = (notificationId, moduleId) => {
-        fetch(`/api/notifications/markAsRead/${notificationId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-        .then(() => {
-            router.push(`/module/${moduleId}`);
-        })
-        .catch(error => {
-            console.error('Error marking notification as read:', error);
-        });
+
+    const fetchNotifications = async () => {
+        try {
+            const response = await fetch('http://localhost:3000/api/notification');
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Fetched notifications:', data.notifications); 
+                const fetchedNotifications = data.notifications || []; 
+                setNotifications(fetchedNotifications); 
+                setNotificationCount(data.count || 0);
+            } else {
+                console.error('Failed to fetch notifications');
+            }
+        } catch (error) {
+            console.error('Error fetching notifications:', error);
+        }
     };
 
     return (
         <Layout>
-            <Header />
+            <Header notificationCount={notificationCount}/>
             <div className="main-container">
                 <div className="dashboard-container">
                     <section className="main-content">
                         <h2>Notifications</h2>
                         <ul>
-                            {notifications.map((notification) => (
-                                <li key={notification._id} onClick={() => handleNotificationClick(notification._id, notification.moduleId)} className="notification-item">
-                                    {notification.message}
+                            {notifications.map((notification, index) => (
+                                <li key={index} className="notification-item">
+                                    <p>{notification.message}</p>
                                 </li>
                             ))}
                         </ul>
