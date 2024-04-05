@@ -1,3 +1,9 @@
+import sgMail from '@sendgrid/mail';
+import { NextResponse } from "next/server";
+
+const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
+sgMail.setApiKey(SENDGRID_API_KEY);
+
 export async function POST(req, res) {
   // Make a note we are on the api. This goes to the console.
   console.log("in the api page");
@@ -41,26 +47,45 @@ export async function POST(req, res) {
       "timestamp": timestamp
     });
 
-    
+   // Retrieve all users except the one who created the post
+   const users = await db.collection('register').find({ username: { $ne: poster } }).toArray();
 
-// Update notification status for users
-const users = await db.collection('register').find({}).toArray();
-users.forEach(async user => {
-  await db.collection('notifications').updateOne(
-    { username: user.username },
-    { $inc: { count: 1 } }, // Increment notification count
-    { upsert: true }
+    const notificationsCollection = db.collection('notifications');
+
+    const newPostNotification = {
+      message: `New post created by ${poster}`,
+      postId: findResult.insertedId.toString(), // Convert ObjectId to string
+      timestamp: new Date(),
+      createdBy: poster // This field will denote who created the post
+    };
+ // Loop through all users and push the notification
+ await Promise.all(
+  users.map(async user => {
+    if (user.notificationsEnabled) {
+  await notificationsCollection.updateOne(
+      { username: user.username },
+      { $push: { notifications: newPostNotification } },
+      { upsert: true }
   );
-});
-
+  // Send email notification
+  const msg = {
+      to: user.email, // Change to your recipient
+      from: 'bbetsunaidze@hotmail.com', // Change to your verified sender
+      subject: `New post created by ${poster}`,
+      text: `A new post titled "${title}" has been created. Check it out!`,
+      html: `<strong>A new post titled "${title}" has been created. Check it out!</strong>`,
+  };
+  await sgMail.send(msg);
+}
+}));
 
     let valid = true;
     
     // at the end of the process we need to send something back.
-    return res.json({ "data": "" + valid + "" });
+    return NextResponse.json({ "data": "" + valid + "" });
   } catch (error) {
     console.error('Error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   } finally {
     client.close(); // Close the MongoDB client connection
   }
