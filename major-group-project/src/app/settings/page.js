@@ -18,6 +18,72 @@ export default function SettingsPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [address, setAddress] = useState('');
   const [year, setYear] = useState('');
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+
+
+  const handleNotificationToggle = async () => {
+    const newNotificationsEnabled = !notificationsEnabled;
+    setNotificationsEnabled(!notificationsEnabled);
+
+    try {
+      const response = await fetch(`/api/NotificationPreferences?username=${currentUsername}&notificationsEnabled=${newNotificationsEnabled}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                // Include authorization headers if necessary
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update notification settings');
+        }
+
+        const data = await response.json();
+        console.log('Notification settings updated:', data);
+    } catch (error) {
+        console.error('Error updating notification settings:', error);
+        setErrorMessage('Failed to update notification settings');
+        // Revert toggle state in case of failure
+        setNotificationsEnabled(!newNotificationsEnabled);
+    }
+};
+
+useEffect(() => {
+  const fetchUserInfo = async () => {
+    const userId = getUserIdFromCookies();
+    if (!userId) {
+      console.log("User ID not found.");
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/getUserInfo?userId=${userId}`);
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch user information");
+      }
+
+      const { user } = await res.json();
+      if (user && user.length > 0) {
+        const userInfo = user[0]; // Assuming the result is an array with a single user object
+
+        // Update state with fetched data
+        setCurrentUsername(userInfo.username);
+        setEmail(userInfo.email);
+        setAddress(userInfo.address);
+        setYear(userInfo.year);
+        setNotificationsEnabled(userInfo.notificationsEnabled); // Update this line according to your actual data
+      }
+    } catch (error) {
+      console.error("Error fetching user information:", error);
+    }
+  };
+
+  fetchUserInfo();
+}, []);
+
+
+
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -267,6 +333,19 @@ export default function SettingsPage() {
           />
           <button onClick={handlePasswordChange}>Save New Password</button>
         </div>
+        <div>
+          <strong>Notification Settings</strong>
+          <label className="switch">
+            <input
+              type="checkbox"
+              checked={notificationsEnabled}
+              onChange={handleNotificationToggle}
+            />
+            <span className="slider round"></span>
+          </label>
+        </div>
+
+
 
         <strong>Delete Account</strong>
         <div>
