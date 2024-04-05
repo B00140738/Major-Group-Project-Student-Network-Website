@@ -1,12 +1,13 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import '../css/forums.css';
-import '../css/signupform.css';
+
 import { useRouter } from 'next/navigation';
 import { Button, Box, TextField } from "@mui/material";
 import Layout from '../Components/Layout';
 import Link from 'next/link'; 
 import Header from '../Components/Header';
+import Comment from '../Components/Comments'; // Corrected import statement
 
 const Home = () => {
   const router = useRouter(); // Initialize the router object
@@ -76,6 +77,31 @@ const Home = () => {
   }, []);
 
 
+  const onCommentUpdate = async (commentId, newContent) => {
+    try {
+      const formData = {
+        content: newContent
+      };
+  
+      const response = await fetch(`http://localhost:3000/api/updateComment?commentId=${commentId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+  
+      if (response.ok) {
+        return true;
+      } else {
+        throw new Error('Failed to update comment');
+      }
+    } catch (error) {
+      console.error('Error updating comment:', error);
+      return false;
+    }
+  };
+
 
   const handleViewPost = (post) => {
     setSelectedPost(post);
@@ -128,15 +154,12 @@ const Home = () => {
     }
   };
 
-  
-
-
   return (
     <Layout>
       <Header />
       <div className='container'>
         <center><h1>Forum Posts</h1></center>
-        <button onClick={() => window.location.href = '/createPost'}>Create Post</button>
+        
         <Link href="/createPost">Create Post</Link>
         
         {data.length === 0 ? (
@@ -169,10 +192,8 @@ const Home = () => {
         {comments
   .filter((comment) => comment.postId === selectedPost._id) // Make sure the property matches what's in the database
   .map((forumComment, index) => (
-    <div className="forum-container" key={index}>
-      <p>Posted By: {forumComment.poster}</p>
-      <h4>{forumComment.content}</h4>
-    </div>
+    <Comment key={index} comment={forumComment} onCommentUpdate={onCommentUpdate} />
+
   ))
 }
       </div>
