@@ -1,11 +1,12 @@
+//dashboard
 "use client";
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import '../css/dashboard.css'; // Ensure this path is correct
 import Layout from '../Components/Layout';
 import Header from '../Components/Header';
-import { motion } from 'framer-motion';
 import Modal from '../Components/Modal';
+
 export default function Dashboard() {
   const router = useRouter();
   const [modules, setModules] = useState([]);
@@ -98,7 +99,7 @@ export default function Dashboard() {
     console.log('Selected Module:', module);
     setSelectedModule(module);
     fetchThreadsForModule(module._id); // Correct function name
-    router.push(`/modules/${module._id}`);
+    router.push(`/forums`); // Redirect to the module's forum
   };
 
 
