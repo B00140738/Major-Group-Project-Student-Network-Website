@@ -147,3 +147,20 @@ body, html {
     width: 90%;
   }
 }
+
+/* Add this to your CSS file */
+.edit-comment-button {
+  display: inline-block;
+  background-color: #007bff;
+  color: white;
+  padding: 8px 16px;
+  margin-top: 5px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.edit-comment-button:hover {
+  background-color: #0056b3;
+}
