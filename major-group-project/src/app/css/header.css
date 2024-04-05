@@ -146,6 +146,7 @@
   
   
   .dropdown-menu {
+    
     position: absolute;
     left: 0;
     top: 100%; /* Position the dropdown right below the settings icon */
@@ -188,9 +189,50 @@
     border-radius: 50%;
     background-color: #ddd; /* Default background */
     color: black; /* Default text color */
+
 }
 
 .notification-count.has-notifications {
     background-color: red; /* Red background for notifications */
     color: white; /* White text color for visibility */
+}
+
+.notification-count.has-notifications:empty {
+    display: none; /* Hide the badge when there are no notifications */
+}
+
+.notification-count.has-notifications:after {
+    content: attr(data-count); /* Display the count value */
+}
+
+
+.username-notification-container {
+  padding-left: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.notification-container {
+  padding-left: 20px;
+  margin-left: 10px;
+  position: relative;
+  cursor: pointer;
+}
+
+.notification-count {
+  position: absolute;
+  top: 8px; /* Adjust this value to move the badge up */
+  right: 14px; /* Adjust this value to move the badge to the right */
+  width: 5px; /* Width of the badge */
+  height: 5px; /* Height of the badge */
+  border-radius: 100%; /* Makes it circular */
+  background-color: #FF4500; /* Red background color for notifications */
+  color: white; /* White text color */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px; /* Adjust the font size if necessary */
+  font-weight: bold; /* Makes the number bold */
+  box-shadow: 0 0 2px rgba(0,0,0,0.5); /* Optional: adds a slight shadow for depth */
+  z-index: 1; /* Ensures it will be above other elements */
 }
