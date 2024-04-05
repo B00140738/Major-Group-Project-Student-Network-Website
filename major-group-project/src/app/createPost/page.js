@@ -1,8 +1,9 @@
+//createPost page
 'use client';
 import { Button, Box, TextField } from "@mui/material";
 import React, { useState, useEffect } from 'react';
 import Layout from "../Components/Layout";
-
+import '../css/createPost.css';
 
 async function runDBCallAsync(url, formData){
 // Send a POST request
@@ -13,7 +14,7 @@ async function runDBCallAsync(url, formData){
           headers: {
             'Content-Type': 'application/json',
           },
-          // Convert the FormData object into a JSON string
+          // Convert th into a JSON string
           body: JSON.stringify(formData), 
         });
         // Check if the HTTP status code is OK (200-299)
@@ -106,13 +107,22 @@ const createPost = () => {
   
             <br></br>
             <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Create Post
-            </Button>
+  type="submit"
+  fullWidth
+  variant="contained"
+  sx={{
+    mt: 3, mb: 2,
+    borderRadius: '8px', // Rounded corners
+    backgroundColor: '#1976d2', // Primary color
+    '&:hover': {
+      backgroundColor: '#115293', // Darker shade on hover
+    },
+    padding: '10px 15px', // Padding
+    color: 'white', // Text color
+  }}
+>
+  Create Post
+</Button>
           </form>
         </div>
       </Layout>
