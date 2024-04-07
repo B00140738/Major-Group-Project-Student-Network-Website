@@ -136,9 +136,15 @@ const [passwordError, setPasswordError] = useState(''); // Separate state for pa
           </label>
           <br />
           <label>
-            Year:
-            <input type="text" name="year" id="year" className="inputField" required/>
-          </label>
+  Year:
+  <select name="year" id="year" className="inputField" required>
+    <option value="">Select Year</option>
+    <option value="1">Year 1</option>
+    <option value="2">Year 2</option>
+    <option value="3">Year 3</option>
+    <option value="4">Year 4</option>
+  </select>
+</label>
           <button type="submit">Register</button>
         </form>
       </div>
