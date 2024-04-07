@@ -3,7 +3,6 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
 }
 
-
 /* Common styles for glassmorphism effect */
 .glass-container {
   background: rgba(255, 255, 255, 0.1);
@@ -17,18 +16,20 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background: linear-gradient(to right, #8e9eab, #eef2f3);
-  overflow: hidden; /* Remove overflow to hide the white frame */
+  min-height: 100vh; /* Ensure it is at least the height of the viewport */
+  padding: 20px; /* Add padding inside the container */
+  box-sizing: border-box; /* Include padding in the container's height */
 }
 
 .dashboard-container {
   display: flex;
   width: 80%;
   max-width: 1200px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 20px;
+  margin: auto; /* Centers the container on the page */
   overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.05); /* Set background here if needed */
+  border-radius: 20px;
 }
 
 .main-content {
@@ -44,26 +45,16 @@ body {
 
 .left {
   background: rgba(0, 123, 255, 0.5);
-  /* Add glassmorphism effect to sidebar */
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .right {
   background: rgba(40, 167, 69, 0.5);
-  /* Add glassmorphism effect to sidebar */
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .central-content,
-  .side-bar {
-
+.side-bar {
   flex: 2;
   padding: 20px;
-  /* Add glassmorphism effect to central content */
   background: rgba(255, 255, 255, 0.1);
   border-radius: 20px;
   backdrop-filter: blur(10px);
@@ -75,9 +66,6 @@ body {
 .central-content,
 .side-bar {
   margin: 20px;
-  padding: 20px;
-  border-radius: 16px;
-  overflow: hidden;
 }
 
 .side-bar h2,
@@ -115,7 +103,6 @@ button:hover {
   box-shadow: 0 5px 10px rgba(0,0,0,0.2); /* Add shadow for depth */
 }
 
-
 /* Popup styles */
 .popup-overlay {
   position: fixed;
@@ -128,12 +115,10 @@ button:hover {
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  overflow: auto; /* Add overflow property to enable scrollbar */
-  backdrop-filter: blur(5px); /* Softer blur effect */
 }
 
-
 .popup-content {
+  position: relative;
   background: #ffffff;
   border-radius: 15px; /* Smoother border radius */
   padding: 25px; /* More padding for better spacing */
@@ -141,102 +126,52 @@ button:hover {
   color: #333; /* Darker text for better readability */
   font-size: 16px; /* Larger font size */
 }
+
 .popup-content h2 {
   font-size: 1.5rem;
   margin-bottom: 15px;
   text-align: center;
 }
 
-.popup-content form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.popup-content ul {
+  padding: 0;
 }
 
-.popup-content label {
-  font-size: 1rem;
+.popup-content ul li {
   margin-bottom: 10px;
 }
 
-.popup-content select {
-  background: #f8f9fa;
-  border: 2px solid #ced4da; /* Subtle border */
-  border-radius: 5px; /* Consistent border radius */
-  box-sizing: border-box; /* For accurate width measurement */
-  height: 40px; /* Increased height for better touch */
-  font-size: 16px; /* Larger font size for readability */
+.popup-content p {
+  margin-top: 5px;
 }
 
-.popup-content button {
-  background: rgba(0, 123, 255, 0.7); /* Change button background color */
-  color: white;
-  padding: 10px 15px;
-  border-radius: 8px;
+
+.close {
+  position: absolute;
+  top: 20px; /* More space from the top inside the popup */
+  right: 20px; /* More space from the right inside the popup */
+  width: 32px;
+  height: 32px;
+  background-color: #f5f5f5;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
   cursor: pointer;
-  transition: background 0.3s ease-in-out;
-  border: none;
-  width: 100%;
-  max-width: 200px; /* Adjust maximum width as needed */
-  margin: 0 auto;
+  transition: all 0.2s ease-in-out;
 }
 
-.popup-content center {
-  text-align: center;
+.close:hover {
+  background-color: #eb0000;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
 
-.popup-content button:hover {
-  background: rgba(0, 123, 255, 1); /* Darken button color on hover */
+.close:before {
+  font-size: 24px;
+  color: #333;
 }
-
-.popup-content button + button {
-  margin-top: 10px; /* Add space between buttons */
-}
-/* Module list styles */
-.module-list {
-  display: flex;
-  flex-direction: column;
-}
-
-.module-box {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  margin-bottom: 15px;
-  padding: 15px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.module-box h3 {
-  font-size: 1.2rem;
-}
-
-.module-box p {
-  margin-top: 5px;
-}
-
-.module-box small {
-  display: block;
-  margin-top: 5px;
-}
-
-/* Space between Submit and Cancel buttons */
-.popup-content center button {
-  margin-right: 10px;
-}
-
-/* Popup form styles */
-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-label {
-  font-size: 1rem;
-  margin-bottom: 10px;
-}
-
-select {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 20px;
+/* Add more specific styles for the popup button */
+.view-modules {
+  margin-top: 20px;
 }
