@@ -4,7 +4,7 @@ import { Button, Box, TextField } from "@mui/material";
 import React, { useState, useEffect } from 'react';
 import Layout from "../Components/Layout";
 import '../css/createPost.css';
-
+import { useRouter } from 'next/navigation';
 async function runDBCallAsync(url, formData){
 // Send a POST request
     try {
@@ -43,31 +43,34 @@ async function runDBCallAsync(url, formData){
 
 const createPost = () => {
     const [username, setUsername] = useState('');
-  
-    useEffect(() => {
-      const getUsernameFromCookies = () => {
-        const allCookies = document.cookie.split('; ');
-        const usernameCookie = allCookies.find(cookie => cookie.startsWith('username='));
-        return usernameCookie ? decodeURIComponent(usernameCookie.split('=')[1]) : '';
-      };
-      setUsername(getUsernameFromCookies());
+    const moduleId = localStorage.getItem('currentModuleId');
+    const router = useRouter(); // Using useRouter for navigation
+
+    
+  useEffect(() => {
+        const getUsernameFromCookies = () => {
+            const allCookies = document.cookie.split('; ');
+            const usernameCookie = allCookies.find(cookie => cookie.startsWith('username='));
+            return usernameCookie ? decodeURIComponent(usernameCookie.split('=')[1]) : '';
+        };
+        setUsername(getUsernameFromCookies());
     }, []);
   
     const handleSubmit = async (event) => {
       event.preventDefault();
-  
+    
       const data = new FormData(event.currentTarget);
       let title = data.get('title');
       let content = data.get('content');
       let timestamp = new Date();
       let poster = username;
-  
+    
       try {
-        const response = await runDBCallAsync(`http://localhost:3000/api/createPost?poster=${poster}&title=${title}&content=${content}&timestamp=${timestamp}`);
-       console.log('response:', response);
+        const response = await runDBCallAsync(`http://localhost:3000/api/createPost?poster=${poster}&title=${title}&content=${content}&timestamp=${timestamp}&moduleId=${moduleId}`);
+        console.log('response:', response);
         if (response.data === "true") {
           console.log("Post created successfully");
-          window.location.href = '/forums'; // Redirect to dashboard
+          router.push('/forums'); // Navigate to forums page
         } else {
           console.log("Error: could not create post");
         }
