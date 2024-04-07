@@ -15,11 +15,12 @@ export async function POST(req, res) {
   const title = searchParams.get('title');
   const content = searchParams.get('content');
   const timestamp = searchParams.get('timestamp');
-
+  const moduleId = searchParams.get('moduleId');
   console.log(poster);
   console.log(title);
   console.log(content);
   console.log(timestamp);
+  console.log(moduleId); // Ensure moduleId is not null
 
   // =================================================
   // Connect to MongoDB and insert a document
@@ -44,7 +45,8 @@ export async function POST(req, res) {
       "poster": poster,
       "title": title,
       "content": content,
-      "timestamp": timestamp
+      "timestamp": timestamp,
+      "moduleId": moduleId
     });
 
    // Retrieve all users except the one who created the post
