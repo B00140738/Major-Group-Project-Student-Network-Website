@@ -16,9 +16,7 @@ const Header = ({ setSearchResults }) => {
   const [notificationCount, setNotificationCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
-  const [profileImageData, setProfileImageData] = useState('../public/images/homepage.png');
   const [notifications, setNotifications] = useState([]);
-  const [removeNotification, setRemoveNotification] = useState([]);
   const router = useRouter();
   const [showNotificationsDropdown, setShowNotificationsDropdown] = useState(false);
   const notificationRef = useRef(null);
@@ -109,15 +107,6 @@ const Header = ({ setSearchResults }) => {
   return (
     <div className="side-bar-header">
       <div className="profile-section">
-        <div className="profile-image" style={{ backgroundImage: `url(${profileImageData})` }}>
-          {!profileImageData && <div>Your placeholder or icon here</div>}
-        </div>
-        <input
-          id="profile-image-upload"
-          type="file"
-          accept="image/*"
-          style={{ display: 'none' }}
-        />
         <div className="username-notification-container">
           <div className="username-display">{username}</div>
           <div className="notification-container" ref={notificationRef}>
@@ -161,8 +150,8 @@ const Header = ({ setSearchResults }) => {
           Settings {showSettingsDropdown ? '▲' : '▼'}
         </div>
         {showSettingsDropdown && (
-          <div className="dropdown-menu">
-            <Link href="/edit-settings" legacyBehavior>
+          <div className="profile-dropdown">
+            <Link href="/settings" legacyBehavior>
               <a className="dropdown-item">Edit Settings</a>
             </Link>
           </div>
@@ -174,10 +163,3 @@ const Header = ({ setSearchResults }) => {
 };
 
 export default Header;
-
-
-
-
-
-
-
