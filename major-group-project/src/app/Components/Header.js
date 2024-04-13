@@ -18,6 +18,7 @@ const Header = ({ setSearchResults }) => {
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [profileImageData, setProfileImageData] = useState('../public/images/homepage.png');
   const [notifications, setNotifications] = useState([]);
+  const [removeNotification, setRemoveNotification] = useState([]);
   const router = useRouter();
   const [showNotificationsDropdown, setShowNotificationsDropdown] = useState(false);
   const notificationRef = useRef(null);
