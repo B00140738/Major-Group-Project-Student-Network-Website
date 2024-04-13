@@ -1,4 +1,4 @@
-// server.js
+//Major-Group-Project-Student-Network-Website\major-group-project\src\app\api\getModules\route.js
 import { MongoClient, ObjectId } from 'mongodb';
 import { NextResponse } from "next/server";
 
