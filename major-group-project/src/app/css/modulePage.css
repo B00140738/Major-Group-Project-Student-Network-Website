@@ -77,3 +77,40 @@ p {
     font-size: 12px;
   }
 }
+
+/* ModulePage.module.css */
+
+/* Container for announcements */
+.announcement-container {
+  display: grid;
+  gap: 20px;
+  justify-content: center;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid */
+}
+
+/* Individual announcement card */
+.announcement {
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.announcement:hover {
+  transform: translateY(-5px); /* Hover effect */
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Announcement title */
+.announcement-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* Announcement content */
+.announcement-content {
+  font-size: 1.1rem;
+  color: #555;
+}
