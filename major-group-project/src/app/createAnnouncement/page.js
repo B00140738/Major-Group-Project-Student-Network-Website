@@ -82,7 +82,7 @@ const createAnnouncement = () => {
     return (
       <Layout>
         <div className="post-creator">
-          <center><h1>Create Post</h1></center>
+          <center><h1>Create Announcement</h1></center>
   
           <form onSubmit={handleSubmit}>
             <h2>Title</h2>

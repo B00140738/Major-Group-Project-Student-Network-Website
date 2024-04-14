@@ -73,9 +73,9 @@ export async function POST(req, res) {
   const msg = {
       to: user.email, // Change to your recipient
       from: 'bbetsunaidze@hotmail.com', // Change to your verified sender
-      subject: `New post created by ${poster}`,
-      text: `A new announcement titled "${title}" has been created. Check it out!`,
-      html: `<strong>A new post titled "${title}" has been created. Check it out!</strong>`,
+      subject: `New Announcement created by ${poster}`,
+      text: `A new Announcement titled "${title}" has been created. Check it out!`,
+      html: `<strong>A new Announcement titled "${title}" has been created. Check it out!</strong>`,
   };
   await sgMail.send(msg);
 }

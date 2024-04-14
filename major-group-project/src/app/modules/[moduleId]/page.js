@@ -1,13 +1,12 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-
 import { Button, Box, TextField } from "@mui/material";
 import Link from 'next/link'; 
 import Layout from '../../Components/Layout';
-import Header from '../../Components/Header';
-
 import '../../css/modulePage.css';
+
+
 const ModulePage = () => {
   const [moduleInfo, setModuleInfo] = useState({});
   const [threads, setThreads] = useState([]);
@@ -74,7 +73,7 @@ const ModulePage = () => {
         const response = await fetch(`/api/getAnnouncements?moduleId=${moduleId}`);
         if (!response.ok) throw new Error('Failed to fetch announcements for module');
         const data = await response.json();
-        setAnnouncements(data.announcements || []);
+        setAnnouncements(data || []); // Set announcements directly
       } catch (error) {
         console.error('Error fetching announcements for module:', error);
       }
@@ -101,7 +100,6 @@ const ModulePage = () => {
 
   return (
     <Layout>
-      <Header />
       <div className='container'>
         {moduleInfo && moduleInfo.title ? (
           <div className='forum-container'>
@@ -115,24 +113,25 @@ const ModulePage = () => {
                 Create Announcement
               </Button>
             </center>
-            <br></br>
-            <br></br>
+            <br />
+            <br />
             <center><h1>Announcements</h1></center>
-            <br></br>
-            <br></br>
+            <br />
+            <br />
             {/* Render Announcements Here */}
             {announcements.length > 0 ? (
               announcements.map((announcement, index) => (
-                <div key={index} className="announcement">
-                  <h4>{announcement.title}</h4>
+                <div key={index} className="post">
+                  <h4>{announcement.poster}</h4>
+                  <h3>{announcement.title}</h3>
                   <p>{announcement.content}</p>
                 </div>
               ))
             ) : (
               <center><p>No announcements to display</p></center>
             )}
-            <br></br>
-            <br></br>
+            <br />
+            <br />
             <center><h1>Posts</h1></center>
             {/* Rendering Posts Here */}
             {posts.length > 0 ? (
