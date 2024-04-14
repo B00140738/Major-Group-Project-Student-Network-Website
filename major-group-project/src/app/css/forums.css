@@ -11,6 +11,7 @@ body, html {
    
 }
 .forum-container {
+ 
   max-width: 940px; /* Increased width for a better layout */
   margin: 20px auto;
   padding: 20px;
@@ -20,6 +21,7 @@ body, html {
 }
 
 .forum-post {
+
   border: 1px solid #e1e4e8; /* Add border for definition */
   margin-bottom: 16px;
   border-radius: 4px;
@@ -57,6 +59,7 @@ body, html {
 }
 
 .container {
+  
   flex-grow: 1; /* Take up the remaining space */
   margin-left: 240px; /* Adjust to the width of your sidebar */
   padding: 20px; /* Add padding inside the container */
@@ -66,6 +69,7 @@ body, html {
 }
 
 .modal-content {
+  position: relative;
   width: 80%; 
   max-width: 600px;
   height: auto;

@@ -283,16 +283,23 @@ useEffect(() => {
               required
             />
           <label>Year:</label>
-            <input
-              className={isEditing ? 'input-enabled' : 'input-disabled'}
+
+
+
+            <select  className={isEditing ? 'input-enabled' : 'input-disabled'}
               id='year'
               type="text"
               value={year}
               onChange={(e) => setYear(e.target.value)}
               disabled={!isEditing}
               style={{ backgroundColor: isEditing ? 'white' : 'lightgray' }}
-              required
-            />
+              required>
+              <option value="">Select Year</option>
+              <option value="1">Year 1</option>
+              <option value="2">Year 2</option>
+              <option value="3">Year 3</option>
+              <option value="4">Year 4</option>
+            </select>
               <div>
                 <button onClick={handleSaveClick}>Save Profile Information</button>
                 <button

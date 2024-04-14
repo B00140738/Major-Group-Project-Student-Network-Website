@@ -10,6 +10,7 @@ import Link from 'next/link';
 export default function Dashboard() {
   const router = useRouter();
   const [modules, setModules] = useState([]);
+  const [generalModules, setGeneralModules] = useState([]); // State to store general modules
   const [username, setUsername] = useState('');
   const [userYear, setUserYear] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -31,6 +32,17 @@ export default function Dashboard() {
       }
     };
 
+    const fetchGeneralModules = async () => {
+      try {
+        const response = await fetch(`/api/getGeneral`);
+        if (!response.ok) throw new Error('Failed to fetch');
+        const data = await response.json();
+        setGeneralModules(data.modules);
+      } catch (error) {
+        console.error('Error fetching general modules:', error);
+      }
+    };
+
     const getUserDataFromCookies = () => {
       const allCookies = document.cookie.split('; ');
       const usernameCookie = allCookies.find((cookie) => cookie.startsWith('username='));
@@ -48,6 +60,7 @@ export default function Dashboard() {
       router.replace('/login');
     } else {
       fetchModules();
+      fetchGeneralModules(); // Fetch general modules
     }
   }, [router]);
 
@@ -78,6 +91,7 @@ export default function Dashboard() {
   };
 
   const handleModuleClick = (moduleId) => {
+    localStorage.setItem('currentModuleId', moduleId);
     router.push(`/modules/${moduleId}`);
   };
 
@@ -136,7 +150,15 @@ export default function Dashboard() {
             </div>
             <div className="side-bar right">
               <h2>General Forums</h2>
-              {/* Right sidebar content, if any */}
+              {/* Display fetched general modules */}
+              {generalModules.map((module) => (
+                <div key={module._id}>
+                  <h3>{module.title}</h3>
+                  <p>{module.description}</p>
+                  <small>{module.code} - Year {module.year}</small>
+                  <button onClick={() => handleModuleClick(module._id)}>See Module</button>
+                </div>
+              ))}
             </div>
           </section>
         </div>
@@ -144,3 +166,4 @@ export default function Dashboard() {
     </Layout>
   );
 }
+

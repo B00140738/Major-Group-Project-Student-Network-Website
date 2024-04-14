@@ -26,6 +26,7 @@ const Home = () => {
     }
   }, [router.query]);
 
+  /*
   const fetchPostsByModule = async (moduleId) => {
     try {
       const response = await fetch(`http://localhost:3000/api/getPostsByModule?moduleId=${moduleId}`);
@@ -40,7 +41,7 @@ const Home = () => {
     }
   };
 
-
+*/
   async function runDBCallAsync(url, formData){
     try {
       const res = await fetch(url, {
@@ -76,31 +77,29 @@ const Home = () => {
       });
   }, []);
 
-
   const onCommentUpdate = async (commentId, newContent) => {
     try {
-      const formData = {
-        content: newContent
-      };
-  
-      const response = await fetch(`http://localhost:3000/api/updateComment?commentId=${commentId}`, {
+      const response = await fetch(`/api/updateComment`, {
         method: 'PATCH',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({ commentId, content: newContent }), // Pass commentId and newContent as JSON
       });
   
-      if (response.ok) {
-        return true;
-      } else {
-        throw new Error('Failed to update comment');
+      if (!response.ok) {
+        const errorData = await response.json(); // Parse error response
+        throw new Error(errorData.message || 'Failed to update comment');
       }
+  
+      return true;
     } catch (error) {
-      console.error('Error updating comment:', error);
+      console.error('Error updating comment:', error.message);
       return false;
     }
   };
+  
+  
 
 
   const handleViewPost = (post) => {
@@ -134,19 +133,21 @@ const Home = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const content = event.target.content.value; // Get the content value from the form
+    const content = event.target.content.value.trim();
+    if (!content) return; // Basic validation to prevent empty comments
+
+    
     if (!content.trim()) return; // Basic validation to prevent empty comments
-    const timestamp = new Date();
-    const poster = username;
-    const postId = selectedPost._id;
+      const timestamp = new Date();
+      const poster = username;
+      const postId = selectedPost._id;
 
     try {
       const response = await runDBCallAsync(`http://localhost:3000/api/createComment?poster=${poster}&content=${content}&timestamp=${timestamp}&postId=${postId}`);
-  
-      if (response && response.data === "true") { // Make sure to check if response is not undefined
+      if (response && response.data === "true") {
         const newComment = { poster, content, timestamp, postId };
         setComments(prevComments => [...prevComments, { ...newComment, _id: Date.now().toString() }]);
-        event.target.content.value = ''; // Clear the input field
+        event.target.content.value = '';
       
       }
     } catch (error) {
@@ -178,23 +179,27 @@ const Home = () => {
             </div>
           ))
         )}
-
-{isModalOpen && (
-  <div className="modal-backdrop">
-    <div className="modal-content">
-      <button onClick={closeModal} className="modal-close-button">X</button>
-      <p>Posted by: {selectedPost?.poster}</p>
-      <h2>{selectedPost?.title}</h2>
-      <p>{selectedPost?.content}</p>
-      <hr/>
-      <div className="forum-container">
-        <h3>Comments:</h3>
-        {comments
-  .filter((comment) => comment.postId === selectedPost._id) // Make sure the property matches what's in the database
-  .map((forumComment, index) => (
-    <Comment key={index} comment={forumComment} onCommentUpdate={onCommentUpdate} />
-
-  ))
+      {isModalOpen && (
+        <div className="modal-backdrop">
+          <div className="modal-content">
+            <button onClick={closeModal} className="modal-close-button">X</button>
+            <p>Posted by: {selectedPost?.poster}</p>
+            <h2>{selectedPost?.title}</h2>
+            <p>{selectedPost?.content}</p>
+            <hr/>
+            <div className="forum-container">
+              <h3>Comments:</h3>
+              {
+  comments
+    .filter((comment) => comment.postId === selectedPost._id)
+    .map((forumComment, index) => (
+      <Comment 
+        key={index} 
+        comment={forumComment} 
+        onCommentUpdate={onCommentUpdate} 
+        currentUser={username} // Pass the current username as the currentUser prop
+      />
+    ))
 }
       </div>
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>

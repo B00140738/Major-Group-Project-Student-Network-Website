@@ -9,21 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@mui/icons-material": "^5.15.15",
-    "cookie": "^0.6.0",
     "helmet": "^7.1.0",
-    "mongodb": "^6.5.0",
-    "next": "^14.2.1",
+    "next": "14.0.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-email": "^2.1.0",
     "react-helmet": "^6.1.0",
     "react-router-dom": "^6.18.0",
-    "resend": "^3.2.0",
-    "socket.io": "^4.7.5",
-    "socket.io-client": "^4.7.5",
     "svelte": "^4.2.7",
-    "vanilla-tilt": "^1.8.1",
-    "ws": "^8.16.0"
+    "vanilla-tilt": "^1.8.1"
   }
 }

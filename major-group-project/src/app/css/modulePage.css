@@ -1,20 +1,79 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
 
-.moduleHeader {
-    padding: 20px;
-    border-bottom: 1px solid #ccc;
+.forum-container {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+p {
+  margin-bottom: 20px;
+}
+
+.create-post-btn {
+  margin-bottom: 20px;
+}
+
+.post {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.post h4 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.post p {
+  font-size: 16px;
+  color: #333;
+}
+
+.post-meta {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
   }
   
-  .moduleTitle {
-    margin: 0;
-    padding: 0;
-    font-size: 24px;
+  .forum-container {
+    padding: 10px;
   }
   
-  .moduleDescription {
-    margin-top: 10px;
-    color: #555;
+  h1 {
+    font-size: 20px;
   }
   
-  .moduleContent {
-    padding: 20px;
+  p {
+    font-size: 14px;
   }
+  
+  .post h4 {
+    font-size: 16px;
+  }
+  
+  .post p {
+    font-size: 14px;
+  }
+  
+  .post-meta {
+    font-size: 12px;
+  }
+}
