@@ -18,7 +18,7 @@ const ModulePage = () => {
   const [comments, setComments] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
-
+  const [email, setEmail] = useState('');
   useEffect(() => {
     if (router.query && router.query.moduleId) {
       const { moduleId } = router.query;
