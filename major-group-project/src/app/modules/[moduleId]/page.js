@@ -13,6 +13,7 @@ const ModulePage = () => {
   const [posts, setPosts] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const router = useRouter();
   const moduleId = localStorage.getItem('currentModuleId');
   const [comments, setComments] = useState([]);
