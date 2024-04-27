@@ -10,6 +10,7 @@ const RedirectButton = ({ destination, text }) => {
   //Send user to destination page when clicked
   const handleClick = (e) => {
     e.preventDefault();
+    //Push to destination page
     router.push(destination);
   };
 

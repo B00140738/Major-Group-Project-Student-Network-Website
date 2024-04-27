@@ -1,180 +1,249 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import '../css/forums.css';
-import '../css/signupform.css';
+import { useRouter } from 'next/navigation';
 import { Button, Box, TextField } from "@mui/material";
-
+import Layout from '../Components/Layout';
+import Link from 'next/link'; 
+import Header from '../Components/Header';
+import Comment from '../Components/Comments'; // Corrected import statement
 
 const Home = () => {
+  const router = useRouter(); // Initialize the router object
   const [data, setData] = useState([]);
-  const [comment, setComment] = useState([]);
+  const [comments, setComments] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
   const [username, setUsername] = useState(''); // State for username
+  const [moduleId, setModuleId] = useState('');
+
+  useEffect(() => {
+    if (router.query && router.query.moduleId) {
+      const { moduleId } = router.query;
+      setModuleId(moduleId);
+      fetchPostsByModule(moduleId);
+    }
+  }, [router.query]);
 
 
   async function runDBCallAsync(url, formData){
-
     try {
-        const res = await fetch(url, {
-          method: 'POST', // Use POST method
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        });
-        // Check if the HTTP status code is OK (200-299)
-        if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`);
-        }
-
-
-    const data = await res.json();
-
-    if (data.data === "true"){
-        console.log("Post created successfully")
+      const res = await fetch(url, {
+        method: 'POST', // Use POST method
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      // Check if the HTTP status code is OK (200-299)
+      if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+      }
+  
+      const data = await res.json(); // Parse the JSON in the response
+  
+      return data; // Return the parsed JSON data
+    } catch (error) {
+      // If an error occurs, log it to the console
+      console.error("Error during fetch: ", error);
+      throw error; // Re-throw the error to be handled by the caller
     }
-    else {
-        console.log("Error: could not create post")
-    }
-    }catch (error) {
-    // If an error occurs, log it to the console
-    console.error("Error during fetch: ", error);
   }
-}
 
   useEffect(() => {
-    fetch('/api/getPosts')
+    fetch('http://localhost:3000/api/getPosts')
       .then((res) => res.json())
-      .then((postData) => {
-        setData(postData);
+      .then((data) => {
+        setData(data);
       })
       .catch((error) => {
-        console.error('Error fetching posts:', error);
+        console.error('Error fetching sposts:', error);
       });
   }, []);
 
-  const fetchCommentsForPost = (postId) => {
-    fetch('http://localhost:3000/api/getCommentsById')
-      .then((res) => res.json())
-      .then((comment) => {
-        setComment(comment);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
+  const onCommentUpdate = async (commentId, newContent) => {
+    try {
+      const response = await fetch(`/api/updateComment`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ commentId, content: newContent }), // Pass commentId and newContent as JSON
       });
-    };
+  
+      if (!response.ok) {
+        const errorData = await response.json(); // Parse error response
+        throw new Error(errorData.message || 'Failed to update comment');
+      }
+  
+      return true;
+    } catch (error) {
+      console.error('Error updating comment:', error.message);
+      return false;
+    }
+  };
+  
+  
 
 
   const handleViewPost = (post) => {
     setSelectedPost(post);
     setIsModalOpen(true);
-    fetchCommentsForPost(post._id); 
-  };
-
+    console.log('Fetching comments for post:', post._id);
+    fetch(`http://localhost:3000/api/getCommentsById?postId=${post._id}`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Failed to fetch comments');
+        }
+        return res.json();
+      })
+      .then((comments) => {
+        console.log('Fetched comments:', comments);
+        setComments(comments);
+      })
+      .catch((error) => {
+        console.error('Error fetching comments:', error);
+      });
+}
+  
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedPost(null);
-    setComment(null);
+    setComments([]);
   };
 
   useEffect(() => {
-    // Function to retrieve username from the cookie
     const getUsernameFromCookies = () => {
-        const allCookies = document.cookie.split('; ');
-        const usernameCookie = allCookies.find(cookie => cookie.startsWith('username='));
-        return usernameCookie ? decodeURIComponent(usernameCookie.split('=')[1]) : '';
+      const allCookies = document.cookie.split('; ');
+      const usernameCookie = allCookies.find(cookie => cookie.startsWith('username='));
+      return usernameCookie ? decodeURIComponent(usernameCookie.split('=')[1]) : '';
     };
-    setUsername(getUsernameFromCookies()); // Set the username
-}, [])
+    setUsername(getUsernameFromCookies());
+  }, []);
 
- 
-const handleSubmit = async (event) => {
-  event.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-  const data = new FormData(event.currentTarget);
-  let content = data.get('content');
-  let timestamp = new Date();
-  let poster = username;
+    const content = event.target.content.value.trim();
+    if (!content) return; // Basic validation to prevent empty comments
 
-  try {
-    const response =await runDBCallAsync(`http://localhost:3000/api/createComment?poster=${poster}&content=${content}&timestamp=${timestamp}`);
- 
+    
+    if (!content.trim()) return; // Basic validation to prevent empty comments
+      const timestamp = new Date();
+      const poster = username;
+      const postId = selectedPost._id;
 
-    // Handle the response as needed
-    console.log('API Response:', response);
-
-    // If the comment was successfully created, update the comments for the selected post
-    if (response.data === "true" && selectedPost) {
-      const newComment = {
-        poster,
-        content,
-        timestamp,
-      };
-      setComment((prevComments) => [...prevComments, newComment]);
+    try {
+      const response = await runDBCallAsync(`http://localhost:3000/api/createComment?poster=${poster}&content=${content}&timestamp=${timestamp}&postId=${postId}`);
+      if (response && response.data === "true") {
+        const newComment = { poster, content, timestamp, postId };
+        setComments(prevComments => [...prevComments, { ...newComment, _id: Date.now().toString() }]);
+        event.target.content.value = '';
+      
+      }
+    } catch (error) {
+      console.error('Error creating post:', error);
     }
-  } catch (error) {
-    console.error('Error creating post:', error);
-  }
-};
+  };
+
+
+  const handleReplySubmit = async (parentCommentId, replyContent) => {
+    const url = `/api/postReply?parentCommentId=${parentCommentId}&poster=${username}&content=${replyContent}&timestamp=${new Date().toISOString()}`;
+  
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to submit reply');
+      }
+  
+      const newReply = { poster: username, content: replyContent, timestamp: new Date().toISOString() };
+      // Update comments state to include new reply
+      setComments(currentComments => currentComments.map(comment => {
+        if (comment._id === parentCommentId) {
+          return {...comment, replies: [...(comment.replies || []), newReply]};
+        }
+        return comment;
+      }));
+  
+      return true;
+    } catch (error) {
+      console.error('Error submitting reply:', error);
+      alert('Failed to submit reply: ' + error.message);
+      return false;
+    }
+  };
+
   
 
-  if (!data) return <div className='forum-container'><p>Loading...</p></div>;
-  if (data.length === 0) return <div className='forum-container'><p>No posts available.</p></div>;
-
   return (
-    <div>
-      <center><h1>Forum Posts</h1></center>
-      <button onClick={() => window.location.href = '/createPost'}>Create Post</button>
-      {data.map((item, i) => (
-        <div className='forum-container' key={i}>
-          <p>Posted By: {item.poster}</p>
-          <h2>{item.title}</h2>
-          <p>{item.content}</p>
-          <button onClick={() => handleViewPost(item)}>
-            View Post
-          </button>
-        </div>
-      ))}
-
-      {isModalOpen && (
-        <div className="modal-backdrop">
-          <div className="modal-content">
-            <button onClick={closeModal} className="modal-close-button">X</button>
-            <p>Posted by: {selectedPost?.poster}</p>
-            <h2>{selectedPost?.title}</h2>
-            <p>{selectedPost?.content}</p>
-            <hr/>
-            <div className="comments-container">
-              <h3>Comments:</h3>
-              {comment && comment.map((forumComment, index) => (
-                <div className='forum-container' key={index}>
-                  <p>Posted By: {forumComment.poster}</p>
-                  <p>{forumComment.content}</p>
-                </div>
-              ))}
-            </div>
-            <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
-            <TextField
-            margin="normal"
-            name="content"
-            label="content"
-            type="text"
-            id="content"
-            />
-            <Button type="submit"
-            variant="contained"
-            sx={{mt: 3, mb: 2 }}>
-                Submit
-            </Button>
-              </Box>
+    <Layout>
+      <Header />
+      <div className='container'>
+        <center><h1>Forum Posts</h1></center>
+        
+        <Link href="/createPost">Create Post</Link>
+        
+        {data.length === 0 ? (
+          <div className='forum-container'>
+            <p>No posts available.</p>
           </div>
-        </div>
-      )}
-    </div>
+        ) : (
+          data.map((item, i) => (
+            <div className='forum-container' key={i}>
+              <p>Posted By: {item.poster}</p>
+              <h2>{item.title}</h2>
+              <p>{item.content}</p>
+              <button onClick={() => handleViewPost(item)}>
+                View Post
+              </button>
+            </div>
+          ))
+        )}
+          {isModalOpen && (
+            <div className="modal-backdrop">
+              <div className="modal-content">
+                <button onClick={closeModal} className="modal-close-button">X</button>
+                <p>Posted by: {selectedPost?.poster}</p>
+                <h2>{selectedPost?.title}</h2>
+                <p>{selectedPost?.content}</p>
+                <hr/>
+                <div className="forum-container">
+                  <h3>Comments:</h3>
+                  {comments.map((comment, index) => (
+                    <Comment 
+                      key={index}
+                      comment={comment}
+                      onCommentUpdate={onCommentUpdate}
+                      onReplySubmit={handleReplySubmit}
+                      currentUser={username}
+                    />
+                  ))}
+                </div>
+                <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                  <TextField
+                    margin="normal"
+                    name="content"
+                    label="content"
+                    type="text"
+                    id="content"
+                  />
+                  <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
+                    Submit
+                  </Button>
+                </Box>
+              </div>
+            </div>
+          )}
+      </div>
+    </Layout>
   );
 };
 
 export default Home;
-
-// Keep your existing GET function as it is

@@ -1,18 +1,18 @@
-/* Overlay background that covers the entire screen */
+
 .modal-background {
-  position: fixed; /* Stay in place */
-  z-index: 1000; /* Sit on top */
+  position: fixed;
+  z-index: 1000;
   left: 0;
   top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  background-color: rgba(0,0,0,0.4); /* Black background with opacity */
+  width: 100%; 
+  height: 100%; 
+  background-color: rgba(0,0,0,0.4); 
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* Modal container with the content */
+
 .modal-container {
   background: #333;
   padding: 20px;
@@ -20,15 +20,15 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   position: relative;
   width: auto;
-  min-width: 320px; /* Minimum width to ensure content fits well */
-  max-width: 400px; /* Maximum width of the modal */
+  min-width: 320px;
+  max-width: 400px;
   margin: 0 20px; 
 }
 
-/* The Close Button */
+
 .close-modal {
   color: #aaa;
-  position: absolute; /* Absolute relative to the loginContainer */
+  position: absolute;
   top: 5px; 
   right: 5px; 
   font-size: 24px;
@@ -42,7 +42,7 @@
   text-decoration: none;
 }
 
-/* Style for the sign-in button */
+
 .appleLogin,
 .googleLogin {
   width: 100%;
@@ -54,8 +54,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px; /* Space between icon and text */
-  z-index: 0; /* Ensure they are behind the close button */
+  gap: 20px; 
+  z-index: 0; 
 }
 
 .appleLogin {
@@ -84,22 +84,22 @@
   border: 1px solid #555;
   background: #222;
   color: #fff;
-  font-size: 16px; /* Increase font size for better readability */
+  font-size: 16px; 
 }
 
-/* The 'Next' button style */
+
 .nextButton {
   width: 100%;
   padding: 15px;
   margin-top: 20px;
-  background: #0A84FF; /* Adjust the color to match your branding */
+  background: #0A84FF;
   color: #fff;
   border-radius: 5px;
   border: none;
   cursor: pointer;
 }
 
-/* Styles for forgot password and sign-up links */
+
 .forgotPassword,
 .signUpLink {
   color: #0A84FF;
@@ -114,10 +114,10 @@
   text-decoration: underline;
 }
 
-/* Responsive adjustments */
+
 @media (max-width: 480px) {
   .loginContainer {
     max-width: 90%;
-    padding: 20px; /* Less padding on smaller screens */
+    padding: 20px; 
   }
 }

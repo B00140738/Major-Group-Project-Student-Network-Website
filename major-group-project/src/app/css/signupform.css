@@ -110,3 +110,8 @@
   border-radius: 4px;
   text-align: center;
 }
+label{
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}

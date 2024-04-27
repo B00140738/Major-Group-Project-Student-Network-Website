@@ -3,7 +3,9 @@
 import React, { useState } from 'react';
 import '../css/signupform.css'; // Adjust the path to your CSS file
 import LoginModal from '../login/page';
+
 export default function SignUpModal({ toggleModal }) {
+  // Function to generate an array of numbers in a range
 const range = (start, end) => Array.from({ length: end - start + 1 }, (_, i) => start + i);
 const [errorMessage, setErrorMessage] = useState('');
 const [passwordError, setPasswordError] = useState(''); // Separate state for password error
@@ -52,29 +54,30 @@ const [passwordError, setPasswordError] = useState(''); // Separate state for pa
         let pass = data.get('pass');
         let address = data.get('address');
         let repeatPass = data.get('repeatPass');
+        let studentyear = data.get('year');
         const month = data.get('dobMonth');
         const day = data.get('dobDay');
         const year = data.get('dobYear');
-        
+        // Format the date of birth  data  before sending it to the server as a string as YYYY-MM-DD
         const dob = `${year.padStart(2, '0')}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-
-         // Pseudo-code for checking if the user already exists
  
-        
+        // Check if the passwords match
         if (pass !== repeatPass) {
           setPasswordError("Passwords do not match."); // Set the error message
           return;
-        } else if(!username || !email || !pass || !address || !dob){
+          // Check if the password is at least 8 characters long
+        } else if(!username || !email || !pass || !address || !dob || !studentyear){
           setErrorMessage("Please fill in the form"); // Set the error message
         }
    
           else{
-          runDBCallAsync(`http://localhost:3000/api/register?&username=${username}&email=${email}&pass=${pass}&address=${address}&dob=${dob}`);
+            // Run the DB call asynchronously
+          runDBCallAsync(`http://localhost:3000/api/register?&username=${username}&email=${email}&pass=${pass}&address=${address}&dob=${dob}&year=${studentyear}`);
             window.location.href = '/'; // Redirect to dashboard
-        };
-      
-       
+              
+          };
       };
+      
   return (
     <div className="modal-background">
       <div className="modal-container">
@@ -132,10 +135,19 @@ const [passwordError, setPasswordError] = useState(''); // Separate state for pa
             <input type="text" name="address" id="address" className="inputField" required/>
           </label>
           <br />
+          <label>
+  Year:
+  <select name="year" id="year" className="inputField" required>
+    <option value="">Select Year</option>
+    <option value="1">Year 1</option>
+    <option value="2">Year 2</option>
+    <option value="3">Year 3</option>
+    <option value="4">Year 4</option>
+  </select>
+</label>
           <button type="submit">Register</button>
         </form>
       </div>
     </div>
   );
 };
-

@@ -3,7 +3,7 @@
 //Login form for draft/project website
 import React, { useState } from "react";
 import React from 'react';
-import styles from '../styles/Login.module.css'; // Adjust the path as necessary
+import styles from '../css/loginform.css'; // Adjust the path as necessary
 
 const Login = () => {
   return (

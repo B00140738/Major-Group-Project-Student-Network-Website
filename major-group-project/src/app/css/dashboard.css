@@ -1,153 +1,177 @@
-body, html {
-  margin: 0;
-  height: 100%; /* Ensure body takes full viewport height */
-  overflow: hidden; /* Be careful with this to not clip scrolling content */
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+body {
+  background: linear-gradient(to right, #8e9eab, #eef2f3);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
+}
+
+/* Common styles for glassmorphism effect */
+.glass-container {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .main-container {
-  height: 100vh; /* Use 100% of the viewport height */
-  overflow: auto; /* Allow scrolling if content overflows */
-  backdrop-filter: blur(20px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Ensure it is at least the height of the viewport */
+  padding: 20px; /* Add padding inside the container */
+  box-sizing: border-box; /* Include padding in the container's height */
 }
 
 .dashboard-container {
-  background: linear-gradient(135deg, #74ebd5, #ACB6E5);
   display: flex;
-  flex-direction: column;
-  height: calc(100% - 40px); /* Adjust based on header size */
+  width: 80%;
+  max-width: 1200px;
+  margin: auto; /* Centers the container on the page */
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.05); /* Set background here if needed */
+  border-radius: 20px;
 }
-
-header {
-  display: flex;
-  justify-content: space-between; /* This will space the child elements */
-  align-items: center; /* This will center the child elements vertically */
-  padding: 20px;
-  backdrop-filter: blur(10px);
-}
-
-.search-bar {
-  flex-grow: 1; /* This will allow the search bar to grow and take available space */
-  display: flex;
-  justify-content: center; /* This will center the search bar horizontally */
-  align-items: center;
-}
-
-.search-bar input {
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    margin-right: 10px;
-}
-
-.search-button {
-    padding: 10px;
-    background-color: rgba(247, 232, 232, 0.3);
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
 
 .main-content {
-    flex: 1;
-    display: flex;
-}
-
-.top-boxes {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-
-.forum-box {
-    background-color: rgba(255, 255, 255, 0.2);
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-}
-
-.view-posts-button {
-    padding: 10px;
-    background-color: rgba(255, 255, 255, 0.3);
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+  display: flex;
+  flex: 1;
 }
 
 .side-bar {
-    width: 250px;
-    background-color: rgba(255, 255, 255, 0.2);
-    padding: 20px;
-    border-radius: 10px;
-    margin: 25px;
-    text-align: center;
+  flex: 1;
+  padding: 20px;
+  color: white;
 }
 
-.side-bar h2 {
-    margin-bottom: 10px;
+.left {
+  background: rgba(0, 123, 255, 0.5);
 }
 
-.profile-section {
-    position: relative;
-  }
-  
-  .profile-button {
-    padding: 10px;
-    background-color: #333; /* Dark background color */
-    border: none;
-    border-radius: 20px; /* Rounded corners like the image */
-    color: white; /* White text color */
-    cursor: pointer;
-    font-weight: bold; /* Bold font for the username */
-  }
-  
-  .profile-button::after {
-    margin-left: 5px;
-    color: white;
-  }
-  
-  .profile-dropdown {
-    position: absolute;
-    top: 100%; /* Positioned right below the profile button */
-    right: 0;
-    background-color: #333; /* Dark background color */
-    border-radius: 4px; /* Rounded corners like the image */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Subtle shadow for depth */
-    z-index: 1000; /* Ensure it's on top of other content */
-    min-width: 200px; /* Minimum width for the dropdown */
-  }
-  
-  .dropdown-item {
-    padding: 12px 20px; /* More padding for each item */
-    color: white; /* White text color */
-    font-size: 16px; /* Larger font size */
-    border-bottom: 1px solid #555; /* Separator for items */
-  }
-  
-  .dropdown-item:last-child {
-    border-bottom: none; /* No border for the last item */
-  }
-  
-  .dropdown-item:hover {
-    background-color: #444; /* Slight background color change on hover */
-  }
-
-  .central-content {
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+.right {
+  background: rgba(40, 167, 69, 0.5);
 }
 
-/* Make sure .left and .right classes are added to the corresponding side-bar divs */
-.side-bar.left {
-  /* Additional styles for left sidebar if needed */
+.central-content,
+.side-bar {
+  flex: 2;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.side-bar.right {
-  /* Additional styles for right sidebar if needed */
+/* Style changes for glassmorphism effect */
+.central-content,
+.side-bar {
+  margin: 20px;
+}
+
+.side-bar h2,
+.central-content h2 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  margin-bottom: 15px;
+  padding: 15px;
+}
+
+/* Add styles for the buttons */
+button {
+  background: #007bff;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer;
+  font-weight: bold; /* Make text bold */
+  transition: all 0.2s ease-in-out; /* Smooth transition for hover effect */
+}
+
+button:hover {
+  background: #0056b3; /* Darker shade on hover */
+  box-shadow: 0 5px 10px rgba(0,0,0,0.2); /* Add shadow for depth */
+}
+
+/* Popup styles */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7); /* Heavily blurred background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  position: relative;
+  background: #ffffff;
+  border-radius: 15px; /* Smoother border radius */
+  padding: 25px; /* More padding for better spacing */
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2); /* Soft shadow for depth */
+  color: #333; /* Darker text for better readability */
+  font-size: 16px; /* Larger font size */
+}
+
+.popup-content h2 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.popup-content ul {
+  padding: 0;
+}
+
+.popup-content ul li {
+  margin-bottom: 10px;
+}
+
+.popup-content p {
+  margin-top: 5px;
+}
+
+
+.close {
+  position: absolute;
+  top: 20px; /* More space from the top inside the popup */
+  right: 20px; /* More space from the right inside the popup */
+  width: 32px;
+  height: 32px;
+  background-color: #f5f5f5;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.close:hover {
+  background-color: #eb0000;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.close:before {
+  font-size: 24px;
+  color: #333;
+}
+/* Add more specific styles for the popup button */
+.view-modules {
+  margin-top: 20px;
 }

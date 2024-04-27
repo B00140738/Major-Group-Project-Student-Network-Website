@@ -1,57 +1,9 @@
-// pages/posts/[_id].js
+"use client";
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-const getPostById = async (_id) => {
-  try {
-    const response = await fetch(`http://localhost:3000/api/getPostById?_id=${_id}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch post');
-    }
-    const post = await response.json();
-    return post;
-  } catch (error) {
-    console.error('Error fetching post:', error);
-    return null;
-  }
-};
 
-const getCommentsByPostId = async (_id) => {
-  try {
-    const response = await fetch(`http://localhost:3000/api/getCommentsByPostId?_id=${_id}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch comments');
-    }
-    const comments = await response.json();
-    return comments;
-  } catch (error) {
-    console.error('Error fetching comments:', error);
-    return [];
-  }
-};
-
-const Post = ({ post, comments }) => {
-  if (!post) return <div>Post not found</div>;
-
-  return (
-    <div>
-      <h1>{post.title}</h1>
-      <p>{post.content}</p>
-      <p>Posted By: {post._id}</p>
-      <h2>Comments</h2>
-      <ul>
-        {comments.map((comment) => (
-          <li key={comment.id}>{comment.text}</li>
-        ))}
-      </ul>
-
-      <Link href="/forums">
-        <a>Back to Forum</a>
-      </Link>
-    </div>
-  );
-};
 
 const PostPage = () => {
   const [post, setPost] = useState(null);
@@ -60,14 +12,71 @@ const PostPage = () => {
   const { _id } = router.query;
 
   useEffect(() => {
-    if (_id) {
-      // Fetch post and comments data when the component mounts
-      getPostById(_id).then((post) => setPost(post));
-      getCommentsByPostId(_id).then((comments) => setComments(comments));
-    }
+    const fetchData = async () => {
+      if (_id) {
+        try {
+          const postResponse = await fetch(`/api/getPostById?_id=${_id}`);
+          const post = await postResponse.json();
+          setPost(post);
+
+          const commentsResponse = await fetch(`/api/getCommentsByPostId?postId=${_id}`);
+          const comments = await commentsResponse.json();
+          setComments(comments);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      }
+    };
+
+    fetchData();
   }, [_id]);
 
-  return <Post post={post} comments={comments} />;
+  const handleCommentUpdate = async (commentId, newContent) => {
+    try {
+      const response = await fetch(`/api/updateComment`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ commentId, newContent }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to update comment');
+      }
+      const updatedCommentsResponse = await fetch(`/api/getCommentsByPostId?postId=${_id}`);
+      const updatedComments = await updatedCommentsResponse.json();
+      setComments(updatedComments);
+      return true;
+    } catch (error) {
+      console.error('Error updating comment:', error);
+      return false;
+    }
+  };
+
+  return (
+    <div>
+      {post && (
+        <>
+          <h1>{post.title}</h1>
+          <p>{post.content}</p>
+          <h2>Comments</h2>
+          <h2>Comments</h2>
+<button onClick={() => console.log('Test button clicked')}>Test Button</button>
+<ul></ul>
+          <ul>
+            {comments.map((comment) => (
+              <Comment key={comment._id} comment={comment} onCommentUpdate={handleCommentUpdate} />
+              
+            ))}
+          </ul>
+          <Link href="/forums">
+            <a>Back to Forum</a>
+          </Link>
+        </>
+      )}
+      {!post && <div>Post not found</div>}
+    </div>
+  );
 };
 
 export default PostPage;

@@ -1,99 +1,366 @@
-"use client";
+
+"use client"
 import React, { useState, useEffect } from 'react';
+import Layout from '../Components/Layout';
+import css from '../css/settings.css';
 import { useRouter } from 'next/navigation';
 
-
 export default function SettingsPage() {
-    const [username, setUsername] = useState('');
-    const [newUsername, setNewUsername] = useState(''); // Add newUsername state
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const router = useRouter();
+  const router = useRouter();
+  const [currentUsername, setCurrentUsername] = useState('');
+  const [newUsername, setNewUsername] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [userId, setUserId] = useState(null);
+  const [email, setEmail] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [address, setAddress] = useState('');
+  const [year, setYear] = useState('');
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
-    useEffect(() => {
-        const fetchUserDetails = async () => {
-            try {
-              
-                const response = await fetch('http://localhost:3000/api/users');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                const userDetails = await response.json();
-                setUsername(userDetails.username);
-                setEmail(userDetails.email);
-            } catch (error) {
-                console.error("Failed to fetch user details:", error);
-            }
-        };
 
-        fetchUserDetails();
-    }, []);
+  const handleNotificationToggle = async () => {
+    const newNotificationsEnabled = !notificationsEnabled;
+    setNotificationsEnabled(!notificationsEnabled);
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        try {
-            const response = await fetch('http://localhost:3000/api/users', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, newUsername, email, password }), // Include newUsername
-            });
+    try {
+      const response = await fetch(`/api/NotificationPreferences?username=${currentUsername}&notificationsEnabled=${newNotificationsEnabled}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                // Include authorization headers if necessary
+            },
+        });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-
-            const result = await response.json();
-            console.log('Update result:', result);
-            router.push('/dashboard');
-        } catch (error) {
-            console.error("Failed to update user details:", error);
+        if (!response.ok) {
+            throw new Error('Failed to update notification settings');
         }
+
+        const data = await response.json();
+        console.log('Notification settings updated:', data);
+    } catch (error) {
+        console.error('Error updating notification settings:', error);
+        setErrorMessage('Failed to update notification settings');
+        // Revert toggle state in case of failure
+        setNotificationsEnabled(!newNotificationsEnabled);
+    }
+};
+
+useEffect(() => {
+  const fetchUserInfo = async () => {
+    const userId = getUserIdFromCookies();
+    if (!userId) {
+      console.log("User ID not found.");
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/getUserInfo?userId=${userId}`);
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch user information");
+      }
+
+      const { user } = await res.json();
+      if (user && user.length > 0) {
+        const userInfo = user[0]; // Assuming the result is an array with a single user object
+
+        // Update state with fetched data
+        setCurrentUsername(userInfo.username);
+        setEmail(userInfo.email);
+        setAddress(userInfo.address);
+        setYear(userInfo.year);
+        setNotificationsEnabled(userInfo.notificationsEnabled); // Update this line according to your actual data
+      }
+    } catch (error) {
+      console.error("Error fetching user information:", error);
+    }
+  };
+
+  fetchUserInfo();
+}, []);
+
+
+
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+  
+  const handleCurrentPasswordChange = (e) => {
+    setCurrentPassword(e.target.value);
+  };
+  
+  const handleNewPasswordChange = (e) => {
+    setNewPassword(e.target.value);
+  };
+  
+  const handleConfirmPasswordChange = (e) => {
+    setConfirmPassword(e.target.value);
+  };
+  
+  const handleDeleteAccount = () => {
+    // Add logic to handle account deletion
+    console.log('Account deletion requested');
+  };
+  
+  useEffect(() => {
+    // Fetch the current username and userId from cookies
+    const username = getUsernameFromCookies();
+    const userId = getUserIdFromCookies();
+    setCurrentUsername(username);
+    setUserId(userId);
+    if (!username || !userId) {
+      router.replace('/login');
+    }
+  }, [router]);
+
+  const getUsernameFromCookies = () => {
+    const allCookies = document.cookie.split('; ');
+    const usernameCookie = allCookies.find(cookie => cookie.startsWith('username='));
+    return usernameCookie ? decodeURIComponent(usernameCookie.split('=')[1]) : '';
+  };
+
+  const getUserIdFromCookies = () => {
+    const allCookies = document.cookie.split('; ');
+    const userIdCookie = allCookies.find(cookie => cookie.startsWith('userId='));
+    return userIdCookie ? decodeURIComponent(userIdCookie.split('=')[1]) : null;
+  };
+
+  
+  const handleEditClick = () => {
+    setIsEditing(true);
+    setNewUsername(currentUsername);
+  };
+
+  const handleSaveClick = async (event) => {
+    event.preventDefault();
+    if (!userId) {
+      setErrorMessage('User ID not found. Please log in again.');
+      return;
+    }
+  
+    try {
+      const updateResponse = await fetch(`/api/updateUser`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json', // Specify content type as JSON
+        },
+        body: JSON.stringify({ // Stringify the request body to JSON format
+          userId: userId,
+          newUsername: newUsername !== '' ? newUsername : currentUsername, // Use newUsername if it's not empty, otherwise use currentUsername
+          email: email,
+          address: address,
+          year: year,
+        }),
+      });
+  
+      if (!updateResponse.ok) {
+        throw new Error('Failed to update user information');
+      }
+  
+      const responseData = await updateResponse.json();
+      console.log('User information updated successfully', responseData);
+  
+      document.cookie = `username=${newUsername}; path=/`;
+      
+      // Update the currentUsername state with the new value
+      setCurrentUsername(newUsername);
+      setIsEditing(false)
+      // Optionally, you can display a success message or perform other actions here
+    } catch (error) {
+      console.error('Error updating user information:', error);
+      setErrorMessage('Error updating user information');
+    }
+  };
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const userId = getUserIdFromCookies();
+      if (!userId) {
+        console.log("User ID not found.");
+        return;
+      }
+    
+      try {
+        const res = await fetch(`/api/getUserInfo?userId=${userId}`);
+    
+        if (!res.ok) {
+          throw new Error("Failed to fetch user information");
+        }
+    
+        const { user } = await res.json();
+        if (user && user.length > 0) {
+          const userInfo = user[0]; // Assuming the result is an array with a single user object
+        
+  
+          // Update state with fetched data, excluding dob and password
+
+          setCurrentUsername(userInfo.username);
+          setEmail(userInfo.email);
+          setAddress(userInfo.address); // Example additional fields
+          setYear(userInfo.year); // Adjust according to your data structure
+        
+        }
+      } catch (error) {
+        console.error("Error fetching user information:", error);
+      }
     };
+  
+    fetchUserInfo();
+  }, []);
+
+  const handlePasswordChange = async () => {
+    // Validate password inputs
+    if (newPassword !== confirmPassword) {
+      setErrorMessage("Passwords do not match");
+      return;
+    }
+  
+    // Implement the API request to change the password
+    try {
+      // Add your API request logic here
+      console.log("Password change request sent");
+    } catch (error) {
+      console.error("Error changing password:", error);
+      setErrorMessage("Failed to change password");
+    }
+  };
+
+  const handleCancelClick = () => {
+    setIsEditing(false);
+    // Reset the edited fields to their original values
+    setNewUsername(currentUsername);
+    setEmail(email); // Use the state variable instead of userInfo.email
+    setAddress(address); // Use the state variable instead of userInfo.address
+    setYear(year); // Use the state variable instead of userInfo.year
+    // If you have error messages, you might want to clear them too
+    setErrorMessage('');
+  };
+
 
     return (
-        <div className="settings-container">
-            <h1>Account Settings</h1>
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="username">Username</label>
-                    <input
-                        type="text"
-                        id="username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="newUsername">New Username</label> {/* Add newUsername input field */}
-                    <input
-                        type="text"
-                        id="newUsername"
-                        value={newUsername}
-                        onChange={(e) => setNewUsername(e.target.value)}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="email">Email</label>
-                    <input
-                        type="email"
-                        id="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="password">New Password</label>
-                    <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-                <button type="submit" className="save-button">Save Changes</button>
-            </form>
+
+ <Layout>
+    <div className="settings-container">
+      <h1>Account Settings</h1>
+      <div>
+        <strong>Profile Information</strong>
+        <div>
+          <input
+          className={isEditing ? 'input-enabled' : 'input-disabled'}
+            id="username"
+            type="text"
+            value={isEditing ? newUsername : currentUsername}
+            onChange={(e) => setNewUsername(e.target.value)}
+            disabled={!isEditing}
+            style={{ backgroundColor: isEditing ? 'white' : 'lightgray' }}
+            required
+        />
+
+          <label>Email:</label>
+          <input
+              className={isEditing ? 'input-enabled' : 'input-disabled'}
+              id='email'
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              disabled={!isEditing}
+              style={{ backgroundColor: isEditing ? 'white' : 'lightgray' }}
+              required
+            />
+          <label>Address:</label>
+            <input
+              className={isEditing ? 'input-enabled' : 'input-disabled'}
+              id='address'
+              type="text"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              disabled={!isEditing}
+              style={{ backgroundColor: isEditing ? 'white' : 'lightgray' }}
+              required
+            />
+          <label>Year:</label>
+
+
+
+            <select  className={isEditing ? 'input-enabled' : 'input-disabled'}
+              id='year'
+              type="text"
+              value={year}
+              onChange={(e) => setYear(e.target.value)}
+              disabled={!isEditing}
+              style={{ backgroundColor: isEditing ? 'white' : 'lightgray' }}
+              required>
+              <option value="">Select Year</option>
+              <option value="1">Year 1</option>
+              <option value="2">Year 2</option>
+              <option value="3">Year 3</option>
+              <option value="4">Year 4</option>
+            </select>
+              <div>
+                <button onClick={handleSaveClick}>Save Profile Information</button>
+                <button
+                  onClick={isEditing ? handleCancelClick : handleEditClick}
+                  className={isEditing ? 'cancel-button' : 'edit-button'}
+                >
+                  {isEditing ? 'Cancel' : 'Edit Profile Information'}
+                </button>
+              </div>
+          </div>
+
+        <strong>Update Password</strong>
+        
+        <div>
+          <label>Current Password:</label>
+          <input
+          id='currentPassword'
+            type="password"
+            placeholder="Current Password"
+            onChange={handleCurrentPasswordChange}
+            required
+          />
+          <label>New Password:</label>
+          <input
+          id='newPassword'
+            type="password"
+            placeholder="New Password"
+            onChange={handleNewPasswordChange}
+            required
+          />
+          <label>Confirm New Password:</label>
+          <input
+          id='confirmPassword'
+            type="password"
+            placeholder="Confirm Password"
+            onChange={handleConfirmPasswordChange}
+            required
+          />
+          <button onClick={handlePasswordChange}>Save New Password</button>
         </div>
-    );
+        <div>
+          <strong>Notification Settings</strong>
+          <label className="switch">
+            <input
+              type="checkbox"
+              checked={notificationsEnabled}
+              onChange={handleNotificationToggle}
+            />
+            <span className="slider round"></span>
+          </label>
+        </div>
+
+
+
+        <strong>Delete Account</strong>
+        <div>
+          <button className="delete-button" onClick={handleDeleteAccount}>Delete Account</button>
+        </div>
+      </div>
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
+    </div>
+  </Layout>
+);
 }

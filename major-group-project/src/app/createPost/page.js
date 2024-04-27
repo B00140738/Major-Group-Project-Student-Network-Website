@@ -1,16 +1,21 @@
+//createPost page
 'use client';
-
 import { Button, Box, TextField } from "@mui/material";
 import React, { useState, useEffect } from 'react';
+import Layout from "../Components/Layout";
+import '../css/createPost.css';
+import { useRouter } from 'next/navigation';
 async function runDBCallAsync(url, formData){
-
+// Send a POST request
     try {
-        const res = await fetch(url, {
+        // Send a POST request
+        const res = await fetch(url, { 
           method: 'POST', // Use POST method
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(formData),
+          // Convert th into a JSON string
+          body: JSON.stringify(formData), 
         });
         // Check if the HTTP status code is OK (200-299)
         if (!res.ok) {
@@ -19,14 +24,15 @@ async function runDBCallAsync(url, formData){
 
 
     const data = await res.json();
-
-    if (data.data === "true"){
+// Check if the response is OK and return the data
+    if (data.data === "true"){ 
         console.log("Post created successfully")
     }
     else {
         console.log("Error: could not create post")
     }
-    }catch (error) {
+    // If an error occurs, log it to the console
+    }catch (error) { 
     // If an error occurs, log it to the console
     console.error("Error during fetch: ", error);
   }
@@ -36,82 +42,94 @@ async function runDBCallAsync(url, formData){
 
 
 const createPost = () => {
-    const [username, setUsername] = useState(''); // State for username
-    useEffect(() => {
-        // Function to retrieve username from the cookie
+    const [username, setUsername] = useState('');
+    const moduleId = localStorage.getItem('currentModuleId');
+    const router = useRouter(); // Using useRouter for navigation
+
+    
+  useEffect(() => {
         const getUsernameFromCookies = () => {
             const allCookies = document.cookie.split('; ');
             const usernameCookie = allCookies.find(cookie => cookie.startsWith('username='));
             return usernameCookie ? decodeURIComponent(usernameCookie.split('=')[1]) : '';
         };
-        setUsername(getUsernameFromCookies()); // Set the username
-    }, [])
-
-
+        setUsername(getUsernameFromCookies());
+    }, []);
+  
+    const handleSubmit = async (event) => {
+      event.preventDefault();
     
-const handleSubmit = (event) => {
-
-    console.log("handling submit");
-    event.preventDefault();
-
-    const data = new FormData(event.currentTarget);
-
-       // Extract the title and content from the form data
-        let title = data.get('title');
-        let content = data.get('content');
-        let timestamp = new Date();
-        let poster = username;
-
-    console.log("creating post...")
-
-
-    runDBCallAsync(`http://localhost:3000//api/createPost?poster=${poster}&title=${title}&content=${content}&timestamp=${timestamp}`)
-    window.location.href = '/forums'; // Redirect to dashboard
-}; // end handler
-
+      const data = new FormData(event.currentTarget);
+      let title = data.get('title');
+      let content = data.get('content');
+      let timestamp = new Date();
+      let poster = username;
+    
+      try {
+        const response = await runDBCallAsync(`http://localhost:3000/api/createPost?poster=${poster}&title=${title}&content=${content}&timestamp=${timestamp}&moduleId=${moduleId}`);
+        console.log('response:', response);
+        if (response.data === "true") {
+          console.log("Post created successfully");
+          router.push('/forums'); // Navigate to forums page
+        } else {
+          console.log("Error: could not create post");
+        }
+      } catch (error) {
+        console.error('Error creating post:', error);
+      }
+    };
+  
     return (
-        <body>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
+      <Layout>
         <div className="post-creator">
-            <center><h1>Create Post</h1></center>
-     
-            <br></br>
+          <center><h1>Create Post</h1></center>
+  
+          <form onSubmit={handleSubmit}>
             <h2>Title</h2>
             <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="title"
-            label="title"
-            type="text"
-            id="title"
+              margin="normal"
+              required
+              fullWidth
+              name="title"
+              label="title"
+              type="text"
+              id="title"
             />
             <br></br>
             <h2>Content</h2>
             <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="content"
-            label="content"
-            type="text"
-            id="content"
+              margin="normal"
+              required
+              fullWidth
+              name="content"
+              label="content"
+              type="text"
+              id="content"
             />
             <br></br>
-          
+  
             <br></br>
             <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{mt: 3, mb: 2 }}
-            >
-            Create Post  
-            </Button>
+  type="submit"
+  fullWidth
+  variant="contained"
+  sx={{
+    mt: 3, mb: 2,
+    borderRadius: '8px', // Rounded corners
+    backgroundColor: '#1976d2', // Primary color
+    '&:hover': {
+      backgroundColor: '#115293', // Darker shade on hover
+    },
+    padding: '10px 15px', // Padding
+    color: 'white', // Text color
+  }}
+>
+  Create Post
+</Button>
+          </form>
         </div>
-        </Box>
-        </body>
-    )
-}
-
-export default createPost;
+      </Layout>
+    );
+  }
+  
+  export default createPost;
