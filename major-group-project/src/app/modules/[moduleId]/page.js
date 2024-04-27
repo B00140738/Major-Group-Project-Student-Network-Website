@@ -63,6 +63,35 @@ const ModulePage = () => {
   }, []);
 
   useEffect(() => {
+    const fetchUserInfo = async () => {
+      const userId = getUserIdFromCookies();
+      if (!userId) {
+        console.log("User ID not found.");
+        return;
+      }
+  
+      try {
+        const res = await fetch(`/api/getUserInfo?userId=${userId}`);
+  
+        if (!res.ok) {
+          throw new Error("Failed to fetch user information");
+        }
+  
+        const { user } = await res.json();
+        if (user && user.length > 0) {
+          const userInfo = user[0]; // Assuming the result is an array with a single user object
+  
+          setEmail(userInfo.email);
+        }
+      } catch (error) {
+        console.error("Error fetching user information:", error);
+      }
+    };
+  
+    fetchUserInfo();
+  }, []);
+
+  useEffect(() => {
     const fetchModuleDetails = async () => {
       if (!moduleId) return;
 
@@ -275,9 +304,11 @@ return (
             <Button variant="contained" color="primary" onClick={handleCreatePost}>
               Create Post
             </Button>
-            <Button variant="contained" color="primary" onClick={handleCreateAnnouncement}>
-              Create Announcement
-            </Button>
+            {email == moduleInfo.lecturer && (
+                <Button variant="contained" color="primary" onClick={handleCreateAnnouncement}>
+                Create Announcement
+              </Button>
+              )}
           </center>
           <br />
           <br />

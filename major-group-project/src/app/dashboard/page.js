@@ -6,7 +6,7 @@ import '../css/dashboard.css';
 import Layout from '../Components/Layout';
 import Header from '../Components/Header';
 import Link from 'next/link';
-import { setCookie } from 'nookies';
+import Grid from '@mui/material/Unstable_Grid2';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -17,8 +17,6 @@ export default function Dashboard() {
   const [searchResults, setSearchResults] = useState([]);
   const [showModulesPopup, setShowModulesPopup] = useState(false);
   const [dashboardModules, setDashboardModules] = useState([]);
-
-
 
   useEffect(() => {
     const fetchModules = async () => {
@@ -255,5 +253,6 @@ export default function Dashboard() {
     </Layout>
   );
 }
+
 
 
