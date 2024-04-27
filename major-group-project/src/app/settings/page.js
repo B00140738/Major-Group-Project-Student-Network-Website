@@ -16,10 +16,10 @@ export default function SettingsPage() {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [address, setAddress] = useState('');
+  const [code, setCode] = useState('');
   const [year, setYear] = useState('');
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-
+  
 
   const handleNotificationToggle = async () => {
     const newNotificationsEnabled = !notificationsEnabled;
@@ -70,7 +70,7 @@ useEffect(() => {
         // Update state with fetched data
         setCurrentUsername(userInfo.username);
         setEmail(userInfo.email);
-        setAddress(userInfo.address);
+        setCode(userInfo.code);
         setYear(userInfo.year);
         setNotificationsEnabled(userInfo.notificationsEnabled); // Update this line according to your actual data
       }
@@ -152,7 +152,7 @@ useEffect(() => {
           userId: userId,
           newUsername: newUsername !== '' ? newUsername : currentUsername, // Use newUsername if it's not empty, otherwise use currentUsername
           email: email,
-          address: address,
+          code: code,
           year: year,
         }),
       });
@@ -200,7 +200,7 @@ useEffect(() => {
 
           setCurrentUsername(userInfo.username);
           setEmail(userInfo.email);
-          setAddress(userInfo.address); // Example additional fields
+          setCode(userInfo.code); // Example additional fields
           setYear(userInfo.year); // Adjust according to your data structure
         
         }
@@ -219,22 +219,43 @@ useEffect(() => {
       return;
     }
   
-    // Implement the API request to change the password
     try {
-      // Add your API request logic here
-      console.log("Password change request sent");
+      // Send a request to update the password
+      const response = await fetch(`/api/updateUserPassword`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: userId,
+          currentPassword: currentPassword,
+          newPassword: newPassword,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to update password');
+      }
+  
+      // Clear the input fields
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+  
+      // Optionally, you can display a success message or perform other actions here
+      console.log('Password updated successfully');
     } catch (error) {
-      console.error("Error changing password:", error);
-      setErrorMessage("Failed to change password");
+      console.error('Error updating password:', error);
+      setErrorMessage('Failed to update password');
     }
   };
-
+  
   const handleCancelClick = () => {
     setIsEditing(false);
     // Reset the edited fields to their original values
     setNewUsername(currentUsername);
     setEmail(email); // Use the state variable instead of userInfo.email
-    setAddress(address); // Use the state variable instead of userInfo.address
+    setCode(code); // Use the state variable instead of userInfo.address
     setYear(year); // Use the state variable instead of userInfo.year
     // If you have error messages, you might want to clear them too
     setErrorMessage('');
@@ -271,13 +292,13 @@ useEffect(() => {
               style={{ backgroundColor: isEditing ? 'white' : 'lightgray' }}
               required
             />
-          <label>Address:</label>
+          <label>Code:</label>
             <input
               className={isEditing ? 'input-enabled' : 'input-disabled'}
-              id='address'
+              id='code'
               type="text"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
               disabled={!isEditing}
               style={{ backgroundColor: isEditing ? 'white' : 'lightgray' }}
               required

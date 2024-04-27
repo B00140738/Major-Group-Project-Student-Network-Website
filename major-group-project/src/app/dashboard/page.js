@@ -79,6 +79,15 @@ export default function Dashboard() {
     const userId = getUserIdFromCookies();
     const dashboardModulesKey = `dashboardModules-${userId}`;
     const updatedModule = [...dashboardModules, module];
+
+      // Check if the module is already on the dashboard
+  const isModuleAlreadyAdded = dashboardModules.some(item => item._id === module._id);
+  
+  if (isModuleAlreadyAdded) {
+    alert("This module is already on your dashboard.");
+    return; // Stop execution if module is already added
+  }
+  
     setDashboardModules(updatedModule);
     localStorage.setItem(dashboardModulesKey, JSON.stringify(updatedModule));
   };
