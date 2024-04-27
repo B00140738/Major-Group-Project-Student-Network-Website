@@ -13,23 +13,37 @@ const ModulePage = () => {
   const [posts, setPosts] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const router = useRouter();
   const moduleId = localStorage.getItem('currentModuleId');
 
   useEffect(() => {
-    const fetchUsername = async () => {
+    const fetchUserInfo = async () => {
+      const userId = getUserIdFromCookies();
+      if (!userId) {
+        console.log("User ID not found.");
+        return;
+      }
+  
       try {
-        const userId = getUserIdFromCookies();
-        const response = await fetch(`/api/getUserInfo?userId=${userId}`);
-        if (!response.ok) throw new Error('Failed to fetch username');
-        const data = await response.json();
-        setUsername(data.username);
+        const res = await fetch(`/api/getUserInfo?userId=${userId}`);
+  
+        if (!res.ok) {
+          throw new Error("Failed to fetch user information");
+        }
+  
+        const { user } = await res.json();
+        if (user && user.length > 0) {
+          const userInfo = user[0]; // Assuming the result is an array with a single user object
+  
+          setEmail(userInfo.email);
+        }
       } catch (error) {
-        console.error('Error fetching username:', error);
+        console.error("Error fetching user information:", error);
       }
     };
-
-    fetchUsername();
+  
+    fetchUserInfo();
   }, []);
 
   useEffect(() => {
@@ -109,9 +123,11 @@ const ModulePage = () => {
               <Button variant="contained" color="primary" onClick={handleCreatePost}>
                 Create Post
               </Button>
-              <Button variant="contained" color="primary" onClick={handleCreateAnnouncement}>
+              {email == moduleInfo.lecturer && (
+                <Button variant="contained" color="primary" onClick={handleCreateAnnouncement}>
                 Create Announcement
               </Button>
+              )}
             </center>
             <br />
             <br />
@@ -121,9 +137,8 @@ const ModulePage = () => {
             {/* Render Announcements Here */}
             {announcements.length > 0 ? (
               announcements.map((announcement, index) => (
-                <div key={index} className="post">
-                  <h4>{announcement.poster}</h4>
-                  <h3>{announcement.title}</h3>
+                <div key={index} className="announcement">
+                  <h4>{announcement.title}</h4>
                   <p>{announcement.content}</p>
                 </div>
               ))

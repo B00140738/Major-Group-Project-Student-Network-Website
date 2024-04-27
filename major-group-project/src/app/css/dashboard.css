@@ -1,6 +1,22 @@
 body {
-  background: linear-gradient(to right, #8e9eab, #eef2f3);
+  background: linear-gradient(45deg, #d2001a, #7462ff, #f48e21, #23d5ab);
+  background-size: 300% 300%;
+  animation: color 12s ease-in-out infinite;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
+}
+
+@keyframes color {
+  0% {
+    background-position: 0 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0 50%;
+  }
 }
 
 /* Common styles for glassmorphism effect */
@@ -25,7 +41,7 @@ body {
   display: flex;
   width: 80%;
   max-width: 1200px;
-  margin: auto; /* Centers the container on the page */
+  margin: 5px;
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   background: rgba(255, 255, 255, 0.05); /* Set background here if needed */
@@ -79,11 +95,11 @@ ul {
   padding: 0;
 }
 
-li {
+.module {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  margin-bottom: 15px;
-  padding: 15px;
+  margin-bottom: 10px;
+  padding: 10px;
 }
 
 /* Add styles for the buttons */
@@ -174,4 +190,28 @@ button:hover {
 /* Add more specific styles for the popup button */
 .view-modules {
   margin-top: 20px;
+}
+
+.banner {
+  display: flex;
+  width: 80%;
+  max-width: 1200px;
+  margin: auto; /* Centers the container on the page */
+  margin-top: 55px;
+  margin-bottom: -25px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-image: url(../../../public/images-LAPTOP-6BIKVR3Q/overlay_3.jpg);
+  border-radius: 20px;
+  height: 350px;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 1.5rem;
+  color: white;
+}
+
+#see-module {
+  margin-right: 7px;
 }
