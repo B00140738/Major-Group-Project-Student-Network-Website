@@ -1,82 +1,173 @@
 "use client";
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button, Box, TextField } from "@mui/material";
+import Link from 'next/link'; 
+import Layout from '../../Components/Layout';
+import '../../css/modulePage.css';
 
 
-
-const PostPage = () => {
-  const [post, setPost] = useState(null);
-  const [comments, setComments] = useState([]);
+const ModulePage = () => {
+  const [moduleInfo, setModuleInfo] = useState({});
+  const [threads, setThreads] = useState([]);
+  const [posts, setPosts] = useState([]);
+  const [announcements, setAnnouncements] = useState([]);
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const router = useRouter();
-  const { _id } = router.query;
+  const moduleId = localStorage.getItem('currentModuleId');
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (_id) {
-        try {
-          const postResponse = await fetch(`/api/getPostById?_id=${_id}`);
-          const post = await postResponse.json();
-          setPost(post);
-
-          const commentsResponse = await fetch(`/api/getCommentsByPostId?postId=${_id}`);
-          const comments = await commentsResponse.json();
-          setComments(comments);
-        } catch (error) {
-          console.error('Error fetching data:', error);
+    const fetchUserInfo = async () => {
+      const userId = getUserIdFromCookies();
+      if (!userId) {
+        console.log("User ID not found.");
+        return;
+      }
+  
+      try {
+        const res = await fetch(`/api/getUserInfo?userId=${userId}`);
+  
+        if (!res.ok) {
+          throw new Error("Failed to fetch user information");
         }
+  
+        const { user } = await res.json();
+        if (user && user.length > 0) {
+          const userInfo = user[0]; // Assuming the result is an array with a single user object
+  
+          setEmail(userInfo.email);
+        }
+      } catch (error) {
+        console.error("Error fetching user information:", error);
+      }
+    };
+  
+    fetchUserInfo();
+  }, []);
+
+  useEffect(() => {
+    const fetchModuleDetails = async () => {
+      if (!moduleId) return;
+
+      try {
+        const response = await fetch(`/api/threads?moduleId=${moduleId}`);
+        if (!response.ok) throw new Error('Failed to fetch module details');
+        const data = await response.json();
+        setModuleInfo(data.module || {});
+        setThreads(data.threads || []);
+      } catch (error) {
+        console.error('Error fetching module details:', error);
       }
     };
 
-    fetchData();
-  }, [_id]);
+    fetchModuleDetails();
+  }, [moduleId]);
 
-  const handleCommentUpdate = async (commentId, newContent) => {
-    try {
-      const response = await fetch(`/api/updateComment`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ commentId, newContent }),
-      });
-      if (!response.ok) {
-        throw new Error('Failed to update comment');
+  useEffect(() => {
+    const fetchPostsForModule = async () => {
+      if (!moduleId) return;
+      try {
+        const response = await fetch(`/api/getPostByModule?moduleId=${moduleId}`);
+        if (!response.ok) throw new Error('Failed to fetch posts for module');
+        const data = await response.json();
+        setPosts(data.posts || []);
+      } catch (error) {
+        console.error('Error fetching posts for module:', error);
       }
-      const updatedCommentsResponse = await fetch(`/api/getCommentsByPostId?postId=${_id}`);
-      const updatedComments = await updatedCommentsResponse.json();
-      setComments(updatedComments);
-      return true;
-    } catch (error) {
-      console.error('Error updating comment:', error);
-      return false;
-    }
+    };
+
+    fetchPostsForModule();
+  }, [moduleId]);
+
+  useEffect(() => {
+    const fetchAnnouncementsForModule = async () => {
+      if (!moduleId) return;
+      try {
+        const response = await fetch(`/api/getAnnouncements?moduleId=${moduleId}`);
+        if (!response.ok) throw new Error('Failed to fetch announcements for module');
+        const data = await response.json();
+        setAnnouncements(data || []); // Set announcements directly
+      } catch (error) {
+        console.error('Error fetching announcements for module:', error);
+      }
+    };
+
+    fetchAnnouncementsForModule();
+  }, [moduleId]);
+
+  const getUserIdFromCookies = () => {
+    const allCookies = document.cookie.split('; ');
+    const userIdCookie = allCookies.find(cookie => cookie.startsWith('userId='));
+    return userIdCookie ? decodeURIComponent(userIdCookie.split('=')[1]) : null;
+  };
+
+  const handleCreatePost = () => {
+    localStorage.setItem('currentModuleId', moduleId);
+    router.push('/createPost');
+  };
+
+  const handleCreateAnnouncement = () => {
+    localStorage.setItem('currentModuleId', moduleId);
+    router.push('/createAnnouncement');
   };
 
   return (
-    <div>
-      {post && (
-        <>
-          <h1>{post.title}</h1>
-          <p>{post.content}</p>
-          <h2>Comments</h2>
-          <h2>Comments</h2>
-<button onClick={() => console.log('Test button clicked')}>Test Button</button>
-<ul></ul>
-          <ul>
-            {comments.map((comment) => (
-              <Comment key={comment._id} comment={comment} onCommentUpdate={handleCommentUpdate} />
-              
-            ))}
-          </ul>
-          <Link href="/forums">
-            <a>Back to Forum</a>
-          </Link>
-        </>
-      )}
-      {!post && <div>Post not found</div>}
-    </div>
+    <Layout>
+      <div className='container'>
+        {moduleInfo && moduleInfo.title ? (
+          <div className='forum-container'>
+            <center>
+              <h1>{moduleInfo.title}</h1>
+              <p>{moduleInfo.description}</p>
+              <Button variant="contained" color="primary" onClick={handleCreatePost}>
+                Create Post
+              </Button>
+              {email == moduleInfo.lecturer && (
+                <Button variant="contained" color="primary" onClick={handleCreateAnnouncement}>
+                Create Announcement
+              </Button>
+              )}
+            </center>
+            <br />
+            <br />
+            <center><h1>Announcements</h1></center>
+            <br />
+            <br />
+            {/* Render Announcements Here */}
+            {announcements.length > 0 ? (
+              announcements.map((announcement, index) => (
+                <div key={index} className="announcement">
+                  <h4>{announcement.title}</h4>
+                  <p>{announcement.content}</p>
+                </div>
+              ))
+            ) : (
+              <center><p>No announcements to display</p></center>
+            )}
+            <br />
+            <br />
+            <center><h1>Posts</h1></center>
+            {/* Rendering Posts Here */}
+            {posts.length > 0 ? (
+              posts.map((post) => (
+                <div key={post._id} className="post">
+                  <h4>creator: {post.poster}</h4>
+                  <h4>{post.title}</h4>
+                  <p>{post.content}</p>
+                </div>
+              ))
+            ) : (
+              <p>No posts to display</p>
+            )}
+          </div>
+        ) : (
+          <p>Loading module details...</p>
+        )}
+      </div>
+    </Layout>
   );
 };
 
-export default PostPage;
+export default ModulePage;
+

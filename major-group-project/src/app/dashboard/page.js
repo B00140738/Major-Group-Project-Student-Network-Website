@@ -6,7 +6,7 @@ import '../css/dashboard.css';
 import Layout from '../Components/Layout';
 import Header from '../Components/Header';
 import Link from 'next/link';
-import { setCookie } from 'nookies';
+import Grid from '@mui/material/Unstable_Grid2';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -17,8 +17,6 @@ export default function Dashboard() {
   const [searchResults, setSearchResults] = useState([]);
   const [showModulesPopup, setShowModulesPopup] = useState(false);
   const [dashboardModules, setDashboardModules] = useState([]);
-
-
 
   useEffect(() => {
     const fetchModules = async () => {
@@ -119,6 +117,46 @@ export default function Dashboard() {
           </div>
         </div>
       )}
+      <br/>
+      <br/>
+      <div className="banner">
+        <center><h1>Welcome back, We've missed you! 👋</h1></center>
+      </div>
+      <div className="main-container">
+        <div className="dashboard-container">
+          <section className="main-content">
+            <div className="side-bar left">
+              <center><h2>Your Modules</h2></center>
+                {dashboardModules.map((module) => (
+                  <div key={module._id}>
+                    <div className='module'>
+                      <center>
+                      <h4>{module.title}</h4>
+                      <small>{module.code} - Year {module.year}</small>
+                      <br/>
+                      <br/>
+                      <button id='see-module' onClick={() => handleModuleClick(module._id)}>See Module</button><button onClick={() => handleRemoveModule(module)}>🗑️</button>
+                      </center>
+                    </div>
+                  </div>
+                ))}
+            </div>
+            <div className="side-bar right">
+              <center><h2>Let's get you sorted...</h2></center>
+              <br/>
+              <center><bold><h3>In order to get started, let's see which modules you want to 
+                add to your dashboard. To get
+                started, just click the button!
+              </h3></bold></center>
+              <center><button className="view-modules" onClick={handleViewModulesClick}>View Modules</button></center>
+              <br/>
+            </div>
+          </section>
+        </div>
+      </div>
+      <div className="banner">
+        <center><h1>Activities on Campus</h1></center>
+      </div>
       <div className="main-container">
         <div className="dashboard-container">
           <section className="main-content">
@@ -133,11 +171,7 @@ export default function Dashboard() {
               ))}
             </div>
             <div className="side-bar left">
-              <h2>Newest Posts</h2>
-              <button className="Make-Thread">Make a Thread</button>
-            </div>
-            <div className="central-content">
-              <h2>Modules</h2>
+              <center><h2>Your Modules</h2></center>
               <ul>
                 {dashboardModules.map((module) => (
                   <li key={module._id}>
@@ -152,14 +186,64 @@ export default function Dashboard() {
               <button className="view-modules" onClick={handleViewModulesClick}>View Modules</button>
             </div>
             <div className="side-bar right">
-              <h2>General Forums</h2>
+              <center><h2>General Forums</h2></center>
               {/* Display fetched general modules */}
               {generalModules.map((module) => (
                 <div key={module._id}>
+                  <center>
                   <h3>{module.title}</h3>
-                  <p>{module.description}</p>
-                  <small>{module.code} - Year {module.year}</small>
+                  <p>{module.code} - {module.year}</p>
+                  <br/>
                   <button onClick={() => handleModuleClick(module._id)}>See Module</button>
+                  </center>
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
+      </div>
+      <div className="banner">
+        <center><h1>Find A Post</h1></center>
+      </div>
+      <div className="main-container">
+        <div className="dashboard-container">
+          <section className="main-content">
+            <div>
+              <h3>Search Results:</h3>
+              {searchResults.map((result, i) => (
+                <li key={result._id}>
+                  <h3>{result.title}</h3>
+                  <p>{result.content}</p>
+                  <small>Posted by: {result.poster} on {result.timestamp}</small>
+                </li>
+              ))}
+            </div>
+            <div className="side-bar left">
+              <center><h2>Your Modules</h2></center>
+              <ul>
+                {dashboardModules.map((module) => (
+                  <li key={module._id}>
+                    <h3>{module.title}</h3>
+                    <p>{module.description}</p>
+                    <small>{module.code} - Year {module.year}</small>
+                    <button onClick={() => handleModuleClick(module._id)}>See Module</button>
+                    <button onClick={() => handleRemoveModule(module)}>Remove Module</button>
+                  </li>
+                ))}
+              </ul>
+              <button className="view-modules" onClick={handleViewModulesClick}>View Modules</button>
+            </div>
+            <div className="side-bar right">
+              <center><h2>General Forums</h2></center>
+              {/* Display fetched general modules */}
+              {generalModules.map((module) => (
+                <div key={module._id}>
+                  <center>
+                  <h3>{module.title}</h3>
+                  <p>{module.code} - {module.year}</p>
+                  <br/>
+                  <button onClick={() => handleModuleClick(module._id)}>See Module</button>
+                  </center>
                 </div>
               ))}
             </div>
@@ -169,4 +253,6 @@ export default function Dashboard() {
     </Layout>
   );
 }
+
+
 

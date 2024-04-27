@@ -52,27 +52,22 @@ const [passwordError, setPasswordError] = useState(''); // Separate state for pa
         let username = data.get('username');
         let email = data.get('email');
         let pass = data.get('pass');
-        let address = data.get('address');
         let repeatPass = data.get('repeatPass');
+        let code = data.get('code');
         let studentyear = data.get('year');
-        const month = data.get('dobMonth');
-        const day = data.get('dobDay');
-        const year = data.get('dobYear');
-        // Format the date of birth  data  before sending it to the server as a string as YYYY-MM-DD
-        const dob = `${year.padStart(2, '0')}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
  
         // Check if the passwords match
         if (pass !== repeatPass) {
           setPasswordError("Passwords do not match."); // Set the error message
           return;
           // Check if the password is at least 8 characters long
-        } else if(!username || !email || !pass || !address || !dob || !studentyear){
+        } else if(!username || !email || !pass || !code || !studentyear){
           setErrorMessage("Please fill in the form"); // Set the error message
         }
    
           else{
             // Run the DB call asynchronously
-          runDBCallAsync(`http://localhost:3000/api/register?&username=${username}&email=${email}&pass=${pass}&address=${address}&dob=${dob}&year=${studentyear}`);
+          runDBCallAsync(`http://localhost:3000/api/register?&username=${username}&email=${email}&pass=${pass}&code=${code}&year=${studentyear}`);
             window.location.href = '/'; // Redirect to dashboard
               
           };
@@ -107,32 +102,8 @@ const [passwordError, setPasswordError] = useState(''); // Separate state for pa
           </label>
           <br />
           <label>
-            Date of Birth:
-            <div className="dob-select">
-              <select name="dobMonth" id="dobMonth" required>
-                <option value="">Month</option>
-                {range(1, 12).map(month => (
-                  <option key={month} value={month}>{month}</option>
-                ))}
-              </select>
-              <select name="dobDay" id="dobDay" required>
-                <option value="">Day</option>
-                {range(1, 31).map(day => (
-                  <option key={day} value={day}>{day}</option>
-                ))}
-              </select>
-              <select name="dobYear" id="dobYear" required>
-                <option value="">Year</option>
-                {range(new Date().getFullYear() - 100, new Date().getFullYear()).map(year => (
-                  <option key={year} value={year}>{year}</option>
-                ))}
-              </select>
-            </div>
-          </label>
-          <br />
-          <label>
-            Address:
-            <input type="text" name="address" id="address" className="inputField" required/>
+            Course Code:
+            <input type="text" name="code" id="code" className="inputField" required/>
           </label>
           <br />
           <label>
