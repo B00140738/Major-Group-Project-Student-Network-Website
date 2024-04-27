@@ -2,20 +2,13 @@
 import React from 'react';
 import Header from './Header';
 import Footer from './Footer'; // Import the Footer component
-import '../css/layout.css';
-const Layout = ({ children }) => {
+import styles from '../css/layout.module.css';
 
-  const pageTransition = {
-    initial: { opacity: 0 },
-    animate: { opacity: 1 },
-    exit: { opacity: 0 }
-  };
+const Layout = ({ children }) => {
   return (
-    <div>
+    <div className={styles.layout}>
       <Header />
-      <main>{children}
-      
-      </main>
+      <main className={styles.main}>{children}</main>
       <Footer /> {/* Use the Footer component here */}
     </div>
   );

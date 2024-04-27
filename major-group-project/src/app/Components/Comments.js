@@ -1,51 +1,139 @@
-// components/Comment.js
-"use client";
 import React, { useState } from 'react';
-const Comment = ({ comment, onCommentUpdate, currentUser }) => {
+import { Button, TextField, Typography } from '@mui/material';
+import styles from '../css/Comment.module.css';
 
+
+const Comment = ({ comment, onCommentUpdate, onDeleteComment, onReplySubmit, currentUser }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [newContent, setNewContent] = useState(comment.content);
-  const [originalContent, setOriginalContent] = useState(comment.content); // Store original content
+  const [editedContent, setEditedContent] = useState(comment.content);
+  const [replyContent, setReplyContent] = useState('');
+  const [isReplying, setIsReplying] = useState(false);
 
-  const handleEdit = async () => {
-    const success = await onCommentUpdate(comment._id, newContent);
+  const lastReply = comment.replies?.slice(-1)[0] || {};
+  const userHasLastReply = lastReply.poster === currentUser;
+  const allowReply = !userHasLastReply || comment.replies?.length === 0;
+
+  const handleEdit = () => {
+    setIsEditing(true);
+    setEditedContent(comment.content);
+  };
+
+  const handleReplyChange = (event) => {
+    setReplyContent(event.target.value);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditedContent(comment.content);
+  };
+
+  const handleSubmitReply = async () => {
+    const success = await onReplySubmit(comment._id, replyContent);
     if (success) {
-      setIsEditing(false);
+        setReplyContent('');
+        setIsReplying(false);
     } else {
-      alert('Failed to update comment.');
-      console.log('Failed to update comment.');
+        alert('Failed to submit reply.');
     }
   };
 
-  const handleCancel = () => {
-    setNewContent(originalContent); // Restore original content
-    setIsEditing(false);
+  const handleCancelReply = () => {
+    setReplyContent('');
+    setIsReplying(false);
   };
 
+  const submitReply = () => {
+    if (replyContent.trim() === '') {
+      // Don't submit empty replies
+      return;
+    }
+    onReplySubmit(comment._id, replyContent);
+    setReplyContent(''); // Clear the input field
+    setIsReplying(false); // Hide the reply input field
+  };
 
+  const handleSaveEdit = async () => {
+    if (editedContent.trim() === '') {
+      // Content cannot be empty
+      return;
+    }
 
-  const canEdit = currentUser === comment.poster; // Check if the current user is the author of the comment
-  console.log(currentUser, comment.poster);
+    setIsEditing(false);
+    // Call the onCommentUpdate function with the updated content
+    await onCommentUpdate(comment._id, editedContent);
+  };
+
+  const handleDelete = () => {
+    // Call the onDeleteComment function with the comment ID
+    onDeleteComment(comment._id);
+  };
+
   return (
-    <li>
-      <p>Commented by: {comment.poster}</p>
-      {isEditing ? (
-        <>
-          <input
-            type="text"
-            value={newContent}
-            onChange={(e) => setNewContent(e.target.value)}
+    <div className={styles['comment-container']}>
+      <div className={styles['comment-header']}>
+        <Typography variant="subtitle1" component="span">
+          {comment.poster}
+        </Typography>
+        {comment.editedAt && (
+          <Typography variant="caption" color="textSecondary" component="span">
+            {' (edited at ' + new Date(comment.editedAt).toLocaleString() + ')'}
+          </Typography>
+        )}
+      </div>
+      <div className={styles['comment-content']}>
+        {isEditing ? (
+          <TextField
+            multiline
+            fullWidth
+            variant="outlined"
+            value={editedContent}
+            onChange={(e) => setEditedContent(e.target.value)}
           />
-          <button onClick={handleEdit}>Save</button>
-          <button onClick={handleCancel}>Cancel</button>
-        </>
-      ) : (
-        <>
-          <p>{comment.content}</p>
-          {canEdit && <button onClick={() => setIsEditing(true)}>Edit</button>}
-        </>
+        ) : (
+          <Typography variant="body1">{comment.content}</Typography>
+        )}
+      </div>
+      {currentUser === comment.poster && !isEditing && (
+        <div className={styles['comment-actions']}>
+          <Button onClick={handleEdit} className={styles['action-btn']}>Edit</Button>
+          <Button onClick={handleDelete} className={styles['action-btn']}>Delete</Button>
+        </div>
       )}
-    </li>
+      {currentUser !== comment.poster && !isEditing && !isReplying && allowReply && (
+        <div className={styles['comment-actions']}>
+          <Button onClick={() => setIsReplying(true)} className={styles['action-btn']}>Reply</Button>
+        </div>
+      )}
+      {isEditing && (
+        <div className={styles['comment-actions']}>
+          <Button onClick={handleSaveEdit} className={styles['save-btn']}>Save</Button>
+          <Button onClick={handleCancelEdit} className={styles['cancel-btn']}>Cancel</Button>
+        </div>
+      )}
+      {isReplying && (
+        <div className={styles['reply-section']}>
+          <TextField
+            multiline
+            fullWidth
+            variant="outlined"
+            value={replyContent}
+            onChange={handleReplyChange}
+            placeholder="Write a reply..."
+          />
+          <div className={styles['reply-actions']}>
+            <Button onClick={handleSubmitReply} className={styles['action-btn']}>Submit Reply</Button>
+            <Button onClick={handleCancelReply} className={styles['action-btn']}>Cancel</Button>
+          </div>
+        </div>
+      )}
+      {comment.replies && comment.replies.map((reply, index) => (
+        <div key={index} style={{ marginLeft: '20px' }}>
+          <Typography variant="body1">
+            <strong>{reply.poster}</strong>: {reply.content}
+          </Typography>
+        </div>
+      ))}
+    </div>
   );
 };
 

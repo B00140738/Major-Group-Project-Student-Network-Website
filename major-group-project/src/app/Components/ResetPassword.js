@@ -1,46 +1,40 @@
 // ResetPassword.js
 "use client"
+
 import React, { useState } from 'react';
-import '../css/loginform.css'; // Adjust the path to your CSS file
+import '../css/loginform.css';
 
 export default function ResetPassword({ toggleModal }) {
     const [popupStyle, setPopupStyle] = useState('hide');
     const [popupMessage, setPopupMessage] = useState('');
-  
-    async function runDBCallAsync(url, username, password) {
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const email = formData.get('email');
+        const username = formData.get('username');
+
+        console.log("Email: ", email, "Username: ", username);
+
         try {
-            const res = await fetch(url, {
+            const res = await fetch(`http://localhost:3000/api/send-reset-email?username=${username}&email=${email}`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, password })
             });
-            const data = await res.json();
-            if (!res.ok) {
-                throw new Error(`HTTP error! status: ${res.status}`);
-            }
-            if (data.data === "true") {
-                console.log("Password Reset Successful!");
-                // Redirect or show success message
+            const result = await res.json();
+            if (res.ok) {
+                setPopupMessage('Reset link sent! Check your email.');
             } else {
-                throw new Error('Failed to reset password');
+                throw new Error(result.error || 'Something went wrong');
             }
         } catch (error) {
-            setPopupMessage(error.message);
+            console.error('Failed to send reset email:', error);
+            setPopupMessage(error.message || 'Failed to send reset email.');
+        } finally {
             setPopupStyle('login-popup-show');
             setTimeout(() => setPopupStyle('hide'), 3000);
         }
-    }
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        let username = data.get('username');
-        let password = data.get('password');
-        runDBCallAsync(`http://localhost:3000/api/reset-password`, username, password);
     };
-  
+
     return (
         <div className="modal-background">
             <div className="modal-container">
@@ -48,8 +42,8 @@ export default function ResetPassword({ toggleModal }) {
                 <h1>Reset Password</h1>
                 <form onSubmit={handleSubmit}>
                     <input type="text" placeholder="Username" className="inputField" name="username" required/>
-                    <input type="password" placeholder="New Password" className="inputField" name="password" required/>
-                    <button type="submit" className="nextButton">Reset Password</button>
+                    <input type="email" placeholder="Email" className="inputField" name="email" required/>
+                    <button type="submit" className="nextButton">Send Reset Link</button>
                 </form>
                 <div className={popupStyle}>
                     <p>{popupMessage}</p>

@@ -58,7 +58,8 @@ export async function POST(req, res) {
       message: `New post created by ${poster}`,
       postId: findResult.insertedId.toString(), // Convert ObjectId to string
       timestamp: new Date(),
-      createdBy: poster // This field will denote who created the post
+      createdBy: poster, // This field will denote who created the post
+      read: false
     };
  // Loop through all users and push the notification
  await Promise.all(
@@ -71,11 +72,21 @@ export async function POST(req, res) {
   );
   // Send email notification
   const msg = {
-      to: user.email, // Change to your recipient
-      from: 'bbetsunaidze@hotmail.com', // Change to your verified sender
-      subject: `New post created by ${poster}`,
-      text: `A new post titled "${title}" has been created. Check it out!`,
-      html: `<strong>A new post titled "${title}" has been created. Check it out!</strong>`,
+    to: user.email,
+    from: 'bbetsunaidze@hotmail.com',
+    subject: `🚀 New Post: ${title}`,
+    text: `Hi there!\n\nA new post titled "${title}" has been created by ${poster}. Check it out on our platform!\n\nBest regards,\nYour Platform Team`,
+    html: `
+      <div style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px;">
+        <div style="background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+          <h1 style="color: #333; font-size: 24px; margin-bottom: 20px;">🚀 New Post</h1>
+          <p style="color: #555; font-size: 16px;">Hi there!</p>
+          <p style="color: #555; font-size: 16px;">A new post titled "${title}" has been created by ${poster}. Check it out on our platform!</p>
+          <br>
+          <p style="color: #555; font-size: 16px;">Best regards,<br>Student Networking Team</p>
+        </div>
+      </div>
+    `,
   };
   await sgMail.send(msg);
 }
