@@ -38,7 +38,7 @@ export async function POST(req, res) {
       return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
     }
     
-    NextResponse.json({message: "Comment added successfully"}, { status: 500 });
+    return NextResponse.json({ message: "Comment added successfully" }, { status: 200 });
   } catch (error) {
     console.error('Error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });

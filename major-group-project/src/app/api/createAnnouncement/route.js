@@ -9,13 +9,13 @@ export async function POST(req, res) {
   console.log("in the api page");
 
   // Get the values that were sent across to us.
-
   const { searchParams } = new URL(req.url);
   const poster = searchParams.get('poster');
   const title = searchParams.get('title');
   const content = searchParams.get('content');
   const timestamp = searchParams.get('timestamp');
   const moduleId = searchParams.get('moduleId');
+
   console.log(poster);
   console.log(title);
   console.log(content);
@@ -49,8 +49,8 @@ export async function POST(req, res) {
       "moduleId": moduleId,
     });
 
-   // Retrieve all users except the one who created the post
-   const users = await db.collection('register').find({ username: { $ne: poster } }).toArray();
+    // Retrieve all users except the one who created the post
+    const users = await db.collection('register').find({ username: { $ne: poster } }).toArray();
 
     const notificationsCollection = db.collection('notifications');
 
@@ -60,43 +60,46 @@ export async function POST(req, res) {
       timestamp: new Date(),
       createdBy: poster // This field will denote who created the post
     };
- // Loop through all users and push the notification
- await Promise.all(
-  users.map(async user => {
-    if (user.notificationsEnabled) {
-  await notificationsCollection.updateOne(
-      { username: user.username },
-      { $push: { notifications: newPostNotification } },
-      { upsert: true }
-  );
-  // Send email notification
-  const msg = {
-    to: user.email,
-    from: 'bbetsunaidze@hotmail.com',
-    subject: `🎉 New Announcement: ${title}`,
-    text: `Hi there!\n\nA new announcement titled "${title}" has been created by ${poster}. Check it out on our platform!\n\nBest regards,\nYour Platform Team`,
-    html: `
-      <div style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px;">
-        <div style="background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-          <h1 style="color: #333; font-size: 24px; margin-bottom: 20px;">🎉 New Announcement</h1>
-          <p style="color: #555; font-size: 16px;">Hi there!</p>
-          <p style="color: #555; font-size: 16px;">A new announcement titled "${title}" has been created by ${poster}. Check it out on our platform!</p>
-          <br>
-          <p style="color: #555; font-size: 16px;">Best regards,<br>Student Networking Team</p>
-        </div>
-      </div>
-    `,
-  };
-  await sgMail.send(msg);
-}
-}));
+
+    // Loop through all users and push the notification
+    await Promise.all(
+      users.map(async user => {
+        if (user.notificationsEnabled) {
+          await notificationsCollection.updateOne(
+            { username: user.username },
+            { $push: { notifications: newPostNotification } },
+            { upsert: true }
+          );
+          // Send email notification
+          const msg = {
+            to: user.email,
+            from: 'bbetsunaidze@hotmail.com',
+            subject: `🎉 New Announcement: ${title}`,
+            text: `Hi there!\n\nA new announcement titled "${title}" has been created by ${poster}. Check it out on our platform!\n\nBest regards,\nYour Platform Team`,
+            html: `
+              <div style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px;">
+                <div style="background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                  <h1 style="color: #333; font-size: 24px; margin-bottom: 20px;">🎉 New Announcement</h1>
+                  <p style="color: #555; font-size: 16px;">Hi there!</p>
+                  <p style="color: #555; font-size: 16px;">A new announcement titled "${title}" has been created by ${poster}. Check it out on our platform!</p>
+                  <br>
+                  <p style="color: #555; font-size: 16px;">Best regards,<br>Student Networking Team</p>
+                </div>
+              </div>
+            `,
+          };
+          await sgMail.send(msg);
+        }
+      })
+    );
 
     let valid = true;
     
-    // at the end of the process we need to send something back.
-    return NextResponse.json({ "data": "" + valid + "" });
+    // Send a successful response
+    return NextResponse.json({ data: valid });
   } catch (error) {
     console.error('Error:', error);
+    // Send an error response
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   } finally {
     client.close(); // Close the MongoDB client connection

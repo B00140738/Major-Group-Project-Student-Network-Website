@@ -1,1 +1,1 @@
-# Major-Group-Project-Student-Network-Website
+import 'tailwindcss/tailwind.css';

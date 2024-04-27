@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import '../css/forums.css';
-
 import { useRouter } from 'next/navigation';
 import { Button, Box, TextField } from "@mui/material";
 import Layout from '../Components/Layout';
@@ -26,22 +25,7 @@ const Home = () => {
     }
   }, [router.query]);
 
-  /*
-  const fetchPostsByModule = async (moduleId) => {
-    try {
-      const response = await fetch(`http://localhost:3000/api/getPostsByModule?moduleId=${moduleId}`);
-      if (response.ok) {
-        const data = await response.json();
-        setData(data);
-      } else {
-        console.error('Failed to fetch posts by module');
-      }
-    } catch (error) {
-      console.error('Error fetching posts by module:', error);
-    }
-  };
 
-*/
   async function runDBCallAsync(url, formData){
     try {
       const res = await fetch(url, {
@@ -105,15 +89,22 @@ const Home = () => {
   const handleViewPost = (post) => {
     setSelectedPost(post);
     setIsModalOpen(true);
-    fetch('http://localhost:3000/api/getCommentsById')
-    .then((res) => res.json())
-    .then((comments) => {
-      setComments(comments);
-    })
-    .catch((error) => {
-      console.error('Error fetching comments:', error);
-    });
-  };
+    console.log('Fetching comments for post:', post._id);
+    fetch(`http://localhost:3000/api/getCommentsById?postId=${post._id}`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Failed to fetch comments');
+        }
+        return res.json();
+      })
+      .then((comments) => {
+        console.log('Fetched comments:', comments);
+        setComments(comments);
+      })
+      .catch((error) => {
+        console.error('Error fetching comments:', error);
+      });
+}
   
   const closeModal = () => {
     setIsModalOpen(false);
@@ -155,6 +146,42 @@ const Home = () => {
     }
   };
 
+
+  const handleReplySubmit = async (parentCommentId, replyContent) => {
+    const url = `/api/postReply?parentCommentId=${parentCommentId}&poster=${username}&content=${replyContent}&timestamp=${new Date().toISOString()}`;
+  
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to submit reply');
+      }
+  
+      const newReply = { poster: username, content: replyContent, timestamp: new Date().toISOString() };
+      // Update comments state to include new reply
+      setComments(currentComments => currentComments.map(comment => {
+        if (comment._id === parentCommentId) {
+          return {...comment, replies: [...(comment.replies || []), newReply]};
+        }
+        return comment;
+      }));
+  
+      return true;
+    } catch (error) {
+      console.error('Error submitting reply:', error);
+      alert('Failed to submit reply: ' + error.message);
+      return false;
+    }
+  };
+
+  
+
   return (
     <Layout>
       <Header />
@@ -179,44 +206,41 @@ const Home = () => {
             </div>
           ))
         )}
-      {isModalOpen && (
-        <div className="modal-backdrop">
-          <div className="modal-content">
-            <button onClick={closeModal} className="modal-close-button">X</button>
-            <p>Posted by: {selectedPost?.poster}</p>
-            <h2>{selectedPost?.title}</h2>
-            <p>{selectedPost?.content}</p>
-            <hr/>
-            <div className="forum-container">
-              <h3>Comments:</h3>
-              {
-  comments
-    .filter((comment) => comment.postId === selectedPost._id)
-    .map((forumComment, index) => (
-      <Comment 
-        key={index} 
-        comment={forumComment} 
-        onCommentUpdate={onCommentUpdate} 
-        currentUser={username} // Pass the current username as the currentUser prop
-      />
-    ))
-}
-      </div>
-      <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
-        <TextField
-          margin="normal"
-          name="content"
-          label="content"
-          type="text"
-          id="content"
-        />
-        <Button type="submit" variant="contained" sx={{mt: 3, mb: 2}}>
-          Submit
-        </Button>
-      </Box>
-    </div>
-  </div>
-)}
+          {isModalOpen && (
+            <div className="modal-backdrop">
+              <div className="modal-content">
+                <button onClick={closeModal} className="modal-close-button">X</button>
+                <p>Posted by: {selectedPost?.poster}</p>
+                <h2>{selectedPost?.title}</h2>
+                <p>{selectedPost?.content}</p>
+                <hr/>
+                <div className="forum-container">
+                  <h3>Comments:</h3>
+                  {comments.map((comment, index) => (
+                    <Comment 
+                      key={index}
+                      comment={comment}
+                      onCommentUpdate={onCommentUpdate}
+                      onReplySubmit={handleReplySubmit}
+                      currentUser={username}
+                    />
+                  ))}
+                </div>
+                <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                  <TextField
+                    margin="normal"
+                    name="content"
+                    label="content"
+                    type="text"
+                    id="content"
+                  />
+                  <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
+                    Submit
+                  </Button>
+                </Box>
+              </div>
+            </div>
+          )}
       </div>
     </Layout>
   );

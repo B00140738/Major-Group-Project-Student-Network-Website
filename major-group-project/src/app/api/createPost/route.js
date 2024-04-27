@@ -58,7 +58,8 @@ export async function POST(req, res) {
       message: `New post created by ${poster}`,
       postId: findResult.insertedId.toString(), // Convert ObjectId to string
       timestamp: new Date(),
-      createdBy: poster // This field will denote who created the post
+      createdBy: poster, // This field will denote who created the post
+      read: false
     };
  // Loop through all users and push the notification
  await Promise.all(
