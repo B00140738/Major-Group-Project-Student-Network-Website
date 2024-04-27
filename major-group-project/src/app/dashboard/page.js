@@ -122,6 +122,7 @@ export default function Dashboard() {
       <div className="banner">
         <center><h1>Welcome back, We've missed you! 👋</h1></center>
       </div>
+      <br/>
       <div className="main-container">
         <div className="dashboard-container">
           <section className="main-content">
@@ -148,6 +149,11 @@ export default function Dashboard() {
                 add to your dashboard. To get
                 started, just click the button!
               </h3></bold></center>
+              <br/>
+              <center><bold><h3>In order to view posts for a specific subject, just add a module from
+                the list and begin chatting with like-minded about a variety of topics in a matter of
+                seconds.
+              </h3></bold></center>
               <center><button className="view-modules" onClick={handleViewModulesClick}>View Modules</button></center>
               <br/>
             </div>
@@ -160,44 +166,39 @@ export default function Dashboard() {
       <div className="main-container">
         <div className="dashboard-container">
           <section className="main-content">
-            <div>
-              <h3>Search Results:</h3>
-              {searchResults.map((result, i) => (
-                <li key={result._id}>
-                  <h3>{result.title}</h3>
-                  <p>{result.content}</p>
-                  <small>Posted by: {result.poster} on {result.timestamp}</small>
-                </li>
-              ))}
-            </div>
             <div className="side-bar left">
-              <center><h2>Your Modules</h2></center>
-              <ul>
-                {dashboardModules.map((module) => (
-                  <li key={module._id}>
-                    <h3>{module.title}</h3>
-                    <p>{module.description}</p>
-                    <small>{module.code} - Year {module.year}</small>
-                    <button onClick={() => handleModuleClick(module._id)}>See Module</button>
-                    <button onClick={() => handleRemoveModule(module)}>Remove Module</button>
-                  </li>
-                ))}
-              </ul>
-              <button className="view-modules" onClick={handleViewModulesClick}>View Modules</button>
+              <center><h2>General Forums</h2></center>
+                {/* Display fetched general modules */}
+                  {generalModules.map((module) => (
+                    <div key={module._id}>
+                      <div className='module'>
+                        <center>
+                        <h3>{module.title}</h3>
+                        <p>{module.code} - {module.year}</p>
+                        <p>{module.description}</p>
+                        <br/>
+                        <button onClick={() => handleModuleClick(module._id)}>See Module</button>
+                        </center>
+                      </div>
+                    </div>
+                  ))}
             </div>
             <div className="side-bar right">
-              <center><h2>General Forums</h2></center>
-              {/* Display fetched general modules */}
-              {generalModules.map((module) => (
-                <div key={module._id}>
-                  <center>
-                  <h3>{module.title}</h3>
-                  <p>{module.code} - {module.year}</p>
-                  <br/>
-                  <button onClick={() => handleModuleClick(module._id)}>See Module</button>
-                  </center>
-                </div>
-              ))}
+            <center><h2>Your home for everything happening around Campus!</h2></center>
+              <br/>
+              <center><bold><h3>To see what's going on, click on any Programme to learn more and engage with
+                other students.
+              </h3></bold></center>
+              <br/>
+              <center><bold><h3>Finding campus life stressful? Seeking a balance between your coursework and
+                campus social life? You're in luck! The following programmes provide a way of connecting with other
+                students to achieve the most out of your campus life. 
+              </h3></bold></center>
+              <br/>
+              <center><bold><h3>Each programme provides a way of getting the most out of your campus life, whether
+                this be through mentoring others, having your voice be heard as part of your College Student Union
+                or simply by engaging with any Societes present around campus. The Sky's the limit!
+              </h3></bold></center>
             </div>
           </section>
         </div>

@@ -198,7 +198,7 @@ button:hover {
   max-width: 1200px;
   margin: auto; /* Centers the container on the page */
   margin-top: 55px;
-  margin-bottom: -25px;
+  margin-bottom: -20px;
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   background-image: url(../../../public/images-LAPTOP-6BIKVR3Q/overlay_3.jpg);
