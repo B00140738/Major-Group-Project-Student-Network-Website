@@ -45,29 +45,33 @@ const [passwordError, setPasswordError] = useState(''); // Separate state for pa
     
       const handleSubmit = (event) => {
         event.preventDefault();
-      setErrorMessage(''); // Clear any existing error messages
-      setPasswordError(''); 
+        setErrorMessage(''); // Clear any existing error messages
+        setPasswordError(''); // Clear any existing password error messages
+
+         // Assuming 'event.currentTarget' is your form element
+      if (!event.currentTarget.checkValidity()) {
+        // If form is not valid, the browser will display the error messages
+        return;
+      }
+      
         const data = new FormData(event.currentTarget);
-    
+      
         let username = data.get('username');
         let email = data.get('email');
         let pass = data.get('pass');
         let repeatPass = data.get('repeatPass');
         let code = data.get('code');
         let studentyear = data.get('year');
- 
+      
         // Check if the passwords match
         if (pass !== repeatPass) {
-          setPasswordError("Passwords do not match."); // Set the error message
+          setPasswordError("Passwords do not match.");
           return;
-          // Check if the password is at least 8 characters long
-        } else if(!username || !email || !pass || !code || !studentyear){
-          setErrorMessage("Please fill in the form"); // Set the error message
         }
-   
+      
           else{
             // Run the DB call asynchronously
-          runDBCallAsync(`http://localhost:3000/api/register?&username=${username}&email=${email}&pass=${pass}&code=${code}&year=${studentyear}`);
+          runDBCallAsync(`/api/register?&username=${username}&email=${email}&pass=${pass}&code=${code}&year=${studentyear}`);
             window.location.href = '/'; // Redirect to dashboard
               
           };
@@ -87,13 +91,14 @@ const [passwordError, setPasswordError] = useState(''); // Separate state for pa
           <br />
           <label>
             Email:
-            <input type="text" name="email" id="email"  className="inputField" required/>
+            <input type="email" name="email" id="email"  className="inputField" required/>
           </label>
           <br />
           <label>
-            Password:
-            <input type="password" name="pass" id="pass" className="inputField" required/>
-          </label>
+    Password:
+    <input type="password" name="pass" id="pass" className="inputField" 
+           pattern=".{8,}" title="Password must be at least 8 characters long" required/>
+  </label>
           <br />
           <label>
             Repeat Password:
