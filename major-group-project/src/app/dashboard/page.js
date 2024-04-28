@@ -6,7 +6,7 @@ import '../css/dashboard.css';
 import Layout from '../Components/Layout';
 import Header from '../Components/Header';
 import Link from 'next/link';
-import { setCookie } from 'nookies';
+import { setCookie } from 'cookies';
 
 export default function Dashboard() {
   const router = useRouter();
