@@ -226,7 +226,7 @@ const ModulePage = () => {
 const onCommentUpdate = async (commentId, newContent) => {
   try {
     // Call the API to update the comment
-    const response = await fetch(`/api/updateComment`, {
+    const response = await fetch(`api/updateComment`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -255,7 +255,7 @@ const handleViewPost = (post) => {
 
   setSelectedPost(post);
   setIsModalOpen(true);
-  fetch('http://localhost:3000/api/getCommentsById')
+  fetch('/api/getCommentsById')
   .then((res) => res.json())
   .then((comments) => {
     setComments(comments);

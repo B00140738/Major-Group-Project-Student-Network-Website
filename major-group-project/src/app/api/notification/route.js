@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 import { NextResponse } from "next/server";
-import cookie from 'cookie'; // Ensure you have 'cookie' installed or use an equivalent method
+import cookie from 'cookie';
 
 export async function GET(request) {
     const url = 'mongodb://root:example@localhost:27017/';
@@ -13,8 +13,8 @@ export async function GET(request) {
 
         // Parse the request cookies
         const cookies = cookie.parse(request.headers.get('cookie') || '');
-        const currentUsername = cookies.username; // Assuming 'username' is the cookie name
-        console.log('Current username from cookie:', currentUsername); // This will log the username from the cookie
+        const currentUsername = cookies.username;
+        console.log('Current username from cookie:', currentUsername);
 
         // Ensure that a username is available
         if (!currentUsername) {

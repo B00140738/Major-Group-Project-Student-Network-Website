@@ -17,7 +17,7 @@ export default function ResetPassword({ toggleModal }) {
         console.log("Email: ", email, "Username: ", username);
 
         try {
-            const res = await fetch(`http://localhost:3000/api/send-reset-email?username=${username}&email=${email}`, {
+            const res = await fetch(`/api/send-reset-email?username=${username}&email=${email}`, {
                 method: 'POST',
             });
             const result = await res.json();

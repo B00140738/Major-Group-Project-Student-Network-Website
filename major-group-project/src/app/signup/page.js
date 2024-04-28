@@ -71,7 +71,7 @@ const [passwordError, setPasswordError] = useState(''); // Separate state for pa
       
           else{
             // Run the DB call asynchronously
-          runDBCallAsync(`/api/register?&username=${username}&email=${email}&pass=${pass}&code=${code}&year=${studentyear}`);
+          runDBCallAsync(`api/register?&username=${username}&email=${email}&pass=${pass}&code=${code}&year=${studentyear}`);
             window.location.href = '/'; // Redirect to dashboard
               
           };

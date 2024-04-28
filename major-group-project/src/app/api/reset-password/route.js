@@ -6,8 +6,7 @@ import bcrypt from 'bcrypt'; // Import bcrypt for password hashing
 
 export async function POST(req) {
     try {
-        const { token, newPassword } = await req.json(); // Parse request body to get token and newPassword
-
+        const { token, newPassword } = await req.json(); 
         // Connect to MongoDB
         const client = new MongoClient('mongodb://root:example@localhost:27017/');
         const dbName = 'forums';

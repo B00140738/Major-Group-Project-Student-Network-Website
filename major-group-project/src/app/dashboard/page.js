@@ -22,7 +22,7 @@ export default function Dashboard() {
     const fetchModules = async () => {
       try {
         const userId = getUserIdFromCookies();
-        const response = await fetch(`/api/getModules?userId=${userId}`);
+        const response = await fetch(`api/getModules?userId=${userId}`);
         if (!response.ok) throw new Error('Failed to fetch');
         const data = await response.json();
         setModules(data.modules);

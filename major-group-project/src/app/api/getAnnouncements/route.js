@@ -1,4 +1,3 @@
-// Major-Group-Project-Student-Network-Website/major-group-project/src/app/api/getAnnouncements/route.js
 
 import { NextResponse } from 'next/server';
 export async function GET(req) {

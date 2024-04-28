@@ -11,7 +11,7 @@ export async function POST(req, res) {
     const studentyear = searchParams.get('year');
 
     // Hash the password before storing it
-    const saltRounds = 10; // You can change the number of salt rounds as needed
+    const saltRounds = 10;
     const hashedPassword = await hash(pass, saltRounds);
 
     // Perform MongoDB operations

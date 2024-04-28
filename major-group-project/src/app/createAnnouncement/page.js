@@ -65,7 +65,7 @@ const createAnnouncement = () => {
       let poster = username;
     
       try {
-        const response = await runDBCallAsync(`http://localhost:3000/api/createAnnouncement?poster=${poster}&title=${title}&content=${content}&timestamp=${timestamp}&moduleId=${moduleId}`);
+        const response = await runDBCallAsync(`api/createAnnouncement?poster=${poster}&title=${title}&content=${content}&timestamp=${timestamp}&moduleId=${moduleId}`);
         console.log('response:', response);
         if (response.data === "true") {
           console.log("Announcement created successfully");

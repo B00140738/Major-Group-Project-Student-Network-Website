@@ -16,7 +16,7 @@ export default function Notification() {
 
     const fetchNotifications = async () => {
         try {
-            const response = await fetch('http://localhost:3000/api/notification');
+            const response = await fetch('api/notification');
             if (response.ok) {
                 const data = await response.json();
                 console.log('Fetched notifications:', data.notifications); 
