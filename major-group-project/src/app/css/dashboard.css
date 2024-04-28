@@ -131,6 +131,7 @@ button:hover {
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  
 }
 
 .popup-content {
@@ -141,6 +142,11 @@ button:hover {
   box-shadow: 0 8px 16px rgba(0,0,0,0.2); /* Soft shadow for depth */
   color: #333; /* Darker text for better readability */
   font-size: 16px; /* Larger font size */
+  overflow-y: auto; 
+  max-height: 70vh;
+}
+.module-list {
+  padding-right: 20px; /* Add padding to prevent content from touching the scrollbar */
 }
 
 .popup-content h2 {

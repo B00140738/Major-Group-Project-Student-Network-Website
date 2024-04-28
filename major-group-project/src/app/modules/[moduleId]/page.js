@@ -293,6 +293,23 @@ const handleDeleteComment = async (commentId) => {
   }
 };
 
+const handleDeletePost = async (postId) => {
+  try {
+    const response = await fetch(`/api/deletePost?postId=${postId}`, {
+      method: 'DELETE',
+    });
+
+    if (response.ok) {
+      console.log('Post deleted successfully');
+      setPosts(prevPosts => prevPosts.filter(post => post._id !== postId));
+    } else {
+      console.error('Failed to delete post');
+    }
+  } catch (error) {
+    console.error('Error deleting post:', error);
+  }
+};
+
 return (
   <Layout>
     <div className='container'>
@@ -333,16 +350,20 @@ return (
           {posts.length > 0 ? (
             posts.map((post, index) => (
               <div key={post._id || index} className="post" id={`post-${post._id || index}`}>
-                <h4>creator: {post.poster}</h4>
+                <h4>Creator: {post.poster}</h4>
                 <h4>{post.title}</h4>
                 <p>{post.content}</p>
                 <button onClick={() => handleViewPost(post)}>
                   View Post
                 </button>
+                {/* Add delete button */}
+                {(username === post.poster || email === moduleInfo.lecturer || email === moduleInfo.moderator) && (
+                  <button onClick={() => handleDeletePost(post._id)}>Delete</button>
+                )}
               </div>
             ))
           ) : (
-            <p>No posts to display</p>
+           <center> <p>No posts to display</p></center>
           )}
 
           {isModalOpen && (
@@ -354,6 +375,7 @@ return (
                 <hr/>
                 <div className="forum-container">
                   <h3>Comments:</h3>
+                  <div className="comment-list">
                   {comments
                       .filter((comment) => comment.postId === selectedPost._id)
                       .map((comment, index) => (
@@ -367,6 +389,7 @@ return (
                         id={`comment-${comment._id || index}`}
                     />
                       ))}
+                </div>
                 </div>
                 <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
                 <p>{username}</p> {/* Display username here */}
@@ -386,7 +409,7 @@ return (
           )}
         </div>
       ) : (
-        <p>Loading module details...</p>
+       <center><p>Loading module details...</p></center> 
       )}
     </div>
   </Layout>

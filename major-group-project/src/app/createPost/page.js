@@ -66,15 +66,17 @@ const createPost = () => {
       let poster = username;
     
       try {
-        const response = await runDBCallAsync(`http://localhost:3000/api/createPost?poster=${poster}&title=${title}&content=${content}&timestamp=${timestamp}&moduleId=${moduleId}`);
+        const response = await runDBCallAsync(`/api/createPost?poster=${poster}&title=${title}&content=${content}&timestamp=${timestamp}&moduleId=${moduleId}`);
         console.log('response:', response);
         if (response.data === "true") {
           console.log("Post created successfully");
-          router.push('/forums'); // Navigate to forums page
+          router.push(`/modules/${moduleId}`); // Navigate to forums page
         } else {
+          router.push(`/modules/${moduleId}`); 
           console.log("Error: could not create post");
         }
       } catch (error) {
+        router.push(`/modules/${moduleId}`); 
         console.error('Error creating post:', error);
       }
     };

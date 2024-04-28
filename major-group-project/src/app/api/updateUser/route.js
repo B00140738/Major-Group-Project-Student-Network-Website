@@ -1,38 +1,46 @@
-import { MongoClient, ObjectId } from 'mongodb';
-import { NextResponse } from "next/server";
+import { hash } from 'bcrypt';
+import { MongoClient } from 'mongodb';
+import { NextResponse } from 'next/server';
 
-const url = 'mongodb://root:example@localhost:27017/';
-const client = new MongoClient(url);
+export async function POST(req) {
+  const { searchParams } = new URL(req.url);
+  const username = searchParams.get('username');
+  const email = searchParams.get('email');
+  const pass = searchParams.get('pass');
+  const code = searchParams.get('code');
+  const studentyear = searchParams.get('year');
 
-const dbName = 'forums';
+  const hashedPassword = await hash(pass, 10);
+  const url = 'mongodb://root:example@localhost:27017/';
+  const client = new MongoClient(url);
+  const dbName = 'forums';
 
-export async function PATCH(request) {
   try {
-    const requestBody = await request.json();
-    const { userId, newUsername, email, code, year, currentPassword, newPassword } = requestBody;
-
     await client.connect();
-    const database = client.db(dbName);
-    const usersCollection = database.collection('register');
+    const db = client.db(dbName);
+    const collection = db.collection('register');
 
-    // Check if the current password matches the one stored in the database
-    const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
-    if (!user || user.password !== currentPassword) {
-      return NextResponse.error({ status: 400, body: 'Current password is incorrect' });
+    const existingUser = await collection.findOne({ $or: [{ username }, { email }] });
+    if (existingUser) {
+      if (existingUser.username === username) {
+        return NextResponse.json({ error: 'This username is already taken' }, { status: 400 });
+      }
+      if (existingUser.email === email) {
+        return NextResponse.json({ error: 'There is already an account with this email' }, { status: 400 });
+      }
     }
 
-    const updateResult = await usersCollection.updateOne(
-      { _id: new ObjectId(userId) },
-      { $set: { username: newUsername, email: email, code: code, year: year, password: newPassword } }
-    );
+    const result = await collection.insertOne({
+      username, email, pass: hashedPassword, code, year: studentyear
+    });
 
-    if (updateResult.modifiedCount > 0) {
-      return NextResponse.json({ message: 'User information updated successfully' });
+    if (result.insertedCount > 0) {
+      return NextResponse.json({ message: 'Registration successful', data: true }, { status: 201 });
     } else {
-      return NextResponse.error({ status: 500, body: 'Failed to update user information' });
+      return NextResponse.json({ error: 'Registration failed', data: false }, { status: 500 });
     }
   } catch (error) {
-    console.error('Error updating user information:', error);
+    console.error('Error:', error);
     return NextResponse.error({ status: 500, body: 'Internal Server Error' });
   } finally {
     await client.close();

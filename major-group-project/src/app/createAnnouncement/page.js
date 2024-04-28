@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import Layout from "../Components/Layout";
 import '../css/createPost.css';
 import { useRouter } from 'next/navigation';
+
 async function runDBCallAsync(url, formData){
 // Send a POST request
     try {
@@ -37,8 +38,6 @@ async function runDBCallAsync(url, formData){
     console.error("Error during fetch: ", error);
   }
 }
-
-
 
 
 const createAnnouncement = () => {
@@ -110,25 +109,25 @@ const createAnnouncement = () => {
   
             <br></br>
             <Button
-  type="submit"
-  fullWidth
-  variant="contained"
-  sx={{
-    mt: 3, mb: 2,
-    borderRadius: '8px', // Rounded corners
-    backgroundColor: '#1976d2', // Primary color
-    '&:hover': {
-      backgroundColor: '#115293', // Darker shade on hover
-    },
-    padding: '10px 15px', // Padding
-    color: 'white', // Text color
-  }}
->
-  Create Announcement
-</Button>
-          </form>
-        </div>
-      </Layout>
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{
+              mt: 3, mb: 2,
+              borderRadius: '8px', // Rounded corners
+              backgroundColor: '#1976d2', // Primary color
+              '&:hover': {
+                backgroundColor: '#115293', // Darker shade on hover
+              },
+              padding: '10px 15px', // Padding
+              color: 'white', // Text color
+            }}
+          >
+            Create Announcement
+          </Button>
+                    </form>
+                  </div>
+                </Layout>
     );
   }
   

@@ -146,33 +146,32 @@ useEffect(() => {
       const updateResponse = await fetch(`/api/updateUser`, {
         method: 'PATCH',
         headers: {
-          'Content-Type': 'application/json', // Specify content type as JSON
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ // Stringify the request body to JSON format
-          userId: userId,
-          newUsername: newUsername !== '' ? newUsername : currentUsername, // Use newUsername if it's not empty, otherwise use currentUsername
-          email: email,
-          code: code,
-          year: year,
+        body: JSON.stringify({
+          userId,
+          newUsername: newUsername !== '' ? newUsername : currentUsername,
+          email,
+          code,
+          year,
         }),
       });
   
       if (!updateResponse.ok) {
-        throw new Error('Failed to update user information');
+        const errorData = await updateResponse.json();
+        throw new Error(errorData.error || 'Failed to update user information');
       }
   
       const responseData = await updateResponse.json();
       console.log('User information updated successfully', responseData);
   
-      document.cookie = `username=${newUsername}; path=/`;
-      
-      // Update the currentUsername state with the new value
+      document.cookie = `username=${newUsername}; path=/`; // Update cookie if needed
       setCurrentUsername(newUsername);
-      setIsEditing(false)
-      // Optionally, you can display a success message or perform other actions here
+      setIsEditing(false);
+      setErrorMessage(''); // Clear any previous error messages
     } catch (error) {
       console.error('Error updating user information:', error);
-      setErrorMessage('Error updating user information');
+      setErrorMessage(error.message);
     }
   };
 
@@ -267,6 +266,7 @@ useEffect(() => {
  <Layout>
     <div className="settings-container">
       <h1>Account Settings</h1>
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
       <div>
         <strong>Profile Information</strong>
         <div>

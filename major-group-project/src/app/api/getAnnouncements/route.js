@@ -30,11 +30,10 @@ export async function GET(req) {
       const collection = db.collection('announcements'); // collection name
       // Query documents based on moduleId
       const posts = await collection.find({ moduleId: moduleId }).toArray();
-      const findResult = await collection.find({}).toArray();
-      console.log('Found documents =>', findResult);
+      console.log('Found documents =>', posts);
   
       // Return the retrieved posts
-      return new NextResponse(JSON.stringify(findResult), {
+      return new NextResponse(JSON.stringify(posts), {
         headers: {
           'Content-Type': 'application/json'
         }
