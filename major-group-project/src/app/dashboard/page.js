@@ -98,7 +98,7 @@ export default function Dashboard() {
 
   return (
     <Layout setSearchResults={setSearchResults}>
-      <Header />
+      <Header setSearchResults={setSearchResults}/>
       {showModulesPopup && (
         <div className="popup-overlay">
           <div className="popup-content">
@@ -209,42 +209,16 @@ export default function Dashboard() {
       <div className="main-container">
         <div className="dashboard-container">
           <section className="main-content">
-            <div>
-              <h3>Search Results:</h3>
+            <div className="side-bar left">
+            <center><h3>Search Results:</h3></center>
               {searchResults.map((result, i) => (
-                <li key={result._id}>
+                <div key={result._id}>
+                <div className='module'>
                   <h3>{result.title}</h3>
                   <p>{result.content}</p>
                   <small>Posted by: {result.poster} on {result.timestamp}</small>
-                </li>
-              ))}
-            </div>
-            <div className="side-bar left">
-              <center><h2>Your Modules</h2></center>
-              <ul>
-                {dashboardModules.map((module) => (
-                  <li key={module._id}>
-                    <h3>{module.title}</h3>
-                    <p>{module.description}</p>
-                    <small>{module.code} - Year {module.year}</small>
-                    <button onClick={() => handleModuleClick(module._id)}>See Module</button>
-                    <button onClick={() => handleRemoveModule(module)}>Remove Module</button>
-                  </li>
-                ))}
-              </ul>
-              <button className="view-modules" onClick={handleViewModulesClick}>View Modules</button>
-            </div>
-            <div className="side-bar right">
-              <center><h2>General Forums</h2></center>
-              {/* Display fetched general modules */}
-              {generalModules.map((module) => (
-                <div key={module._id}>
-                  <center>
-                  <h3>{module.title}</h3>
-                  <p>{module.code} - {module.year}</p>
-                  <br/>
-                  <button onClick={() => handleModuleClick(module._id)}>See Module</button>
-                  </center>
+                  <button onClick={() => handleResultClick(module._id)}>See Module</button>
+                  </div>
                 </div>
               ))}
             </div>

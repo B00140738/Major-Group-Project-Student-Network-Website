@@ -3,7 +3,7 @@ import { Button, TextField, Typography } from '@mui/material';
 import styles from '../css/Comment.module.css';
 
 
-const Comment = ({ comment, onCommentUpdate, onDeleteComment, onReplySubmit, currentUser }) => {
+const Comment = ({ comment, onCommentUpdate, onDeleteComment, onReplySubmit, currentUser, moderator}) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
   const [replyContent, setReplyContent] = useState('');
@@ -93,7 +93,7 @@ const Comment = ({ comment, onCommentUpdate, onDeleteComment, onReplySubmit, cur
           <Typography variant="body1">{comment.content}</Typography>
         )}
       </div>
-      {currentUser === comment.poster && !isEditing && (
+      {(currentUser === comment.poster || moderator) && !isEditing && (
         <div className={styles['comment-actions']}>
           <Button onClick={handleEdit} className={styles['action-btn']}>Edit</Button>
           <Button onClick={handleDelete} className={styles['action-btn']}>Delete</Button>
