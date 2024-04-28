@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 export async function PATCH(req, res) {
     const { searchParams } = new URL(req.url);
     const username = searchParams.get('username');
-    const notificationsEnabled = searchParams.get('notificationsEnabled') === 'true'; // Expecting a string 'true' or 'false'
+    const notificationsEnabled = searchParams.get('notificationsEnabled') === 'true';
 
     const url = process.env.MONGODB_URI;
     const client = new MongoClient(url);
@@ -14,7 +14,7 @@ export async function PATCH(req, res) {
     try {
         await client.connect();
         const db = client.db(dbName);
-        const collection = db.collection('register'); // Assuming 'register' is your user collection
+        const collection = db.collection('register');
 
         await collection.updateOne(
             { username: username },

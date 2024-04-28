@@ -1,4 +1,3 @@
-// Major-Group-Project-Student-Network-Website/major-group-project/src/app/api/getAnnouncements/route.js
 
 import { NextResponse } from 'next/server';
 export async function GET(req) {
@@ -14,7 +13,7 @@ export async function GET(req) {
     // Connect to MongoDB and query documents based on moduleId
     const { MongoClient } = require('mongodb');
     // Connection URL
-    const url = 'mongodb://root:example@localhost:27017/';
+    const url = 'mongodb+srv://b00140738:YtlVhf9tX6yBs2XO@cluster0.j5my8yy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
     // Create a new MongoClient
     const client = new MongoClient(url);
     // database name
@@ -30,11 +29,10 @@ export async function GET(req) {
       const collection = db.collection('announcements'); // collection name
       // Query documents based on moduleId
       const posts = await collection.find({ moduleId: moduleId }).toArray();
-      const findResult = await collection.find({}).toArray();
-      console.log('Found documents =>', findResult);
+      console.log('Found documents =>', posts);
   
       // Return the retrieved posts
-      return new NextResponse(JSON.stringify(findResult), {
+      return new NextResponse(JSON.stringify(posts), {
         headers: {
           'Content-Type': 'application/json'
         }

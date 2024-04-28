@@ -1,135 +1,123 @@
 //createPost page
 'use client';
-import { Button, Box, TextField } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import React, { useState, useEffect } from 'react';
 import Layout from "../Components/Layout";
+import { useRouter } from 'next/router'; // Import useRouter from 'next/router' instead of 'next/navigation'
 import '../css/createPost.css';
-import { useRouter } from 'next/navigation';
-async function runDBCallAsync(url, formData){
-// Send a POST request
+
+async function runDBCallAsync(url, formData) {
     try {
-        // Send a POST request
         const res = await fetch(url, { 
-          method: 'POST', // Use POST method
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          // Convert th into a JSON string
-          body: JSON.stringify(formData), 
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData), 
         });
-        // Check if the HTTP status code is OK (200-299)
         if (!res.ok) {
             throw new Error(`HTTP error! status: ${res.status}`);
         }
-
-
-    const data = await res.json();
-// Check if the response is OK and return the data
-    if (data.data === "true"){ 
-        console.log("Post created successfully")
+        const data = await res.json();
+        return data;
+    } catch (error) { 
+        console.error("Error during fetch: ", error);
+        throw error;
     }
-    else {
-        console.log("Error: could not create post")
-    }
-    // If an error occurs, log it to the console
-    }catch (error) { 
-    // If an error occurs, log it to the console
-    console.error("Error during fetch: ", error);
-  }
 }
-
-
-
 
 const createPost = () => {
     const [username, setUsername] = useState('');
-    const moduleId = localStorage.getItem('currentModuleId');
-    const router = useRouter(); // Using useRouter for navigation
+    const [moduleId, setModuleId] = useState(null); // Initialize moduleId state with null
+    const router = useRouter();
 
-    
-  useEffect(() => {
+    useEffect(() => {
         const getUsernameFromCookies = () => {
             const allCookies = document.cookie.split('; ');
             const usernameCookie = allCookies.find(cookie => cookie.startsWith('username='));
             return usernameCookie ? decodeURIComponent(usernameCookie.split('=')[1]) : '';
         };
         setUsername(getUsernameFromCookies());
-    }, []);
-  
-    const handleSubmit = async (event) => {
-      event.preventDefault();
-    
-      const data = new FormData(event.currentTarget);
-      let title = data.get('title');
-      let content = data.get('content');
-      let timestamp = new Date();
-      let poster = username;
-    
-      try {
-        const response = await runDBCallAsync(`http://localhost:3000/api/createPost?poster=${poster}&title=${title}&content=${content}&timestamp=${timestamp}&moduleId=${moduleId}`);
-        console.log('response:', response);
-        if (response.data === "true") {
-          console.log("Post created successfully");
-          router.push('/forums'); // Navigate to forums page
-        } else {
-          console.log("Error: could not create post");
+
+        // Set moduleId only when window is defined (client-side)
+        if (typeof window !== 'undefined') {
+            const currentModuleId = localStorage.getItem('currentModuleId');
+            setModuleId(currentModuleId);
         }
-      } catch (error) {
-        console.error('Error creating post:', error);
-      }
+    }, []);
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+    
+        const data = new FormData(event.currentTarget);
+        const title = data.get('title');
+        const content = data.get('content');
+        const timestamp = new Date();
+        const poster = username;
+    
+        try {
+            const response = await runDBCallAsync(`api/createPost?poster=${poster}&title=${title}&content=${content}&timestamp=${timestamp}&moduleId=${moduleId}`);
+            if (response.data === "true") {
+                console.log("Post created successfully");
+                router.push(`/modules/${moduleId}`); // Navigate to module page
+            } else {
+                console.log("Error: could not create post");
+            }
+        } catch (error) {
+            console.error('Error creating post:', error);
+            router.push(`/modules/${moduleId}`); // Navigate to module page even on error
+        }
     };
   
     return (
-      <Layout>
-        <div className="post-creator">
-          <center><h1>Create Post</h1></center>
-  
-          <form onSubmit={handleSubmit}>
-            <h2>Title</h2>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="title"
-              label="title"
-              type="text"
-              id="title"
-            />
-            <br></br>
-            <h2>Content</h2>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="content"
-              label="content"
-              type="text"
-              id="content"
-            />
-            <br></br>
-  
-            <br></br>
-            <Button
-  type="submit"
-  fullWidth
-  variant="contained"
-  sx={{
-    mt: 3, mb: 2,
-    borderRadius: '8px', // Rounded corners
-    backgroundColor: '#1976d2', // Primary color
-    '&:hover': {
-      backgroundColor: '#115293', // Darker shade on hover
-    },
-    padding: '10px 15px', // Padding
-    color: 'white', // Text color
-  }}
->
-  Create Post
-</Button>
-          </form>
-        </div>
-      </Layout>
+        <Layout>
+            <div className="post-creator">
+                <center><h1>Create Post</h1></center>
+                <form onSubmit={handleSubmit}>
+                    <h2>Title</h2>
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="title"
+                        label="title"
+                        type="text"
+                        id="title"
+                    />
+                    <br></br>
+                    <h2>Content</h2>
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="content"
+                        label="content"
+                        type="text"
+                        id="content"
+                    />
+                    <br></br>
+                    <br></br>
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        sx={{
+                            mt: 3, mb: 2,
+                            borderRadius: '8px',
+                            backgroundColor: '#1976d2',
+                            '&:hover': {
+                                backgroundColor: '#115293',
+                            },
+                            padding: '10px 15px',
+                            color: 'white',
+                        }}
+                    >
+                        Create Post
+                    </Button>
+                </form>
+            </div>
+        </Layout>
     );
-  }
-  
-  export default createPost;
+}
+
+export default createPost;

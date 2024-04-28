@@ -141,6 +141,7 @@ p {
 
 .comment {
   margin-bottom: 20px;
+  padding: 10px;
 }
 
 .comment p {
@@ -159,4 +160,29 @@ p {
   font-size: 14px;
   line-height: 1.5;
   color: #333;
+}
+
+/* Scrollbar styles for comment list */
+.comment-list {
+  max-height: 400px; /* Set maximum height for the comment list */
+  overflow-y: auto; /* Enable vertical scrollbar when content overflows */
+  padding-right: 10px; /* Add some padding to prevent scrollbar from covering content */
+}
+
+/* Customize scrollbar */
+.comment-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.comment-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.comment-list::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.comment-list::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

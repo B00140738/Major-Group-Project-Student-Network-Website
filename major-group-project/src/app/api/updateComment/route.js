@@ -9,7 +9,7 @@ export async function PATCH(req, res) {
         const { commentId, content } = await req.json();
 
         // Database connection details
-        const url = 'mongodb://root:example@localhost:27017/';
+        const url = 'mongodb+srv://b00140738:YtlVhf9tX6yBs2XO@cluster0.j5my8yy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
         client = new MongoClient(url);
         const dbName = 'forums';
 
@@ -19,8 +19,7 @@ export async function PATCH(req, res) {
         const db = client.db(dbName);
         const collection = db.collection('commentsandreply');
 
-        // Use the updateOne method to update the content of the comment with the specified ID
-   // Use the updateOne method to update the content and editedAt timestamp of the comment with the specified ID
+      
         const updateResult = await collection.updateOne(
             { "_id": new ObjectId(commentId) }, // Filter to identify the document to update
             { $set: { "content": content, "editedAt": new Date() } } // Update content and editedAt

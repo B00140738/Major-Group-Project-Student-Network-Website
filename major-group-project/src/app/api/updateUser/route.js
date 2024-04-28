@@ -1,41 +1,46 @@
-import { MongoClient, ObjectId } from 'mongodb';
-import { NextResponse } from "next/server";
+import { hash } from 'bcrypt';
+import { MongoClient } from 'mongodb';
+import { NextResponse } from 'next/server';
 
-    const url = 'mongodb://root:example@localhost:27017/';
-    const client = new MongoClient(url);
+export async function POST(req) {
+  const { searchParams } = new URL(req.url);
+  const username = searchParams.get('username');
+  const email = searchParams.get('email');
+  const pass = searchParams.get('pass');
+  const code = searchParams.get('code');
+  const studentyear = searchParams.get('year');
 
-    const dbName = 'forums';
+  const hashedPassword = await hash(pass, 10);
+  const url = 'mongodb+srv://b00140738:YtlVhf9tX6yBs2XO@cluster0.j5my8yy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+  const client = new MongoClient(url);
+  const dbName = 'forums';
 
-// To handle a PATCH request to /api
-export async function PATCH(request) {
   try {
-    const requestBody = await request.json(); // Parse the request body as JSON
-    const { userId, newUsername, email, address, year } = requestBody; // Access parsed JSON data
-    
-    console.log('Received request body:', requestBody); // Add this line to check the parsed body
-
     await client.connect();
-    const database = client.db(dbName);
-    const usersCollection = database.collection('register');
+    const db = client.db(dbName);
+    const collection = db.collection('register');
 
-    const updateResult = await usersCollection.updateOne(
-      { _id: new ObjectId(userId) }, // Filter by user ID
-      { $set: { username: newUsername, email: email, address: address, year: year } } // Update fields
-    );
-
-    // Check if the update was successful
-    let valid = false;
-    if (updateResult.modifiedCount > 0) {
-      valid = true;
-      console.log('User information updated successfully', updateResult);
-      return NextResponse.json('User information updated successfully'); // Sending response back
-    } else {
-      console.log('Failed to update user information');
+    const existingUser = await collection.findOne({ $or: [{ username }, { email }] });
+    if (existingUser) {
+      if (existingUser.username === username) {
+        return NextResponse.json({ error: 'This username is already taken' }, { status: 400 });
+      }
+      if (existingUser.email === email) {
+        return NextResponse.json({ error: 'There is already an account with this email' }, { status: 400 });
+      }
     }
 
-    return NextResponse.json({ valid:  'User information updated successfully'}); // Sending response back
+    const result = await collection.insertOne({
+      username, email, pass: hashedPassword, code, year: studentyear
+    });
+
+    if (result.insertedCount > 0) {
+      return NextResponse.json({ message: 'Registration successful', data: true }, { status: 201 });
+    } else {
+      return NextResponse.json({ error: 'Registration failed', data: false }, { status: 500 });
+    }
   } catch (error) {
-    console.error('Error updating user information:', error);
+    console.error('Error:', error);
     return NextResponse.error({ status: 500, body: 'Internal Server Error' });
   } finally {
     await client.close();

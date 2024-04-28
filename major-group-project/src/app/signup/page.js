@@ -45,34 +45,33 @@ const [passwordError, setPasswordError] = useState(''); // Separate state for pa
     
       const handleSubmit = (event) => {
         event.preventDefault();
-      setErrorMessage(''); // Clear any existing error messages
-      setPasswordError(''); 
+        setErrorMessage(''); // Clear any existing error messages
+        setPasswordError(''); // Clear any existing password error messages
+
+         // Assuming 'event.currentTarget' is your form element
+      if (!event.currentTarget.checkValidity()) {
+        // If form is not valid, the browser will display the error messages
+        return;
+      }
+      
         const data = new FormData(event.currentTarget);
-    
+      
         let username = data.get('username');
         let email = data.get('email');
         let pass = data.get('pass');
-        let address = data.get('address');
         let repeatPass = data.get('repeatPass');
+        let code = data.get('code');
         let studentyear = data.get('year');
-        const month = data.get('dobMonth');
-        const day = data.get('dobDay');
-        const year = data.get('dobYear');
-        // Format the date of birth  data  before sending it to the server as a string as YYYY-MM-DD
-        const dob = `${year.padStart(2, '0')}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
- 
+      
         // Check if the passwords match
         if (pass !== repeatPass) {
-          setPasswordError("Passwords do not match."); // Set the error message
+          setPasswordError("Passwords do not match.");
           return;
-          // Check if the password is at least 8 characters long
-        } else if(!username || !email || !pass || !address || !dob || !studentyear){
-          setErrorMessage("Please fill in the form"); // Set the error message
         }
-   
+      
           else{
             // Run the DB call asynchronously
-          runDBCallAsync(`http://localhost:3000/api/register?&username=${username}&email=${email}&pass=${pass}&address=${address}&dob=${dob}&year=${studentyear}`);
+          runDBCallAsync(`api/register?&username=${username}&email=${email}&pass=${pass}&code=${code}&year=${studentyear}`);
             window.location.href = '/'; // Redirect to dashboard
               
           };
@@ -92,13 +91,14 @@ const [passwordError, setPasswordError] = useState(''); // Separate state for pa
           <br />
           <label>
             Email:
-            <input type="text" name="email" id="email"  className="inputField" required/>
+            <input type="email" name="email" id="email"  className="inputField" required/>
           </label>
           <br />
           <label>
-            Password:
-            <input type="password" name="pass" id="pass" className="inputField" required/>
-          </label>
+    Password:
+    <input type="password" name="pass" id="pass" className="inputField" 
+           pattern=".{8,}" title="Password must be at least 8 characters long" required/>
+  </label>
           <br />
           <label>
             Repeat Password:
@@ -107,32 +107,8 @@ const [passwordError, setPasswordError] = useState(''); // Separate state for pa
           </label>
           <br />
           <label>
-            Date of Birth:
-            <div className="dob-select">
-              <select name="dobMonth" id="dobMonth" required>
-                <option value="">Month</option>
-                {range(1, 12).map(month => (
-                  <option key={month} value={month}>{month}</option>
-                ))}
-              </select>
-              <select name="dobDay" id="dobDay" required>
-                <option value="">Day</option>
-                {range(1, 31).map(day => (
-                  <option key={day} value={day}>{day}</option>
-                ))}
-              </select>
-              <select name="dobYear" id="dobYear" required>
-                <option value="">Year</option>
-                {range(new Date().getFullYear() - 100, new Date().getFullYear()).map(year => (
-                  <option key={year} value={year}>{year}</option>
-                ))}
-              </select>
-            </div>
-          </label>
-          <br />
-          <label>
-            Address:
-            <input type="text" name="address" id="address" className="inputField" required/>
+            Course Code:
+            <input type="text" name="code" id="code" className="inputField" required/>
           </label>
           <br />
           <label>

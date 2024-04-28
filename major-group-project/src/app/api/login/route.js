@@ -1,6 +1,3 @@
-import { cookies } from 'next/headers'
-
-
 export async function GET(req, res) {
   try {
     const { searchParams } = new URL(req.url);
@@ -8,7 +5,7 @@ export async function GET(req, res) {
     const pass = searchParams.get('pass');
 
     const { MongoClient } = require('mongodb');
-    const url = 'mongodb://root:example@localhost:27017/';
+    const url = 'mongodb+srv://b00140738:YtlVhf9tX6yBs2XO@cluster0.j5my8yy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
     const client = new MongoClient(url);
     const dbName = 'forums';
 
@@ -25,16 +22,19 @@ export async function GET(req, res) {
       let hashResult = bcrypt.compareSync(pass, findResult.pass); // Compare password
       if (hashResult) {
         valid = true;
-        cookies().set('auth', true);
-        cookies().set('username', username);
-        cookies().set('userId', findResult._id.toString()); // Store userId as string
+        // Set cookies in response headers
+        res.setHeader('Set-Cookie', [
+          `auth=true; HttpOnly; Path=/`,
+          `username=${username}; HttpOnly; Path=/`,
+          `userId=${findResult._id.toString()}; HttpOnly; Path=/`
+        ]);
       }
     }
 
-    return Response.json({ "data": "" + valid + "" });
+    return res.json({ "data": "" + valid + "" });
 
   } catch (error) {
     console.error('Error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 }

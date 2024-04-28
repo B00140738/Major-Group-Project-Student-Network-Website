@@ -10,7 +10,7 @@ export async function POST(req) {
   const timestamp = searchParams.get('timestamp');
 
   // Database connection details
-  const url = 'mongodb://root:example@localhost:27017/';
+  const url = 'mongodb+srv://b00140738:YtlVhf9tX6yBs2XO@cluster0.j5my8yy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
   const client = new MongoClient(url);
   const dbName = 'forums';
   const collectionName = 'commentsandreply';

@@ -7,16 +7,16 @@ export async function POST(req, res) {
     const username = searchParams.get('username');
     const email = searchParams.get('email');
     const pass = searchParams.get('pass');
-    const dob = searchParams.get('dob');
-    const address = searchParams.get('address');
+    const code = searchParams.get('code');
     const studentyear = searchParams.get('year');
 
-   // Hash the password before storing it
-   const saltRounds = 10; // You can change the number of salt rounds as needed
-   const hashedPassword = await hash(pass, saltRounds);
+    // Hash the password before storing it
+    const saltRounds = 10;
+    const hashedPassword = await hash(pass, saltRounds);
+
     // Perform MongoDB operations
     const { MongoClient } = require('mongodb');
-    const url = 'mongodb://root:example@localhost:27017/';
+    const url = 'mongodb+srv://b00140738:YtlVhf9tX6yBs2XO@cluster0.j5my8yy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
     const client = new MongoClient(url);
     const dbName = 'forums'; // database name
 
@@ -26,32 +26,36 @@ export async function POST(req, res) {
     const db = client.db(dbName);
     const collection = db.collection('register'); // collection name
 
+    // Check if the username or email already exists
+    const existingUser = await collection.findOne({ $or: [{ username }, { email }] });
 
-
-    const findResult = await collection.insertOne({
-      "username":username,
-      "email":email,
-      "pass": hashedPassword,
-      "dob":dob,
-      "address":address,
-      "year":studentyear,
-    });
-
-    let valid = false;
-    if (findResult.insertedCount > 0) {
-          // save a little cookie to say we are authenticated
-    cookies().set('auth', true);
-    cookies().set('username', username)
-
-      valid = true;
-      console.log('Registered valid');
+    if (existingUser) {
+      return res.status(400).json({ error: 'Username or email already exists' });
     } else {
-      valid = false;
-      console.log('Not Registered');
-    }
+      // Insert the new user data into the collection
+      const findResult = await collection.insertOne({
+        "username": username,
+        "email": email,
+        "pass": hashedPassword,
+        "code": code,
+        "year": studentyear,
+      });
 
-    // Return a JSON response
-    res.json({ data: valid });
+      let valid = false;
+      if (findResult.insertedCount > 0) {
+        // save a little cookie to say we are authenticated
+        cookies().set('auth', true);
+        cookies().set('username', username)
+
+        valid = true;
+        console.log('Registered valid');
+      } else {
+        console.log('Not Registered');
+      }
+
+      // Return a JSON response
+      res.json({ data: valid });
+    }
   } catch (error) {
     console.error('Error:', error);
     // Return an error response
