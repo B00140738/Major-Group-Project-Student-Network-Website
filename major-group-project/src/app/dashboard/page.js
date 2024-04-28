@@ -35,7 +35,7 @@ export default function Dashboard() {
 
     const fetchGeneralModules = async () => {
       try {
-        const response = await fetch(`/api/getGeneral`);
+        const response = await fetch(`api/getGeneral`);
         if (!response.ok) throw new Error('Failed to fetch');
         const data = await response.json();
         setGeneralModules(data.modules);

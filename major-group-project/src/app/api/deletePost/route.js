@@ -9,7 +9,7 @@ export async function DELETE(req, res) {
   const postId = searchParams.get('postId');
 
   // Connect to MongoDB
-  const client = new MongoClient('mongodb://root:example@localhost:27017/');
+  const client = new MongoClient('mongodb+srv://b00140738:YtlVhf9tX6yBs2XO@cluster0.j5my8yy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0');
   try {
     await client.connect();
     console.log('Connected successfully to MongoDB');

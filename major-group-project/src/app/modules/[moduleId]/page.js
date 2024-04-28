@@ -71,7 +71,7 @@ const ModulePage = () => {
       }
   
       try {
-        const res = await fetch(`/api/getUserInfo?userId=${userId}`);
+        const res = await fetch(`api/getUserInfo?userId=${userId}`);
   
         if (!res.ok) {
           throw new Error("Failed to fetch user information");
@@ -96,7 +96,7 @@ const ModulePage = () => {
       if (!moduleId) return;
 
       try {
-        const response = await fetch(`/api/threads?moduleId=${moduleId}`);
+        const response = await fetch(`api/threads?moduleId=${moduleId}`);
         if (!response.ok) throw new Error('Failed to fetch module details');
         const data = await response.json();
         setModuleInfo(data.module || {});
@@ -113,7 +113,7 @@ const ModulePage = () => {
     const fetchPostsForModule = async () => {
       if (!moduleId) return;
       try {
-        const response = await fetch(`/api/getPostByModule?moduleId=${moduleId}`);
+        const response = await fetch(`api/getPostByModule?moduleId=${moduleId}`);
         if (!response.ok) throw new Error('Failed to fetch posts for module');
         const data = await response.json();
         setPosts(data.posts || []);
@@ -129,7 +129,7 @@ const ModulePage = () => {
     const fetchAnnouncementsForModule = async () => {
       if (!moduleId) return;
       try {
-        const response = await fetch(`/api/getAnnouncements?moduleId=${moduleId}`);
+        const response = await fetch(`api/getAnnouncements?moduleId=${moduleId}`);
         if (!response.ok) throw new Error('Failed to fetch announcements for module');
         const data = await response.json();
         setAnnouncements(data || []); // Set announcements directly
@@ -174,7 +174,7 @@ const ModulePage = () => {
     const postId = selectedPost._id;
   
     try {
-      const response = await runDBCallAsync(`/api/createComment?poster=${poster}&content=${content}&timestamp=${timestamp}&postId=${postId}`, {});
+      const response = await runDBCallAsync(`api/createComment?poster=${poster}&content=${content}&timestamp=${timestamp}&postId=${postId}`, {});
       if (response && response.data === "true") {
         const newComment = { poster, content, timestamp, postId };
         // Update comments state to include the new comment
@@ -191,7 +191,7 @@ const ModulePage = () => {
 
 
   const handleReplySubmit = async (parentCommentId, replyContent) => {
-    const url = `/api/postReply?parentCommentId=${parentCommentId}&poster=${username}&content=${replyContent}&timestamp=${new Date().toISOString()}`;
+    const url = `api/postReply?parentCommentId=${parentCommentId}&poster=${username}&content=${replyContent}&timestamp=${new Date().toISOString()}`;
   
     try {
       const response = await fetch(url, {
@@ -255,7 +255,7 @@ const handleViewPost = (post) => {
 
   setSelectedPost(post);
   setIsModalOpen(true);
-  fetch('/api/getCommentsById')
+  fetch('api/getCommentsById')
   .then((res) => res.json())
   .then((comments) => {
     setComments(comments);
@@ -274,7 +274,7 @@ const closeModal = () => {
 const handleDeleteComment = async (commentId) => {
   try {
     // Make an API request to delete the comment with the given ID
-    const response = await fetch(`/api/deleteComments?commentId=${commentId}`, {
+    const response = await fetch(`api/deleteComments?commentId=${commentId}`, {
       method: 'DELETE',
       // Add any necessary headers or authentication tokens
     });
@@ -295,7 +295,7 @@ const handleDeleteComment = async (commentId) => {
 
 const handleDeletePost = async (postId) => {
   try {
-    const response = await fetch(`/api/deletePost?postId=${postId}`, {
+    const response = await fetch(`api/deletePost?postId=${postId}`, {
       method: 'DELETE',
     });
 
