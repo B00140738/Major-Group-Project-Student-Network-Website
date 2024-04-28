@@ -64,18 +64,18 @@ const createAnnouncement = () => {
       let timestamp = new Date();
       let poster = username;
     
-      try {
-        const response = await runDBCallAsync(`api/createAnnouncement?poster=${poster}&title=${title}&content=${content}&timestamp=${timestamp}&moduleId=${moduleId}`);
-        console.log('response:', response);
-        if (response.data === "true") {
-          console.log("Announcement created successfully");
-          router.push('/forums'); // Navigate to forums page
-        } else {
-          console.log("Error: could not create announcement");
+        try {
+            const response = await runDBCallAsync(`/api/createAnnouncement?poster=${poster}&title=${title}&content=${content}&timestamp=${timestamp}&moduleId=${moduleId}`);
+            console.log('response:', response);
+            if (response.data === "true") {
+                console.log("Announcement created successfully");
+                router.push('/forums'); // Navigate to forums page
+            } else {
+                console.log("Error: could not create announcement");
+            }
+        } catch (error) {
+            console.error('Error creating post:', error);
         }
-      } catch (error) {
-        console.error('Error creating post:', error);
-      }
     };
   
     return (

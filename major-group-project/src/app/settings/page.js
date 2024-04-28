@@ -26,7 +26,7 @@ export default function SettingsPage() {
     setNotificationsEnabled(!notificationsEnabled);
 
     try {
-      const response = await fetch(`api/NotificationPreferences?username=${currentUsername}&notificationsEnabled=${newNotificationsEnabled}`, {
+      const response = await fetch(`/api/NotificationPreferences?username=${currentUsername}&notificationsEnabled=${newNotificationsEnabled}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ useEffect(() => {
     }
 
     try {
-      const res = await fetch(`api/getUserInfo?userId=${userId}`);
+      const res = await fetch(`/api/getUserInfo?userId=${userId}`);
 
       if (!res.ok) {
         throw new Error("Failed to fetch user information");
@@ -143,7 +143,7 @@ useEffect(() => {
     }
   
     try {
-      const updateResponse = await fetch(`api/updateUser`, {
+      const updateResponse = await fetch(`/api/updateUser`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -184,7 +184,7 @@ useEffect(() => {
       }
     
       try {
-        const res = await fetch(`api/getUserInfo?userId=${userId}`);
+        const res = await fetch(`/api/getUserInfo?userId=${userId}`);
     
         if (!res.ok) {
           throw new Error("Failed to fetch user information");
@@ -220,7 +220,7 @@ useEffect(() => {
   
     try {
       // Send a request to update the password
-      const response = await fetch(`api/updateUserPassword`, {
+      const response = await fetch(`/api/updateUserPassword`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

@@ -38,7 +38,7 @@ export default function LoginModal({ toggleModal }) {
       const data = new FormData(event.currentTarget);
       let username = data.get('username');
       let pass = data.get('pass');
-      runDBCallAsync(`api/login?&username=${username}&pass=${pass}`, username);
+      runDBCallAsync(`/api/login?&username=${username}&pass=${pass}`, username);
     };
     
     const toggleResetPasswordModal = () => {
