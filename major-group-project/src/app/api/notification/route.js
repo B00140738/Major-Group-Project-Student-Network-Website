@@ -1,8 +1,9 @@
 import { MongoClient } from 'mongodb';
 import { NextResponse } from "next/server";
+import cookie from 'cookie';
 
 export async function GET(request) {
-    const url = 'mongodb+srv://betsunaidzeb:Ux3Fw4nykUyctoyY@cluster0.mtuixbo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+    const url = 'mongodb+srv://b00140738:YtlVhf9tX6yBs2XO@cluster0.j5my8yy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
     const client = new MongoClient(url);
     const dbName = 'forums';
 
@@ -10,8 +11,9 @@ export async function GET(request) {
         await client.connect();
         const db = client.db(dbName);
 
-        // Access cookies directly from the request object
-        const currentUsername = request.cookies.username;
+        // Parse the request cookies
+        const cookies = cookie.parse(request.headers.get('cookie') || '');
+        const currentUsername = cookies.username;
         console.log('Current username from cookie:', currentUsername);
 
         // Ensure that a username is available
@@ -36,4 +38,3 @@ export async function GET(request) {
         await client.close();
     }
 }
-
