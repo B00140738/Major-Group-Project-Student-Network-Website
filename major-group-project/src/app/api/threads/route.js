@@ -7,7 +7,7 @@ const dbName = 'forums';
 const client = new MongoClient(url);
 
 export async function GET(request) {
-  const url = 'mongodb://root:example@localhost:27017/';
+  const url = 'mongodb://root:example@localhost:27017';
   const client = new MongoClient(url);
   const dbName = 'forums'; // database name
 

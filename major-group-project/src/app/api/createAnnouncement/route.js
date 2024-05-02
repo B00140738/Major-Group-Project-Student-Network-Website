@@ -26,7 +26,7 @@ export async function POST(req, res) {
   // Connect to MongoDB and insert a document
   const { MongoClient } = require('mongodb');
   // Connection URL
-  const url = 'mongodb+srv://betsunaidzeb:Ux3Fw4nykUyctoyY@cluster0.mtuixbo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+  const url = 'mongodb://root:example@localhost:27017';
   // Create a new MongoClient
   const client = new MongoClient(url);
   // database name

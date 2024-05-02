@@ -11,7 +11,7 @@ export async function POST(req) {
   const studentyear = searchParams.get('year');
 
   const hashedPassword = await hash(pass, 10);
-  const url = 'mongodb+srv://betsunaidzeb:Ux3Fw4nykUyctoyY@cluster0.mtuixbo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+  const url = 'mongodb://root:example@localhost:27017';
   const client = new MongoClient(url);
   const dbName = 'forums';
 

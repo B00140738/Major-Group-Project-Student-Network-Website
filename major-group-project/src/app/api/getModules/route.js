@@ -3,7 +3,7 @@ import { MongoClient, ObjectId } from 'mongodb';
 import { NextResponse } from "next/server";
 
 export async function GET(request) {
-  const url = 'mongodb+srv://betsunaidzeb:Ux3Fw4nykUyctoyY@cluster0.mtuixbo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+  const url = 'mongodb://root:example@localhost:27017';
   const client = new MongoClient(url);
   const dbName = 'forums'; // database name
 

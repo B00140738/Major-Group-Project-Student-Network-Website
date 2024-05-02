@@ -13,7 +13,7 @@ export async function GET(req, res) {
   // Connect to MongoDB and query documents based on moduleId
   const { MongoClient, ObjectId } = require('mongodb');
   // Connection URL
-  const url = 'mongodb+srv://betsunaidzeb:Ux3Fw4nykUyctoyY@cluster0.mtuixbo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+  const url = 'mongodb://root:example@localhost:27017';
   // Create a new MongoClient
   const client = new MongoClient(url);
   // database name

@@ -7,7 +7,7 @@ export async function GET(req, res) {
     const userId = searchParams.get('userId');
   // =================================================
   const { MongoClient } = require('mongodb');
-  const url = 'mongodb+srv://betsunaidzeb:Ux3Fw4nykUyctoyY@cluster0.mtuixbo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+  const url = 'mongodb://root:example@localhost:27017';
   const client = new MongoClient(url);
   const dbName = 'forums'; // database name
   await client.connect();
